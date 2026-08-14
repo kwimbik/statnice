@@ -695,9 +695,20 @@ decreases (\uv{shrinking}). Extended variants are therefore used:
   $I = |x_i - y_i|$; typically $\alpha = 0.5$. It allows the offspring to lie
   outside the parents as well.
 \item \textbf{SBX} (\emph{simulated binary crossover}): it imitates the
-  behaviour of one-point binary crossover in a real-valued space; the offspring
-  are distributed symmetrically around the parents with a density controlled by
-  the parameter $\eta$. The standard operator in NSGA-II.
+  behaviour of one-point binary crossover in a real-valued space. The offspring
+  arise by \uv{stretching} the pair of parents around their midpoint by a
+  factor $\beta$:
+  \[
+  z_{1,i} = \tfrac12\big[(1+\beta)x_i + (1-\beta)y_i\big],\qquad
+  z_{2,i} = \tfrac12\big[(1-\beta)x_i + (1+\beta)y_i\big],
+  \]
+  so the midpoint of the parents is preserved and $|z_1 - z_2| = \beta\,|x -
+  y|$. The factor is drawn from $u \sim U(0,1)$: $\beta = (2u)^{1/(\eta+1)}$
+  for $u \le 1/2$, otherwise $\beta = \big(2(1-u)\big)^{-1/(\eta+1)}$.
+  Intuition: $\beta = 1$ returns the parents, $\beta < 1$ gives offspring
+  between them, $\beta > 1$ outside; a large $\eta$ pushes $\beta$ towards one
+  (offspring close to the parents), a small $\eta$ allows large jumps. The
+  standard operator in NSGA-II.
 \end{itemize}
 
 \subsubsection{Permutation representation}

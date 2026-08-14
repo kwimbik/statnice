@@ -668,9 +668,18 @@ rozšířené varianty:
   $I = |x_i - y_i|$; typicky $\alpha = 0{,}5$. Umožňuje potomkům ležet
   i~vně rodičů.
 \item \textbf{SBX} (\emph{simulated binary crossover}): napodobuje chování
-  jednobodového binárního křížení v~reálném prostoru; potomci jsou rozděleni
-  symetricky kolem rodičů s~hustotou řízenou parametrem $\eta$. Standardní
-  operátor v~NSGA-II.
+  jednobodového binárního křížení v~reálném prostoru. Potomci vzniknou
+  \uv{roztažením} dvojice rodičů kolem jejich středu faktorem $\beta$:
+  \[
+  z_{1,i} = \tfrac12\big[(1+\beta)x_i + (1-\beta)y_i\big],\qquad
+  z_{2,i} = \tfrac12\big[(1-\beta)x_i + (1+\beta)y_i\big],
+  \]
+  takže střed rodičů zůstává zachován a~$|z_1 - z_2| = \beta\,|x - y|$.
+  Faktor se losuje z~$u \sim U(0,1)$: $\beta = (2u)^{1/(\eta+1)}$ pro
+  $u \le 1/2$, jinak $\beta = \big(2(1-u)\big)^{-1/(\eta+1)}$.
+  Intuice: $\beta = 1$ vrátí rodiče, $\beta < 1$ dá potomky mezi ně,
+  $\beta > 1$ vně; velké $\eta$ tlačí $\beta$ k~jedničce (potomci blízko
+  rodičů), malé $\eta$ dovolí velké skoky. Standardní operátor v~NSGA-II.
 \end{itemize}
 
 \subsubsection{Permutační reprezentace}
