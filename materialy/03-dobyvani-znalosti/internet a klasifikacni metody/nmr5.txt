@@ -1,0 +1,401 @@
+Neural networks, machine learning and randomness
+
+  General stochastic approach
+    to artificial neural networks
+
+          Optional course for master students
+                      Martin Holea
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         File:Cc.logo.circle.svg
+              What will it be about?
+
+ Statistical approach to neural network learning
+ Specificity of the expectation-based learning
+ Strong law of large numbers for network learing
+ Central limit theorem for artificial neural networks
+ A central limit theorem application to network pruning
+                 Basic framework
+
+ A MLP with  input neurons,  output neurons
+ The training pairs  = ,  with   ,    are viewed
+
+   as realizations of random vectors , respectively  and 
+ All random vectors  are assumed mutually independent
+
+   and identically distributed with a distribution 
+
+    ·  and  have the marginal distributions  and  of 
+           Spaces of random vectors
+
+ Let , ,  be a probability space,    + , ,  ,   1
+ The space of -dimensional random vectors on , ,  :
+
+          , ,  = : ,   ,     < 
+
+    ·  can be any norm on 
+    · ,   ,  denotes measurability to the Borel -algebra 
+
+                        :   &  : -1   
+     Equivalence classes in  , , 
+
+  , ,  - a vector space, but without a norm
+  , ,  is divisible into disjoint classes by the equivalence
+
+                                 P    = 0
+
+    · denote  , ,  the space of those equivalence classes
+
+ If   , then  and  have the same distribution:
+  :     =     -    &   +    &  
+        Alternative view of  , , 
+
+ + , ,  bijectively corresponds to the set of probability
+   distributions on +, + with finite -th moments
+               + = : +  0,1 +   < 
+
+ Similar bijection have also  , ,  and  , , 
+                   = :   0,1    < 
+                   = :   0,1    < 
+    Properties of the  , ,  spaces
+
+  , ,  is a norm-induced metric space
+
+    · the norm of    , ,  ,  =    , ,     , is
+
+         
+
+ =    =         
+
+              +
+
+  , ,  is Banach: Cauchy sequences converge
+
+1, 2, ...   , ,  :   > 0:   : 1, 2  : 1 - 2 < 
+
+     , ,   :  lim    = 
+
+              
+     Specificiity of the 2 , ,  space
+
+ 2 , ,  is not only Banach, but even Hilbert
+
+    · the scalar product , is on 2 , ,  defined:
+
+                                   ,  =  
+
+                                                                 
+
+ A basic framework case: , : +  +,  =   ,  =  
+
+                 ,  =       =     
+
+                                        +
+          Assumption about moments
+
+  and   have finite 2nd moments:   2,   2 < 
+
+    · for a bounded ,   2 <  already follows from   2 < 
+
+1. For expectation and variance:    +, Var   +,+
+
+    · for inputs and outputs:    ,    , Var   ,, Var   ,
+
+ 2. Also conditional moments must be finite:
+                           2,  Var   < 
+Expectation-based learning
+
+ Expectation consideres all possible inputs + their probability
+ This learning yields weights  and biasses  minimizing an
+
+   expected loss  of network predictions to outputs:
+
+    ,       =  arg  min        ,      , 
+
+                    ,
+
+· The most common loss - sum of squares (SSE):
+
+,   =  arg  min  SSE  =  arg  min     ,    -    2
+
+            ,                 ,
+       Random-sample-based learning
+
+ Typically,   ,  ,  cannot be computed   is unknown
+
+ But for a random sample 1, 1 , ... , ,  , the mean
+
+1  =1     ,     ,    is an unbiased estimate of   ,       ,
+
+
+· as 1, 1 , ... , ,  can serve all / some training data
+
+ Coincides with the traditional way of learning because
+
+         1                
+
+   min            ,   ,   = min     ,   , 
+
+   ,       =1                  ,
+                          =1
+        Specificity of SSE learning
+
+ Notation: , 2  |  2  - scalar product | norm in 2+ , , 
+
+                   2                2
+ SSE =   ,  -  2  =        ,  -           +
+
+                                    2 
+
++       -   2   +      ,   -    ,    -  2 
+            2 
+      ,  -    ,    -  2 
+
+           ,  -    ,    -  2  =
+
+                                                         
+
+      =   ,  -       -  =
+
+                                                          
+
+=    ,  -       -   =
+
+                                                       
+
+  =   ,  -        -   =
+
+                                                   
+
+=   ,  -       -    = 0
+                -   2
+                    2 
+
+    -   2   =       -   2=
+        2 
+
+=     -  2  =
+
+=       -  2  =
+
+    =   Var   , =
+    = trace Var  
+         Specificity of SSE learning
+
+ Notation: , 2  |  2  - scalar product | norm in 2+ , , 
+
+                    2                         2
+ SSE =   ,    -               =   ,   -             +
+                    2 
+                                              2 
+
+  +      -   2   +   ,            -    ,    - 
+             2 
+                                                                              2 
+
+                                                2
+
+     =  ,  -    2  + trace Var  
+
+  Thus arg min SSE = arg min   ,     -     2
+                                                , and if exist
+         ,          ,
+                                           2 
+
+  ,     such that  ,          =    , then arg min SSE = , 
+
+                                                                 ,
+        Random-sample  expectation
+
+ Expectation-based learning is not common because
+   the distribution of learning samples is typically unknown
+
+ But random sample empirical mean estimates expectation
+
+1.  in  an  unbiased   way:     1  =1          ,   =    , 
+                                
+
+2.  in  a  consistent  way:  1  =1         ,       , 
+                             
+    Laws of large numbers
+
+  The consistence     property, that  1  =1        ,   converges
+                                      
+
+  to    ,  is called law of large numbers.
+
+ Weak law: convergence of random variables in probability
+
+   > 0: lim           1  =1           ,   -    ,       >  = 0
+                      
+                 
+
+ Strong law ( weak law): convergence almost everywhere
+
+    lim            1  =1         ,       =    ,        =1
+                   
+    
+          Complete probability space
+
+ Laws of large numbers cannot be directly applied
+   to MLPs  =1   ,  ,  changed by minimum
+    · therefore, for MLPs, specific additional assumptions are needed
+
+ Let ,   , be Borel-measurable, : ,   +, 
+ The probability space , ,  is assumed being complete:
+
+      &  & \B  \A    &  = 0    
+        Assumptions for the strong law
+
+1. , , P is a complete probability space
+2. ,  , i  , are i.i.d. (independent and identically distributed)
+3.  = admissible ,   - weights,  - bias is a compact set
+4.  ,     ,  , is a Borel-measurable function of ,
+5.  ,  +   ,  , is a -continuous function of , 
+6.   ,  ,  has an +-integrable majorizer over 
+          Statement of the strong law
+
+ Consider the set of expectation-based learning results
+
+ =      ,       ,               ,   =     min        ,    , 
+
+                                          ,
+
+  + random-sample-based learning results for   ,   
+                                                   =1
+
+                   ,   =  arg  min  =1     ,    , 
+
+                               ,
+
+  Then  ,    converges almost everywhere to 
+
+            =1
+
+          lim inf  ,      ,  - ,               =0 =1
+
+          
+                 Network pruning
+
+ Removing connections from fully connected networks
+
+    · decreases the risk of overtraining + computational costs
+
+ If all input connections / all output connections of
+   a hidden neuron  are pruned, then  is removed
+
+ Formalised:  ,  = 0 with a 0/1-valued matrix , rows contain 1
+   for the 1 connection / for neuron's all connections + bias
+        Statistical approach to pruning
+
+ Because ,  that results from learning is only
+    an estimate (unbiased + consistent) of ,  , what we
+    actually need is to know whether  ,  = 0
+
+    · cannot be directly checked  ,  is not known
+
+ Statistical approach to checking statements for estimated values:
+   hypotheses testing using their estimator , 
+Hypotheses testing recalled
+
+ Testing a null hypotheses 0 against 1: checking whether   
+    · ­ test statistics: random variable with some assumed distribution
+
+· ­ critical set:   Val with 0      0   ­ significance
+
+ The assumed  distribution can always asymptotically rely on
+
+the normality of  1  =1        ,   CLT (central limit theorem)
+                  
+
+· not directly applicable =1  ,  , changed by minimum
+      CLT for MLPs: assumptions 1.­ 6.
+
+1. , , P is a complete probability space
+2. ,  ,   , are i.i.d. (independent and identically distributed)
+3.  = admissible ,   - weights,  - bias is a compact set
+4.  = ,  with ,  an inner point of 
+5.  ,     ,  , is a Borel-measurable function of ,
+6.   ,  ,  has an +-integrable majorizer over 
+       CLT for MLPs: auxiliary notation
+
+  w,b  =  w,b  F w,b X , Y : a random vector such that
+
+   ,  + w,b  = the gradient of   ,  ,  w.r.t. , 
+
+    2     ,   ,  : a random matrix such that   ,    +
+    ,
+
+  2,   ,  ,  = the Hessian of   ,  ,  w.r.t. , 
+     CLT for MLPs: assumptions 7.­ 12.
+
+7. ,    ,  ,  has W-continuous Hessian w.r.t. , 
+8. The matrix  defined  =  2,   ,  ,  is regular
+9. 2w,b   ,  ,  has an +-integrable majorizer over 
+10. The matrix  defined  =  (,)  ,  is regular
+11.  ,  2 has an +- integrable majorizer over 
+12. A 0,1 -valued matrix  has s = rank  rows
+       CLT for MLPs: auxiliary notation
+
+  w,b  =  w,b  F w,b X , Y : a random vector such that
+
+   ,  + w,b  = the gradient of   ,  ,  w.r.t. , 
+
+    2      ,     ,  : a random matrix such that   ,    +
+    ,
+
+  2w,b  F w,b x , y = the Hessian of   ,  ,  w.r.t. , 
+
+    =  1  =1    2       ,    , 
+                w,b
+
+    =  1  =1    w,b    F ,   ,    w,b  F ,                   
+       
+                                                  , 
+CLT for MLPs: exact covariance
+
+  , - ,                converges to the distribution  0,  ,
+
+                   =1
+
+the covariance matrix of which is  = -1-1
+
+ If  ,  = 0, then   ,   
+
+                             converges to  0, 
+
+                        =1
+
+ If  ,  = 0, then the quadratic forms of   ,                  
+
+                                                                  ,
+
+                                                              =1
+
+ ,    -1 ,  
+
+                                                          =1
+
+converge to the distribution 2 with  degrees of freedom
+CLT for MLPs: estimated covariance
+
+ Define an estimate  = -1-1      if   ,  is regular
+                                 if   ,  is singular
+
+ Then    in probability   lim     is regular  =1
+
+                               
+
+ If  ,  = 0, then also the quadratic forms
+
+ ,    -1 ,   converge to the distribution 2
+
+                                                         =1
+      Test procedure for  ,  = 0
+
+1. For given observations 1,1 ,..., , , get [= compute] ,
+2. For  = 1,...,, get  w,b  F ,  , and 2w,b   ,  ,
+3. Get ,  and check whether any is singular
+4. Then the test cannot proceed, else get 
+5. Get  ,   -1 , and compare with the distribution 2
+6. If > the quantile 2 1 -  ,   0,1 , reject  ,  = 0
+

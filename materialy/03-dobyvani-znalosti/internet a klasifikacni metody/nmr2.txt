@@ -1,0 +1,398 @@
+Neural networks, machine learning and randomness
+
+     Artificial neural networks
+       based on randomness
+
+          Optional course for master students
+                      Martin Holea
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         File:Cc.logo.circle.svg
+              What will it be about?
+
+ Extreme learning machines and their learning
+ Randomized variant of convolutional neural networks
+ Echo state machines and using inhibit connections
+ Bayesian kinds of artificial neural networks
+
+    · Bayesian neural networks with random parameters
+    · Bayesian neural networks with stochastic activation
+Extreme learning machine (ELM)
+
+ Feedforward ANN with 1 hidden layer, scalar product outputs
+
+    · layer sizes: input , hidden , output  neurons
+
+ Activation function of the th hidden neuron:   ,  :   
+
+with the weight  and bias , e.g.   ,   =1
+
+                                           1+- +
+
+  ELM output for    is =1   ,  , with   
+
+ Random:  (~ synaptic operations),  (in  ~ somatic operations)
+Notation for ELM training data
+
+ Input-target pairs 1, 1 , ... , ,    × 
+ Activities of the hidden neurons for   :
+
+   = 1  , ... ,   = 1  1, 1 , ... ,   , 
+
+· allow to define a random kernel  ,  =     
+
+1   1
+
+ Matrix notation:  =  ,  =  , thus  is random
+
+    
+                        ELM learning
+
+ What is learnt? The non-random weigths:  = 1, ... ,    ×
+
+  is learnt through minimizing        1  +     -   2
+                                      1            2
+
+  ·    1, 2 - matrix norms, 1, 2 > 0,   (0, +]
+
+  ·    1  -  regularization  term,   -   2    - error term
+       1                                 2
+
+  If no regularization  ~ = + , then arg min   -            2  = +
+                                                            2
+
+  · + - Moore-Penrose generalized inverse: + = , ++ = +
+       Optimization task for ELM learning
+
+ Denote , = , -   , where ,1, ... , ,  = ,  = 1, ... , 
+
+  The  ELM learning min     1  +         -        2  with  1  =  2  =  2
+                            1                     2
+
+  turns  to  constrained  optimization  min  = 1     2 +  = 1 = 1 2,
+
+                                          
+
+  with constraints , -    - , = 0,  = 1, ... , ,  = 1, ... , 
+
+ Its Lagrangian ELM with Lagrange multipliers ,:  = ELM =
+= =1  2 +  =1 =1 2, + =1 =1 , , -    - ,
+            ELM optimization solution
+
+    =  0      = =1 ,             for  = 1, ... ,  and  = 1, ... , 
+  
+
+  · equivalently in matrix notation:  = , where
+
+     = 1, ... ,   and  = ,1, ... , ,  for  = 1, ... , 
+
+    =  0      =    ,  where    =  ,1, ... , ,  for  = 1, ... , 
+  
+
+    = 0       =        + , i.e. the  original constraints
+  
+                  ELM solution if  > 
+
+  Combining    =    with    =     yields     =             =  1    +
+                                                              
+
+  Considering also  =          +     yields     -    +  1        + = 0
+                                                        
+
+      + 1       +    =   the learnt  =              +  -1 
+
+                                                   
+
+ For the hidden neuron activities   = 1  , ... ,   , the ELM
+   output is the linear combination    =    +  -1 
+
+                                                                                          
+                ELM solution if   
+
+ Combining  =  with  =  and  =    +  yields
+
+ +    = , =          +   -1   and            output           +   -1
+
+                                                                     
+
+                                        1,1     1,        :    +  ELM  
+ With the kernel ,ELM =                                      
+                                             
+                                        ,1      ,
+
+                                              1,      
+                                                  
+  = ,  =     +  ELM  -1                                   +  ELM  -1
+                                              ,         
+                         and output                                  
+          ELM and random projection
+
+                                                                                    1
+ Random projection:  with   × random (ELM:  =  )
+
+                                                                                    
+ Random projection differs from an ELM in 2 respects:
+
+    1. It attempts to preserve Euclidean distance:  -    - 
+
+    2. It has less rows than columns:  < , whereas ELM
+
+         usually has  > , sometimes an order of magnitude larger
+      Randomized convolutional ANN
+
+ Convolutional neural network (CNN) in which the
+    weights from inputs to receptive fields (kernels)
+    i.e., input layer  convolutional layer are random
+
+ Further supposed layers: combinatorial, fully connected
+
+    · combinatorial performs pooling  has no weights
+
+ Learned weights: combinatorial  output layer (fully connected)
+      Properties of a randomized CNN
+
+ If the receptive field size is  ×  and
+
+   the input dimension is , then each
+
+  convolutional layer map has the size  -  + 1 ×  -  + 1
+ The matrix ic of random weights between
+
+    the input and convolutional layer is identical
+    for any convolutional layer map 
+           Echo state network (ESN)
+
+ Recurrent neural network with random weights
+ Random are all weights to the hidden layer
+
+    · connections from the input layer
+         + recurrent connection from itself + the output layer
+
+ Weights hidden layer  output layer are learned
+
+ ESN terminology: hidden layer - reservoir, output layer - readout
+          Activity evolution in an ESN
+
+ Dimensions: input   , hidden layer   , output   
+ Activity of the hidden layer for   :
+  =   - 1 + 1 -   ir  + rr  - 1 + ro  - 1
+
+   with ir  ×, rr  ×, ro  ,   , - a nonlinearity
+
+    · if no momentum ( = 0):   =  ir  + rr  - 1 + ro  - 1
+
+ Activity of the output:   = io  + ro  , io  , ro  
+      ESN with inhibit connections
+
+ In biological networks, lateral inhibition of an active
+   neuron inhibit the response of other connected networks
+
+ ESN simulate them with specific reservoir transformations:
+
+rr =  1  -  ,  > 0,  is called inhibition strength
+      -  2
+   Stochastic configuration network (SCN)
+
+ Network with  inputs,  outputs, 1 hidden layer of   2 neurons
+
+ Used to approximate a function :     
+
+ Computes an approximating function :   , defined:
+
+                                           
+
+                     =    +  , :   
+
+                                          =1
+
+    ·  = 1, ... , :    - set of basis activation functions
+
+    ·  = 1,...,: --dimensional random vector,  - random variable
+         SCN for continuous functions
+
+  is assumed to be on  continuous,    
+ Basis activation functions are assumed with finite 2nd moments:
+
+                              :    2  < 
+
+                                                     
+
+ Then the  expectation w.r.t. the random  and 
+
+   with increasing  approaches  in the following sense:
+
+lim       -    2  =0
+
+
+
+      
+       Bayesian neural network (BNN)
+
+ Stochastic neural network trained using the Bayesian approach
+ Parameters  determining the function  =   =   that
+
+   the network learns, are viewed as random variables
+
+    · prior distribution   , posterior    conditioned on data 
+    · data are  = 1,1 ,..., , ,denote  = 1,..., , = 1,...,
+
+ Often with superposed random noise :  =   + 
+      BNNs with restricted stochasticity
+
+ Only parameters of 1/several last layer(s) are random
+ Suitable representation for them: probabilistic graphical model
+         Computing a BNN prediction
+
+ BNN prediction: a random variable with a distribution   , 
+
+    · a stochastic approximation of   for an input 
+    · computed using the posterior    :   ,  =    , ´  ´  ´
+
+ Provided the inputs  are independent of model parameters ,
+   the posterior fulfills the Bayes theorem    =  |,  
+
+                                                                                               |,´  ´ ´
+       BNN distributional assumptions
+
+ The distribution of  is usually assumed Gaussian: ~ , 
+ For BNNs performing regression, the predictive distribution of 
+
+     ,  is assumed Gaussian with same variance: ~ , 
+ For BNNs performing classification,   ,  is categorical with
+
+   the set of categories given by   : ~Cat  
+ In any case, for the whole dataset   ,  =  ,    , 
+            BNN estimate of the output
+
+ An estimate  of  relies on sampling  from data 
+
+  · a set  is sampled from the distribution of 
+
+  If the network performs regression:                 =  1            
+                                                         
+
+  ·  it has the covariance cov  ,            =    1              -       -  
+                                                 -1
+
+  If it classifies into classes  = 1, ... , :            =  arg  max  
+
+                                                                   
+
+  ·     is  the  estimated  probability  of  :     =  1       = 
+                                                      
+BNNs with stochastic activation
+
+ Random are not parameters, but activation function inputs
+
+· their distributions depend on outputs from previous layers
+
+ For a BNN with layers 0, ... , , activation function :
+
+0  = , inter-layer step   =    , and   = 
+
+· random is   ~ -1  + ,  with  - matrix,  - vector
+
+    
+
+ , 1  , ... , -1   =      -1 
+    =1
+, 
+Activation  parameter stochaticity
+
+ Consider a BNN with layers 0, ... , , activation function 
+   and a step   =  -1  +  with ~ , ,~ ,
+
+ It can be shown equivalent to stochastic activation
+
+  =    ,   ~ -1  + , -1  -1 +
+
+           -1   0
+                
+where -1=        -1 
+
+           0
+   Setting BNN priors
+
+ Choosing the parameter prior   - often not intuitive
+
+ Frequently used default is uncorrelated normal prior : ~ 
+
+    · however, it is not supported by theoretical arguments
+
+ Connection of priors with BNN learning:
+
+·  parameter learning from the loss yields  = arg max                                          , 
+
+                                                                                            
+
+·  Using the prior  posterior learning  = arg max                                         ,    
+
+                                                                                       
+                  Noise in BNNs
+
+ 3 noise models: noise completely at random (a),
+   noise at random (b), noise not at random (c)
+
+    · they can be represented as probabilistic graphical models:
+         + noise = , dependences are represented with directed edges
+         Data augmentation for BNNs
+
+ Data augmentation in general complements the collected data
+   with results of transforming them with a transformation
+   entailing no or only predictable label change.
+
+ For a BNN, it entails changing the posterior :
+      , Augmen       ,    , Augmen 
+
+    · Augment = distribution of the augmentation results
+         BNNs and back-propagation
+
+ For a BNN loss function , back-propagating 
+   is not possible due to the stochasticity of 
+
+ Getting around this problem is called reparametrization trick:
+    =  ,  , ~, with a parameter  and a fixed 
+
+    · the non-stochasticity of  allows back-propagating 
+                Hierarchical BNNs
+
+ Several parameters 1, ... ,  depend on another common
+
+   parameter   the joint probability of 1, ... , ,  is
+
+                                                                    
+
+         1, ... , ,  1, ... ,          , ,, 
+
+                                                                  =1
+
+ Can be used for metalearning of BNNs:
+
+    · the parameters 1, ... ,  correspond to features of  BNNs
+    · the parameter  corresponds to their common metafeatures
+              Advantages of BNNs
+
+1. They are a natural approach to quantify uncertainty.
+2. Points out of the training distribution are predicted
+
+    with high    (called high epistemic uncertainty)
+
+    · instead of blindly giving a wrong prediction
+    · allows inference: draw ~   and infer  =   ,  = 1, ... , 
+
+3. The prior distribution of  is made explicit
+         BNNs in active learning
+
+ Based on estimating the uncertainty of   :
+
+1. A set of samples is drawn, defined  = | = 1, ... , , ~  
+
+                                                      -         -    
+                                                          -1
+2.  The  uncertainty  is  estimated  with    =
+
+ Among the unevaluated points  available for evaluation
+
+is evaluated the one maximizing the uncertainty 
+
+ · evaluation ­ regression: obtaining the value, classification: labelling
+

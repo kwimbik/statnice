@@ -1,0 +1,282 @@
+ Internet a klasifikacní metody, 6. pednáska
+
+Tým zvládne víc nez jedinec
+
+ volitelný pedmt pro magisterské studium
+                  Martin Holea
+O cem to bude?
+
+ Spojování více klasifikátor do týmu
+
+     zahrnutí rzné dvry rzným clenm týmu
+     týmy klasifikátor rzných a stejných typ
+     hlavní metody spojování: bagging, boosting, stacking
+
+ Hierarchické uspoádání tým klasifikátor
+ Týmy klasifikacních strom - klasifikacní náhodné lesy
+
+Internet a klasifikacní metody, 6. pednáska                2 (z 46)
+Spojování klasifikátor do týmu
+
+ Motivace: máme-li tým klasifikátor, nepotebujeme
+
+aby kazdý klasifikoval správn jakýkoliv vstup
+
+  moznost specializace na cást prostoru píznak 
+  + nutnost odhadnout dvry jednotlivým clen týmu
+
+ Pro -clenný tým: : 1,..., ,  = 1  ,...,  ,1  ,..., 
+
+      - agregacní funkce,  - dvra (trust) klasifikátoru , :  0,1
+
+Internet a klasifikacní metody, 6. pednáska        3 (z 46)
+  Jak mit dvru klasifikátoru
+
+1. Globální dvra klasifikátoru- nezávisí na ,      =  0,1
+
+  píklad  =  1        =  , kde   ,  - daná validacní mnozina
+             
+
+2. Lokální dvra - závisí na , nejznámjsí píklad:
+
+Euclidean Local Accuracy - pouzívá eukleidovskou vzdálenost 
+
+a  nejblizsích soused z ,                      =  1  =1     ,  =  ,
+                                                  
+
+  ,1 , ...,  ,  - uspoádání prvk  dle vzdálenosti  ,  od 
+
+  Internet a klasifikacní metody, 6. pednáska                  4 (z 46)
+Týmy a soubory klasifikátor
+
+ Jak vnést mezi cleny týmu nepodobnost?
+
+     proc poteba? jinak tým = kterýkoliv clen
+
+1. Klasifikátory rzných druh (-NN, Bayesv, SVM, ...)
+
+2. Klasifikátory 1 druhu s rznými hodnotami parametr
+
+     -NN: , SVM: ,  v  ,  =  +  , MLP: pocet neuron
+     takový tým nazýváme soubor (ensemble) klasifikátor
+
+Internet a klasifikacní metody, 6. pednáska    5 (z 46)
+        Týmová klasifikace multimedií
+
+ K plnému vyuzití informací klasifikujeme kazdé
+   pouzité medium: obrázky, text, videa, zvuky, ...
+
+Internet a klasifikacní metody, 6. pednáska  6 (z 46)
+        Týmová klasifikace multimedií
+
+ K plnému vyuzití informací klasifikujeme kazdé
+   pouzité medium: obrázky, text, videa, zvuky, ...
+
+ Rzná media nejlépe klasifikována rznými typy
+   klasifikátor  potebujeme tým klasifikátor rzných typ
+
+Internet a klasifikacní metody, 6. pednáska  8 (z 46)
+Týmová klasifikace multimedií
+
+ K plnému vyuzití informací klasifikujeme kazdé
+   pouzité medium: obrázky, text, videa, zvuky, ...
+
+ Rzná media nejlépe klasifikována rznými typy
+   klasifikátor  potebujeme tým klasifikátor rzných typ
+
+ Agregacní funkce: klasifikátory odpovídající jednotlivým mediím
+   dynamicky vázíme dvrou (dynamicky ­ lokální dvrou)
+
+Internet a klasifikacní metody, 6. pednáska  10 (z 46)
+         Jak tým klasifikátor vytvoit?
+
+ Rznodruhové týmy: nemnoho clen (nejcastji jednotky)
+
+     kazdý clen naucen nezávisle, specifickou metodou
+
+ Soubory: desítky - tisíce clen, principiáln vytváeny
+   ucením rznými podmnozinami dat - bagging, boosting
+
+Internet a klasifikacní metody, 6. pednáska  12 (z 46)
+Bagging
+
+ Bootstrap aggregating: agregované ,  = 1, ... ,  trénovány na
+
+1  ,...,  získaných bootstrapem = resamplováním s vracením
+
+ bootstrap z  dat: pocet rzných   lim                                      =   =   1  -   1
+                                                                                          
+                                                                     
+
+ Validace pro : daty   1  , ... ,   (,,out of bag")
+
+ baggingová alternativa kízové validace:   2 cástí (-fold),
+
+kazdá validuje klasifikátor naucený  -1 zbývajícími, + zprmrování
+
+Internet a klasifikacní metody, 6. pednáska                                    13 (z 46)
+                   Boosting
+
+ Clenové uceni vsemi ucicími daty , vliv   
+
+vázen neúspsností klasifikace  nkterými jinými cleny
+
+ algoritmy: AdaBoost (nejuzívanjsí), LPBoost, LogitBoost, BrownBoost
+
+ AdaBoost (Adaptive Boosting): klasifikátory :  1,-1 , = 1,...,
+
+  váhy:     1   =  1        , +1                 =    2    -1
+                   
+
+  agregace:  1,...,,1,...,  = sign             =1   ,   = 1 ln        =
+                                                                      
+                                                           2  
+
+  Internet a klasifikacní metody, 6. pednáska                       14 (z 46)
+Jak tým klasifikátor vytvoit?
+
+ Rznodruhové týmy: nemnoho clen (nejcastji jednotky)
+
+     kazdý clen naucen nezávisle, specifickou metodou
+
+ Soubory: desítky - tisíce clen, principiáln vytváeny
+   ucením rznými podmnozinami dat - bagging, boosting
+
+ Dodatecná metoda vytváení tým: pouzít jako
+   clen tým (nap. soubor)  hierarchické týmy
+
+Internet a klasifikacní metody, 6. pednáska  15 (z 46)
+       Soubory klasifikátor a malware
+
+ Detekce malware na základ statických vlastností
+
+     klasifikace -gram souborem specifických neuronových sítí
+
+ Detekce malware na základ dynamických vlastností
+
+     klasifikace volání API souborem SVM klasifikátor
+
+ Rzní clenové soubor trénováni rznými podmnozinami dat
+
+Internet a klasifikacní metody, 6. pednáska  16 (z 46)
+Soubory klasifikátor a malware
+
+ Detekce malware na základ statických vlastností
+
+     klasifikace -gram souborem specifických neuronových sítí
+
+ Detekce malware na základ dynamických vlastností
+
+     klasifikace volání API souborem SVM klasifikátor
+
+ Rzní clenové soubor trénováni rznými podmnozinami dat
+ Princip agregace: teorie evidence (Dempster-Shafer)
+
+Internet a klasifikacní metody, 6. pednáska  18 (z 46)
+                   Náhodné lesy
+
+ Náhodný les: soubor strom, trénován kazdý
+   zvlás, pi klasifikaci jsou predikce scítány
+
+Internet a klasifikacní metody, 6. pednáska     19 (z 46)
+                   Náhodné lesy
+
+ Náhodný les: soubor strom, trénován kazdý
+   zvlás, pi klasifikaci jsou predikce scítány
+
+     hranice: stromy  ostré, les  postupn pecházející
+
+Internet a klasifikacní metody, 6. pednáska            23 (z 46)
+                   Náhodné lesy
+
+ Náhodný les: soubor strom, trénován kazdý
+   zvlás, pi klasifikaci jsou predikce scítány
+
+     hranice: stromy  ostré, les  postupn pecházející
+
+1. výhoda: pokud tídy ve skutecnosti fuzzy,
+   popisují je pesnji nez ostatní klasifikátory
+
+Internet a klasifikacní metody, 6. pednáska            26 (z 46)
+Náhodné lesy
+
+ Náhodný les: soubor strom, trénován kazdý              28 (z 46)
+   zvlás, pi klasifikaci jsou predikce scítány
+
+     hranice: stromy  ostré, les  postupn pecházející
+
+1. výhoda: pokud tídy ve skutecnosti fuzzy,
+   popisují je pesnji nez ostatní klasifikátory
+
+2. výhoda: scítané predikce mén ovlivnny sumem
+
+           Internet a klasifikacní metody, 6. pednáska
+              Typy náhodných les
+
+1. Diferenciace strom ucením rzných podmnozin dat
+2. Diferenciace strom zahrnutím rzných mnozin parametr
+
+Internet a klasifikacní metody, 6. pednáska  30 (z 46)
+              Typy náhodných les
+
+1. Diferenciace strom zahrnutím rzných mnozin parametr
+2. Diferenciace strom ucením rzných podmnozin dat
+3. Diferenciace strom kombinací 1. a 2.
+ Kapradí - les specifických strom: uzlm stejné
+
+   úrovn odpovídají stejné promnné + hodnoty parametr
+
+Internet a klasifikacní metody, 6. pednáska  34 (z 46)
+Typy náhodných les
+
+1. Diferenciace strom zahrnutím rzných mnozin parametr
+
+2. Diferenciace strom ucením rzných podmnozin dat
+
+3. Diferenciace strom kombinací 1. a 2.
+ Kapradí - les specifických strom: uzlm stejné
+
+úrovn odpovídají stejné promnné + hodnoty parametr
+
+   rovnomrnjsí rozdlení vstupního prostoru (nkdy +, jindy -)
+
+Internet a klasifikacní metody, 6. pednáska        36 (z 46)
+             Ucení náhodných les
+
+ Kazdý strom zvlás (informacní zisk | Gini)
+
+     pouze parametry specificky pro nj zahrnuté
+     pouze na jemu vybrané podmnozin dat
+
+ Výsledné pravdpodobnosti klasifikace lesem:  vsechny stromy
+
+Internet a klasifikacní metody, 6. pednáska  38 (z 46)
+Ucení náhodných les
+
+ Kazdý strom zvlás (informacní zisk | Gini)
+
+     pouze parametry specificky pro nj zahrnuté
+     pouze na jemu vybrané podmnozin dat
+
+ Výsledné pravdpodobnosti klasifikace lesem:  vsechny stromy
+
+ Aktivní ucení: drahé zjistní správné klasifikace
+
+     po SVM 2. nejcastjsí pípad, kdy pouzíváno
+
+Internet a klasifikacní metody, 6. pednáska        40 (z 46)
+Náhodné lesy pi doporucování
+
+ Klasifikování uzivatel do rzných demografických profil
+
+     demografický profil: kombinace vku, pohlaví, vzdlání,...
+     motivace: profilm odpovídají specifické strategie doporucování
+
+ Ucení: dotázáním nkterých uzivatel (nap. registrovaných)
+
+     neriskujeme odrazení ostatních vyptáváním - zdrzující, vlezlé
+
+ Hlavní dvod les: diskrétní + spojité vstupy
+
+Internet a klasifikacní metody, 6. pednáska  42 (z 46)
+

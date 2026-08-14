@@ -1,0 +1,531 @@
+Neural networks, machine learning and randomness
+
+      Stochastic methods for
+     artificial neural networks
+
+          Optional course for master students
+                      Martin Holea
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         File:Cc.logo.circle.svg
+              What will it be about?
+
+ Dropout and its role in neural network learning
+
+    · original Bernoulli dropout in multilayer perceptrons
+    · dropout in other kinds of models
+    · Gaussian dropout, its relation to Bernoulli dropout
+
+ Stochastic gradient descent and its assumptions
+
+    · stochastic gradient descent viewed as a random process
+                       Dropout
+
+ Temporarily removing (dropping out) some input
+   or hidden neurons during network training
+
+ Neurons are dropped out randomly,
+   according to a given distribution
+
+ Originally proposed for and most often used
+   during training of multilayer perceptrons
+                 Bernoulli dropout
+
+ Bernoulli() distribution: on ,  with probabilities 1 - , 
+ Assumptions about -th hidden layer,  = 1, ... , :
+
+    · vectorial input   , output   , weight   , scalar bias  
+
+    · activation function  does not depend on , relates   =   
+
+    · in addition: set  = 0,  = 1, denote  0 =  ­ network input
+
+ Then   =      -1 +   , with random   ~Bernoulli()
+         Dropout and network training
+
+ Most often using stochastic gradient descent
+ Difference from standard MLP: for each training case,
+
+   new values   are sampled  a new specific network
+
+    · forward- and backpropagation restricted to that individual network
+
+ Gradients are averaged over cases retaining the parameter
+
+    · cases with that parameter dopped out  gradient contribution = 0
+Dropout and regularization
+
+ Dropout alone improves training, with regularization even more
+
+ Most often combined with max-norm regularization:   
+
+·   vector of all weights,   some norm,   hyperparameter
+
+·  network learning is then constrained optimization
+
+ Main reason why max-norm regularization is useful:
+
+no weigths blowup through large learning rate  explorability
+      Some other properties of dropout
+
+ Sparse representation, even if no sparsity inducing regularizers
+ Influence of dataset size relatively to network size:
+
+    · very small datasets overfitting even after dropout  useless
+    · with increasing dataset size, its usefulness increases, then again
+
+        decreases  for very large datasets, no overfitting occurs
+
+ Training time: 2 - 3 × longer than without dropout
+             Advantages of dropout
+
+1. After dropout, the network has less parameters 
+      less prone to overfitting the training data
+
+2. Breaking-up co-adaptations of different hidden neurons,
+     which impede generalization  improved generalization
+
+3. Different dropout realizations  different network topologies 
+     dropout implies building network ensembles
+               Dropout ensembles
+
+ For an ensemble  built through dropping out subsets
+
+  of the set  of hidden neurons:   2 
+
+ If during training,    survives dropout with probability , then
+
+  during testing, weights outgoing from  are multiplied by 
+
+  ·  expected weights after training = used testing weights
+
+  Alternative  possibility:  training  weights  multilplied  by  1
+                                                                 
+             More general dropouts
+
+ Used also with other models than multilayer perceptrons
+
+    · restricted Boltzmann machine
+    · linear regression (will be described later)
+
+ Used also with other distributions than Bernoulli
+
+    · Gaussian distribution (will be described later)
+          Dropout in linear regression
+
+ Dropped out are individual training pairs - rows of , 
+
+    ·   × - matrix of  data points,   - vector of targets
+
+ Dropout introduced through a component-wise product   
+
+    ·   0,1 × is a 0,1 ×-valued random matrix
+    ·  has all its components random ~Bernoulli()
+Learning dropout in linear regression
+
+ Learning in traditional linear regression consists in finding
+
+a weight vector    minimizing the error  -  2
+
+ For dropout linear regression learning, the minimized error
+
+turns to ~Bernoulli   -     2 = (after computation)
+
+                                                                                  12
+
+        =  -  2 +  1 -  diag  2 =
+
+=  -  2 + 1-                     12
+
+              diag  2 , with  = 
+                Gaussian dropout
+
+ Basic idea: activation  of the hidden neuron  is
+   perturbed to  1 +  with ~ 0,1 , more generally ~ 0, 2
+
+ Equivalently: activation  is perturbed to 
+   with  = 1 + , hence ~ 1,1 , more generally ~ 1, 2
+
+ Hyperparameter 2, like  in Bernoulli dropout
+  What does the Gaussian drop out?
+
+ Formally, Gaussian dropout drops no neurons out,
+
+  only perturbs the activations of hidden neurons
+
+  However, for  with ~  1, 2          , where 2 = 1-:
+
+                                                                
+
+  the expectation  and  variance  of    are    =  1,  Var         =  1-
+                                                                      
+
+  And the same  and Var  has ~ Bernoulli() on                     0, 1 ,
+
+                                                                     
+
+  which drops out the hidden neuron 
+  Stochastic gradient
+
+ Minimizing a loss function for data z = 1, ... ,  , parameters ,
+
+  summed over data:    =  ,   =     1      ,     , =  1,... ,
+                                    
+
+ For   , consider a random variable :   |# =  -valued,
+
+  called minibatch, uniformly distributed:    &# =      =  1
+                                                           
+
+                                                           
+
+  Define a random loss function:    =  ,   =  1         , 
+                                              
+
+ Its gradient  =  is called stochastic gradient
+                 Example: quadratic loss
+
+  ,     =     1   -  2,           =  ,   =     1  =1      -   2
+              2                               2
+
+   ,       =     -  ,  with    =  =1 ,  thus  arg min    ,   = 
+
+                                                       
+
+  ·  the reparametrization new =  -  leads    to  arg min    new,   =0
+
+                                                        new
+
+     =  1            -       2,    =          =   1          - 
+        2                                         
+Recalling standard GD
+
+ Standard gradient descent  also called complete, or batch
+
+      
+            
++  =   -                         , 
+
+      =1
+
+· epoch: one update in this way
+
+ Advantage: updates independent of local differences  stable
+
+ Disadvantage: computationally demanding on large-scale data
+
+· unusable for datasets that don't fit in memory
+   Stochastic gradient descent (SGD)
+
+ The application of gradient descent to stochastic gradient:
+
+          +1 =  -  ,  =  -  , 
+·  parameters in the iteration ,  learning rate
+
+·   ,   =  ,   =  1        , 
+                  
+
+ s < N  SGD is often called minibatch gradient descent
+            SGD pseudocode
+
+ Initialize  > 0 and 0   to a given value
+ Perform a while loop until termination criteria:
+
+1.     ,    =  1        , 
+               
+
+2. +1   - 
+
+3.    + 1
+            Comparing GD and SGD
+
+ Advantages of GD: stable  converges in a small
+   number of iterations, converges to a local minimum,
+   for convex functions to a global minimum
+
+ Advantages of SGD: fast and memory efficient
+    is suitable for online learning
+  Stochastic average gradient (SAG)
+
+  Based on expected increments of  ,   =   1               , 
+                                           
+
+ Initializes 0,  = 0,  = 0 for  = 1, ... , then in each
+
+  iteration  samples  and for    updates
+
+   =  -  +  ,
+
+   =  ,
+
+ Progress to the next iteration: +1 =  + 
+              SGD with momentum
+
+ Decreases SGD oscilations by means of a momentum  , 
+ Partially preserves the previous gradient direction 
+
+           ,  =  -1,  +  ,  ,  > 0,  > 0
+                               +1 =  -  , 
+
+ This method is also called stochastic HB
+    the effect of  resembles heavy ball inertia
+           Nesterov accelerated GD
+
+ Another method attempting to decrease SGD oscilations
+ Like SGD with momentum, but  is computed
+
+   in the point   -  -1,  ,  after the descent
+                   ,  =  -1,  +  -1, 
+                               +1 =  -  , 
+                   Learning rate
+
+ Important: small  slow convergence, large  oscilations
+ Maybe different impact on different dimensions  respective gradient
+
+   components (= partial derivatives) differ in order of magnitude
+ Remedy: set different learning rates for different dimensions
+
+    · if dimensionality high, manual setting is time consuming
+    ·  methods for adaptive learning rate determimnation
+AdaGrad (Adaptive Gradient)
+
+ Modifies the original learning rate  dynamically
+
+based on the gradients acquired in previous iterations
+                                         
+
+                = -1 - diag -1 +   -1, 
+
+·   , it sums the past gradients squares; example:
+
+1  3                 0                             12 + 32  10
+
+ 1,  = 0 ,  2,  = 4 ,  3,  = 5  4 = 42 + 52 = 41
+                                                   32 + 62
+2  0                 6                                      40
+
+              10 +   0      0
+
+ diag 4 +  =  0      41 +   0
+
+              0      0      40 + 
+                      RMSProp
+
+ Lets the influence of past iterations exponentially decay
+    removes the drawback of AdaGrad that
+   it treats all past gradients equally
+
+ A momentum method, but uses the 2nd-order momentum :
+                     = -1 + 1 -  2 ,  ,  > 0
+                        = -1 - .1--11/2 -1, 
+     Adam
+
+ Adaptive moment estimation  an often fast converging
+
+combination of adaptive learning rate and momentum methods
+
+ Uses the 1. () + 2. () moments of the gradient (,  0,1 )
+
+ = -1 + 1 -   ,  ,  = -1 + 1 -  2 , 
+
+  =  1- ,    =    
+                1-
+
+ = -1 -      ,    >  0
+         +
+             Modifications of Adam
+
+ Motivated by occasional problems with Adam`s convergence
+ AdamW: modifies the weights () update with their decay
+
+                                                   
+                   = -1 - -2 -  +  ,  > 0
+ AMSGrad: modifies the 2. moment of the gradient
+
+                         = -1 + 1 -  2 , 
+                                 = max -1, 
+          General comments to SGD
+
+ In the SGD context, processing 1 minibatch is denoted
+   as iteration, processing all avalable samples as epoch
+
+ At the beginning of each epoch, all samples
+  are randomly shuffled, and afterwards they are
+  split into multiple subsequently processed minibatches
+
+ SGD is studied using 4 generally accepted assumptions
+                  Assumption 1
+
+ Conditioned on , 1, ... ,  are conditionally independent
+
+  identically distributed and such that  ,  =
+
+  =  1      ,     behaves like  ,              were
+     
+
+  normal random variables:  ,  ~   ,  
+
+    ,     -    =  1       ,   -                ~ 0, 1  
+                  
+                                                           
+
+  defining  , =   , -  implies  , ~ 0, 
+                   Example: quadratic loss
+
+  ,       =     1   -  2,             =  ,    =    1  =1        -   2
+                2                                 2
+
+   ,         =     -  ,   with     =  =1 ,  thus  arg min      ,   = 
+
+                                                           
+
+  ·  the reparametrization new =  -  leads        to  arg min      new,   =0
+
+                                                            new
+
+       =  1            -        2,      =         =   1            - 
+          2                                           
+
+  The  covariance     of    is  1       = 1    -          -  
+                                
+                                            
+Assumption 2
+
+ In a neighborhood  of an minimal   is   constant
+
+   and positive-definite:  a positive-definite    :   = 
+ Positive definiteness of    a regular matrix :  = 
+ Defining   =   + 1 -   ,  ,  = --1 ,  implies:
+
+1.   = -   -     , = -   +     , 
+              
+
+2.  ,  ~ 0, --1  - -1 =  0, -1  -1 =  0, 
+                          Assumption 3
+
+ The equation   = -       +     , ,  , ~ 0, ,
+
+                               
+
+which is a finite-difference equation for   =   + 1 -   ,
+
+is  replaceable  with  a  differential  equation:    =  -                                   +   
+                                                   
+                                                                                                  
+
+ The equation is particularly simple for   = 1 
+
+                                                                                       2
+
+   =    = - +    - Ornstein-Uhlenbeck
+                           
+                       Assumption 4
+
+ The loss function is on  quadratic
+
+ If for the original parameters   =  +  + , then
+
+the  transformation    =    +  1  -1,    =  2,     =    -  1  -1-1
+                               2                           4
+
+yields    = 1  +                  =    = - +   
+                                                               
+              2
+
+· the solution of this differential equation is
+
+a random process called Ornstein-Uhlenbeck process
+                   Example: quadratic loss
+
+  ,       =     1   -  2,            =  ,    =    1  =1      -   2
+                2                                2
+
+   ,         =     -  ,   with    =  =1 ,  thus  arg min    ,   = 
+
+                                                          
+
+  ·  the reparametrization new =  -  leads       to  arg min    new,   =0
+
+                                                           new
+
+       =  1            -        2,     =         =   1          - 
+          2                                          
+
+  The  covariance     of    is  1      = 1    -       -  
+                                
+                                           
+
+ The Hessian of   is the identity matrix,  = 
+    Comments to the assumptions
+
+ Valid in a neighborhood  of a   local minimum
+
+ About the Ornstein-Uhlenbeck process is known:
+
+1.   for every  fulfills:   = - 0 +    0  -  -               
+                                     
+
+2. it has a stationary distribution   , which is Gaussian
+
+3. for its variance  =   , matrices ,,  from assumptions 2, 4,
+
+    minibatch size  and learning rate :  +  =   =  
+                                                           
+       Encountered SGD strategies
+
+1.  -maximize the estimated posterior probability           =  ,
+
+                                                                  
+
+2. Tune the SGD so that the Ornstein-Uhlenbeck
+
+    stationary distribution   possibly well approximates   
+
+ Both consider    =  1         ,     = -log              -  1  log   
+                                                            
+
+    ·     =      = =1      = -log   - 
+                             
+
+    ·  assumption 4  the posterior distribution of  is   0, 1 -1
+
+                                                            
+Approximation of the posterior
+
+ Learning rate  and minibatch size  are chosen so
+
+that they minimize the Kullback Leibler divergence    
+
+from the posterior distribution    to the stationary distribution 
+
+ The learning rate  and minibatch size  corresponding to
+
+min     are known to be related through
+
+ =             =    Tr    ,  where    denotes  the  dimension  of  
+                        
+          Tr 
+      Componentwise approximation
+
+ SGD with a componentwise descent:   + 1 =   -    
+
+·  - a diagonal matrix, the original SGD corresponds to  = 
+
+ The diagonal matrix  and minibatch size  corresponding to
+
+min     are known to be related through
+
+,  =   2  =     2  ,  for  each  component    =  1, ...  , 
+      ,        
+Preconditioned approximation
+
+ SGD with a preconditioning matrix :   + 1 =   -    
+
+·  is positive definite, the original SGD corresponds to  = 
+
+ The matrix  and minibatch size  corresponding to
+
+min     are known to yield min     = 0
+
+and to be related through  = 2 -1 = 2  -1
+  
+

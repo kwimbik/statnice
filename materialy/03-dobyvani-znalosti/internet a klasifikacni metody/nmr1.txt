@@ -1,0 +1,568 @@
+Neural networks, machine learning and randomness
+
+             Preliminaries:
+recalling what you already know
+
+          Optional course for master students
+                      Martin Holea
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         File:Cc.logo.circle.svg
+              What will it be about?
+
+ Basic concepts concerning artificial neural networks (ANNs)
+ Most important kinds of artificial neural networks
+ Basic concepts pertaining to machine learning (ML)
+ Main kinds of machine learning methods
+ Most important concepts pertaining to randomness
+   Neurons and connections
+
+ Neurons - fundamental units of ANNs, analogous to biological
+
+    · somatic operation: process incoming signals, send them further
+
+ Connections - synaptic operation: weighting signals between neurons
+
+ Structure of a neuron: weights, bias, activation function
+
+·  example activation functions: logistic     =     1  -,  hyperbolic
+                                                 1+
+
+   tangent    = tanh   =    -  -   rectified  linear  unit      = max 0,
+                            +
+                               -,
+          Neural network architecture
+
+ Architecture: a specific pattern of connections between neurons
+ Layered architecture: a linearly ordered sequence of layers
+
+    · disjoint, signal transmitted only in the ordering direction
+    · mostly fully connected: every lower with every upper
+    · sparsely connected - in specific network kinds, e.g., convolutional
+
+ Recurrent architecture: signal transmission path contains cycles
+   Perceptron
+
+ A binary classifier that maps numerical inputs
+
+to binary outputs. Its main parts are:
+
+· input layer: reads input vectors of features x = 1, ... , 
+· weights w = 1,...,  : relative contributions of individual features
+· bias : added to weighted contributions of features,  =  + 
+
+·  step function used as activation function:   = 01  |  0
+                                                      | < 0
+              Multilayer perceptron
+
+ Layered network with  3 layers ordered feedforward
+   = in accordance with the direction of signals
+
+ 0th: input layer, 1st -(-1)th: hidden layers, th: output layer,   2
+              Multilayer perceptron
+
+ Layered network with  3 layers ordered feedforward
+   = in accordance with the direction of signals
+
+ 0th: input layer, 1st -(-1)th: hidden layers, th: output layer,   2
+ E.g., 1 hidden layer  pre-activation activity | final output
+
+                    1 =  0  +  1 |  1 =   1
+                  2 =  1  1 +  2 |  =   2
+Self-organizing map
+
+ Mapping with 2|3-dimensional values learned based on similarity
+
+    ·  unsupervised, no labels, suitable for clustering and visualization
+
+ Input layer:    + map layer :  ×  neurons grid
+ Weight   : represents the pre-image of the neuron   
+ Best matching unit for    among neurons from :
+
+BMU  =  arg  min   - 
+
+             
+                    Autoencoder
+
+ Unsupervised, learns encoding the input into a lower-dimensional
+   compressed representations and then decoding the original
+
+    · purpose: learn an efficient encoding of essential features
+
+ Signal path: input   hidden latent layer   output layer 
+
+    · possible hidden layers between input - latent, latent - output
+                    Autoencoder
+
+ Unsupervised, learns encoding the input into a lower-dimensional
+   compressed representations and then decoding the original
+
+    · purpose: learn an efficient encoding of essential features
+
+ Signal path: input   hidden latent layer   output layer 
+
+    · possible hidden layers between input - latent, latent - output
+
+ =   =   +  =    +  =    +  + 
+    Convolutional Neural Network (CNN)
+
+ Exploit the spatial structure of images or other
+   grid data and capture local patterns in them
+
+ Repeatedly [convolutional + pooling] layers + fully connected layers
+ Convolutional layer: slides filters (aka kernels) over its
+
+   input, connected only with a local receptive field
+    Convolutional Neural Network (CNN)
+
+ Exploit the spatial structure of images or other
+   grid data and capture local patterns in them
+
+ Repeatedly [convolutional + pooling] layers + fully connected layers
+ Convolutional layer: slides filters (aka kernels) over its
+
+   input, connected only with a local receptive field
+
+    · sliding filters output: activation map (aka feature map)
+     Recurrent neural networks (RNNs)
+
+ ANNs considering context or memory of previous inputs
+
+    ·  suit for temporal / spacial sequences (text, speech, time-series)
+
+ Difference to MLPs: loops, e.g.,  =   + -1 + 
+ Leading in recent years: long short-term memory (LSTM)
+
+    · incorporate a gating mechanism to control information flow
+    ·  avoid vanishing and exploding gradients of traditional RNNs
+                   Transformer
+
+ Models sequences via paying attention to new inputs.
+
+ First, it embeds any sequence 1, ... ,  into 1, ... ,   
+
+    · If ordering needed, positional embedding 1,...,   is superposed
+
+ For inputs , the transformer computes queries , keys , values 
+
+Attention   =               ,   =  ,   =  ,            =    
+                   =1 
+               
+
+               =1
+
+  , ,   ,   , ,   ,,   ,
+       Graph neural networks (GNNs)
+
+ Process graphs, represent them as vector space embeddings
+
+    ·  applied to social networks, molecular models, knowledge graphs,...
+
+ At iteration , embedding follows the message passing paradigm:
+
+    · message + aggregation functionsprocess embeddings of node  neighbours:
+
+     = ag gregate message -1 , -1 ,   
+
+    · then, an update function applies:  = up date -1 , 
+      General machine learning model
+
+ Mathematical representation of a real-world phenomenon
+ Designed to generalize from data used for its
+
+   learning  able to make predictions for new data
+ Main steps in model development: data collection, data
+
+   preprocessing, feature selection, feature engineering,
+   model training, model evaluation, deployment and monitoring.
+                   Model training
+
+ Key model development step - fitting the model + regularization
+   to data to learn essential patterns in them
+
+ Data  different purpose parts: training + (validation) + testing
+
+    · for choosing from different models / configurations: cross-validation
+
+ Error function, aka loss function: measures model performance
+
+    · examples: MSE in regression, cross-entropy in classification
+                 Feature selection
+
+ In high-dimensional data,  overfitting  better generalization
+
+    · selection criterion: influence on the model's predictive performance
+
+ Filter methods: rank features without using a model,
+   based on correlation, mutual information, statistical tests
+
+ Wrapper methods, possibly embedded in training: evaluate
+   feature subsets by training a model on them
+    Model evaluation
+
+ Model evaluation: assessing its performance on test data
+
+ Evaluation measures / performance measures are task-specific
+
+· regression: mean {squared | absolute} error ({MSE | MAE}), RMSE
+
+· classification: accuracy TP+TN,                                          Classifier  + .+  - .-
+                                                                            + +.        TP    FN
+                                                                            - -.        FP    TN
+precision TP, recall TP,                                          Correct
+.+  +.
+
+F1-score 2prperceicsiisoino+nrreeccaallll, AUC class
+       Interpretability and explainability
+
+ Crucial for understanding and trust to ML models
+ Interpretability: human comprehensibility of model workings
+ Explainability: reasoning and justification for model's behavior
+
+    · global: for overall behavior, local: for individual predictions
+
+ Explaination kind LIME: interpretable approximations of predictions
+ Explaination kind SHAP: with Shapley values  cooperative games
+         Three basic kinds of learning
+
+1. Supervised learning: uses a dataset pairing each input 
+   with a correct output , learns a mapping  minimizing   -
+
+2. Unsupervised learning: uses unpaired data, attempts finding
+   there intrinsic patterns (clustering, principal component analysis,...)
+
+3. Reinforcement learning: not from static data, but from
+    rewards for actions during interaction with the environment
+    Principal component analysis (PCA)
+
+ Linear transformation of data into new orthogonal coordinates
+
+    · these coordinates are called principal components
+    · 1. captures the maximum variance, 2. the maximum remaining, etc.
+  Principal component analysis (PCA)
+
+ Linear transformation of data into new orthogonal coordinates
+
+  · these coordinates are called principal components
+
+  · 1. captures the maximum variance, 2. the maximum remaining, etc.
+
+  For  observations,  features:   ,  standardized  to  ,  ,  =  ,- 
+                                                                   Var
+
+  principal components  are projections onto Var eigenvectors :
+
+   = , Var = diag 1, ... ,  
+                 Linear regression
+
+ Describes a linear relationship  =  +  between a dependent
+   variable  and independent predictors , with ~ 0, 2
+                       Linear regression
+
+ Describes a linear relationship  =  +  between a dependent
+
+  variable  and independent predictors , with ~ 0, 2
+
+  is estimated using the ordinary least squares method:
+
+   = arg min RSS = arg min  -  2 =  -1
+                           
+
+  Regression  quality  is  assessed  with  2  =  RSS  =  =1   - 2    2
+                                                 TSS         -1 =1 
+
+  · RSS | TSS: residual | total sum of squares
+                      Logistic regression
+
+ Models positive class probability in binary classification:
+
+                                                            1
+                     = 1 1, ... ,  =   = 1 + -
+
+  ·  aggregates the inputs 1, ... ,  linearly:  = 0 + 11 +  + 
+
+    =  log      =  1  1,  ...  ,    is called logit or log-odds
+                =  0  1,  ...  ,  
+
+ Estimation of 0, ... ,  with maximum likelihood:
+               likelihood  = =1    1 -   1-
+     Classification and regression trees
+
+ Binary trees, with nodes testing Boolean conditions, their
+    validity determine the branch where the input continues
+     Classification and regression trees
+
+ Binary trees, with nodes testing Boolean conditions, their
+    validity determine the branch where the input continues
+
+ Classification conditions minimize gain (=entropy) or Gini impurity
+
+     Classification and regression trees
+
+ Binary trees, with nodes testing Boolean conditions, their
+    validity determine the branch where the input continues
+
+ Classification conditions minimize gain (=entropy) or Gini impurity
+ Regression conditions minimize variance within the subsets
+
+ Basic kind: conditions ~ axis-perpendicular hyperplanes
+     Classification and regression trees
+
+ Binary trees, with nodes testing Boolean conditions, their
+    validity determine the branch where the input continues
+
+ Classification conditions minimize gain (=entropy) or Gini impurity
+ Regression conditions minimize variance within the subsets
+
+ Basic kind: conditions ~ axis-perpendicular hyperplanes
+
+    · alternative kinds: ~ general hyperplanes, ~ quadratic surfaces
+        Support vector machine (SVM)
+
+ Simplest: 2 classes ± linearly separable, classifier :  1,-1 ,
+
+  = 1 iff :  +   0 with  training pairs,    > 0 :
+
+                             2  max      2
+                           
+ > 0:  + -1 -1  - -1 1  <       =1...    2 ln2 + ln   0
+
+                             min    ,
+
+                             =1...
+        Support vector machine (SVM)
+
+ Simplest: 2 classes ± linearly separable, classifier :  1,-1 ,
+
+  = 1 iff :  +   0 with  training pairs,    > 0 :
+
+                                                   2  max      2
+                                              
+ > 0:  + -1 -1  - -1 1                    <           =1...    2 ln2 + ln   0
+
+                                                   min    ,
+
+                                                   =1...
+
+  optimize min  2 and max constrained by:  ,                        , = 1...
+
+                                                                       
+
+ Optimal ,depend only on  with  ,                  =        support h-planes
+                                                      
+                                                 
+                                                                          
+ =  , ,   1 ,..., ,  =  arg  max     2        -       ,        =  : ,  =  
+
+                             1,...,     =1       ,=1
+    SVM for linearly nonseparable classes
+
+ Transformation into a higer dimension
+    SVM for linearly nonseparable classes
+
+ Transformation into a higer dimension: A general-position   
+
+with   # -1has any   ,   , linearly separble from \
+
+ Using a kernel : 2   fulfilling  ,  =  ,  and for
+
+                  1, 1    1, 
+
+any 1,...,   is                  positive semidefinite
+
+                  , 1   ...  , 
+
+· #-dimensional vector space:  = = 1 |   with   =  ,
+
+                                  1if    , +  0
+
+                 ,    =                
+          kernel trick ,=1
+=1    =1                         -1if   , + < 0
+
+                                        
+             Naïve Bayes classifier
+
+ Classifier based on the Bayes theorem ( - class,  - input):
+
+                                               
+                                 =  
+ Computing    is infeasible  naïve Bayes assumption:
+
+                                                             
+
+                                 =    
+
+                                                            =1
+
+ Estimation of   : multimodal | Bernoulli | Gaussian
+         Nearest neighbours learning
+
+ Instance-based supervised, searches the  nearest neighbours set
+       = 1, ... ,  , where  -  are among the  smallest
+         Nearest neighbours learning
+
+ Instance-based supervised, searches the  nearest neighbours set
+
+    = 1, ... ,  , where  -  are among the  smallest
+
+  Classification: predicted class is    = arg max #              = 
+
+                                                    
+
+  Regression: predicted value is the average            =  1  =1  
+                                                           
+
+  influences bias-variance decomposition for  estimating a function 
+
+    -    2 =   -                        2      -              2 + 2
+
+                                         + 
+
+         bias2                               variance
+            Rule learning
+
+ Represents knowledge in symbolic form as
+
+implications in propositional logic, aka if-then-rules:
+
+1  2        
+
+antecedent  consequent, aka hypothesis
+
+·  - literal defining an attribute-value condition
+
+ Interpretable  valuable in domains like medicine, law, finance
+
+ Main learning algorithms: separate-and-conquer, association rules
+      Ensemble learning
+
+ Combining multiple base learners - weak learners 1,...,:  ,
+   to form a stronger predictive model - strong learner :   
+
+ Regression ensemble typically predicts a weighted combination:
+
+                          
+
+  =    ,  > 0,   = 1
+
+      =1                  =1
+
+ Classification ensemble typically predicts the majority vote:
+
+   =  arg max #  1         &     = 
+
+             
+                Random Variables
+
+ Functions quantifying the outcomes of probabilistic phenomena
+   by real numbers  allow applying analysis + measure theory
+
+ Probability space , ,  :  - sample space,  - -algebra of
+   subsets of , called events, :   0,1 - probability
+
+ Borel sets : the smallest -algebra containing open  sets
+ :    is called random variable if   : -1   
+           Distribution and Moments
+
+ Cumulative distribution function (CDF) of :   =    
+
+    ·  called discrete for a step function     countable
+           Distribution and Moments
+
+ Cumulative distribution function (CDF) of :   =    
+
+    ·  called discrete for a step function     countable
+    ·  called continuous for  differentiable,  =  is called density
+   Distribution and Moments
+
+ Cumulative distribution function (CDF) of :   =    
+
+·  called discrete for a step function     countable
+·  called continuous for  differentiable,  =  is called density
+
+ -th raw moment of :  =   , in particular 1 =   =  
+ -th central moment (about   ) of :  =   -   
+
+·  variance: 2 = var   =  2,  skewness:  1  =  33,  kurtosis:  2  =  4
+                                                                     4
+Conditional Distribution and Moments
+
+ Describe the distribution of  conditioned on  ( = )
+ Conditional expectation  | of  conditioned on : random
+
+   variable measurable in the -algebra  generated by 
+ For  from both  and the -algebra  generated by :
+
+  |  d  =    d 
+
+  
+
+ Among functions  measurable in :  | minimizes   -  2
+           Statistical Estimating
+
+ Deduces probability distribution properties from a finite sample
+
+  · example properties: expectation, variance, regression coefficients
+
+ Point estimate: single best guess of the property
+
+ Interval estimate: contains the value with required probability
+
+  Moments  method:     m  such    that  for    =  1, ... , : 1  = 1   =    m
+
+                                                             
+
+  Maximum  likelihood  estimate:  mle  =  argmax     with       = = 1 
+
+                                                 
+Statistical Hypothesis Testing
+
+ Procedure deciding whether a hypothesis 0 about a distribution
+   should be rejcted in favour of ist alternative 1
+
+ Is based on the stochastic proof by contradiction:
+
+0 true  high  data 0  low  data 0  0 false
+
+ Test statistic: random variable on 1,..., , assumed distribution
+
+p-value =      1,...,         for  with a right-tailed distribution
+                  1,...,  for  with a 2-tailed symmetric distribution
+                 Random Process
+
+ Random variables collection      , indexed by a   / 
+ Mean   =    , autocorrelation  1, 2 =   1  2
+ Wide sense stationarity of  : 1. constant , 2.  1,2 =  2 -1
+ Discrete | continuous , discrete | continuous states (~ values)
+
+    · discrete  example: Poisson process      , counts random arrivals
+    · continuous    example: Gaussian process (finite    normal)
+  Bayesian Approach to Randomness
+
+ Bayesian statistics interprets probability as a belief degree
+
+  · whereas frequentist interpretation: probability = long-run relative frequency
+
+  · belief degree is updated as new information arrives
+
+  Relies on the Bayes theorem:    =  |  
+
+                                            
+
+  ·   - prior,  | - likelihood of data,    - posterior
+
+  Bayesian statistics relies on posterior  likelihood * prior
+    Aleatoric and Epistemic Uncertainty
+
+ Aleatoric uncertainty: randomness conveyed by random variables
+
+    · inherent in the systems/processes described by them
+
+ Epistemic uncertainty: arises from lack of knowledge
+
+    · 1. insufficient data, 2. incomplete models (differing from reality)
+
+ Aleatoric irreducible, epistemic reducible by more knowledge:
+
+    · more data, better generalizing models, additional expert judgement
+

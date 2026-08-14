@@ -1,0 +1,322 @@
+Internet a klasifikacní metody, 2. pednáska
+
+     Základní koncepty
+    týkající se klasifikace
+
+volitelný pedmt pro magisterské studium
+                Martin Holea
+O cem to bude?
+
+ Klasifikace do 2 a do více tíd
+
+     specifické koncepty týkající se binární klasifikace
+
+ Charakterizace kvality klasifikace (obecné i binární)
+
+ Konstrukce klasifikátor z existujících dat  ucení
+ Lineární separabilita, obecná metoda jejího dosazení
+
+ Ohranicení klasifikace vci regresi a shlukování
+
+Internet a klasifikacní metody, 2. pednáska               2 (z 37)
+Klasifikace a klasifikátory
+
+ Klasifikace: tídní objekt na základ píznak
+
+     tídy: konecný pocet, nkdy nejednoznacná hranice
+     píznaky ­ data vsech typ: nominální (bydlist,...),
+
+       ordinální (vzdlání,...), reálná císla + vektory + pole
+
+ Abstraktní reprezentace klasifikace: zobrazení prostoru
+
+píznak do mnoziny tíd - klasifikátor, :   1, ... , 
+
+Internet a klasifikacní metody, 2. pednáska                    3 (z 37)
+Binární klasifikace
+
+ Pozitivní | negativní tída +|-, :  +, - ,  1, -1 ,  1, 0
+ Falesná pozitivita: -,  =1|negativita:+,  =-1
+
+     E-mail: FP = nedorucený ham, FN = nerozpoznaný spam
+
+ Kdyz je nedosazitelná nízká FP+FN soucasn,
+   pomze 3. tída mezi +,- (interpretace casto umlá)
+                          spam | karanténa | ham
+
+Internet a klasifikacní metody, 2. pednáska  4 (z 37)
+        Jak mit kvalitu klasifikace?
+
+ Potebujeme znát správnou píslusnost do tíd
+
+             Klasifikace  1 .1                   ...   .
+                            11
+    Správná   1 1.            ...                ...         1 matice
+      Tída        ...
+                                                 ...         ...
+               .
+                                                 ...          zámn
+
+  Nejsnazsí:  pesnost     =  pocet               soulad      =    1  =1  
+                                                                  
+                                                 
+
+    1-  pesnost  =  chybovost      =             pocet chyb  =  1    =1  
+                                                                
+                                                         
+
+    Internet a klasifikacní metody, 2. pednáska                          5 (z 37)
+  Rzná cena rzných chyb
+
+ Tradicní pesnost a chybovost pedpokládá, ze
+
+nám kazdá chyba vadí stejn. Nerealistické!
+
+ nedorucený ham vadí > nez nerozpoznaný spam
+ nerozpoznané napadení sít  nez falesný poplach
+
+ esení: cena , klasifikace  je-li  (tradicn  = 0,  = 1)
+
+  zobecnní  chybovosti  je  stední             hodnota  ceny:  1  ,=1   
+                                                               
+
+  Internet a klasifikacní metody, 2. pednáska                          6 (z 37)
+  Matice zámn binární klasifikace
+
+         Klasifikace + .+ - .-
+
+Správná  + +.  TP                            FN TP: pravá pozitivní
+  tída   - -.
+               FP                            TN TN: pravá negativní
+
+ Obvykle pouzíván pomr (ratio): TPr = TP , FPr = FP , ...
+                                             +.  -.
+
+ pro mnozinu klasifikátor (nap. parametrizovanou): kivka
+
+(FPr, TPr) se oznacuje ROC (receiver operating characteristic)
+
+Internet a klasifikacní metody, 2. pednáska                7 (z 37)
+          Míry kvality binární klasifikace
+
+ Pesnost (accuracy) AC = TP+TN
+
+                                                           
+
+ Správnost predikce (precision, predictive value) PR = TP
+
+                                                                                                        .+
+
+ Citlivost (sensitivity), vybavování (recall), detekcní pomr = TPr
+
+  Dalsí:  specificita  =  TNr  =             TN  =  1  -  FPr,  -míra  FM  =  2  PRTPr
+                                                                                 PR+TPr
+                                             -.
+
+  AUC - Area Under Curve (= pod ROC)
+
+  Stední hodnota ceny: 1                     ++TP++-FN + -+FP + --TN
+
+                                           
+
+  Internet a klasifikacní metody, 2. pednáska                                    9 (z 37)
+  Míry kvality ve spamových filtrech
+
+1. Bez zahrnutí ceny: vsechny práv uvedené
+
+2. S cenou -+: nedorucený ham, +-: nerozpoznaný spam
+
+  bereme ++ = -- = 0  stední hodnota ceny:                      -+FP++-FN
+
+                                                                          
+
+ TCR (total cost ratio) : cena nefiltrování (TP = FP = 0,
+
+  TN = TN + FP, FN = FN + TP) v pomru k cen filtrování
+
+  TCR  =  +- FN+TP   =   FN+TP                 ,  kde    =  -+
+          -+FP++-FN      FP+FN                              +-
+
+  Internet a klasifikacní metody, 2. pednáska                   10 (z 37)
+Ucení klasifikátoru
+
+ Klasifikátor vlastn není :   1, ... ,  , ale pesnji
+   :  ×   1, ... ,  ,   pípustné kombinace parametr
+
+     v kazdém okamziku pouzíváme  ,  s konkrétním 
+
+ Do volby    zabudováváme zkusenost a znalost
+
+o kvalit klasifikace  ,  pi pedchozích volbách   
+
+ analogie k ucení  pouzívaný termín
+
+Internet a klasifikacní metody, 2. pednáska  11 (z 37)
+Ucení spamových filtr
+
+ Zdroje znalostí o kvalit pedchozích klasifikací:
+
+1. On-line feedback uzivatele: manuáln oznací FN, FP
+
+ aktuální, ale na zacátku nedostatecné mnozství
+
+2. Veejn pístupná data, vtsinou 0 ham (Spamarchive:
+
+220000 mail) nebo bez header (GenSpam: 41000)
+
+ zídka vse (Spam track corpus: 92000, Spamassasin: 6000)
+
+Internet a klasifikacní metody, 2. pednáska           13 (z 37)
+Peucení trénovacími daty
+
+ Cíl volby    pi ucení: optimální klasifikace
+  pro vsechny mozné nové vstupy klasifikátoru
+
+ Ucicí algoritmus pouzívá jen pedem dodaná
+
+ucicí (trénovací) data 1, 1 , ... , , 
+
+  nebezpecí peucení: vstupy podobné dodaným ucicím
+
+klasifikuje pesn, nepodobné vstupy hodn nepesn    14 (z 37)
+
+     Internet a klasifikacní metody, 2. pednáska
+           Tvar hranice mezi tídami
+
+ Obvykle slozitý, casto vlivem zasumní dat
+
+Internet a klasifikacní metody, 2. pednáska  15 (z 37)
+           Tvar hranice mezi tídami
+
+ Obvykle slozitý, casto vlivem zasumní dat
+ Vtsina klasifikátor pedpokládá urcitý tvar hranice
+
+     nap. kvadratická plocha, po cástech lineární, ...
+     nejcastji se pedpokládá lineární plocha  nadrovina
+
+Internet a klasifikacní metody, 2. pednáska              17 (z 37)
+Tvar hranice mezi tídami
+
+ Obvykle slozitý, casto vlivem zasumní dat
+ Vtsina klasifikátor pedpokládá urcitý tvar hranice
+
+     nap. kvadratická plocha, po cástech lineární, ...
+     nejcastji se pedpokládá lineární plocha  nadrovina
+
+ Lineární separabilita:1  1,... a 2  1,... lze oddlit nadrovinou
+
+     u reálných dat vzácná, dosazitelná pedzpracováním
+
+Internet a klasifikacní metody, 2. pednáska              22 (z 37)
+    Cím dosáhnout lineární separability?
+
+ Transformací do prostoru vyssí dimenze
+
+     píklad: 1 = ,  : 2 + 2 <  , 2 = ,  : 2 + 2 > 
+
+Internet a klasifikacní metody, 2. pednáska  23 (z 37)
+Cím dosáhnout lineární separability?
+
+ Transformací do prostoru vyssí dimenze
+
+ píklad: 1 = ,  : 2 + 2 <  , 2 = ,  : 2 + 2 > 
+
+transformujeme na lineárn separabilní , ,  ,  = 2 + 2
+
+ Potebuji znát tvar hranice? (kruznice, elipsa,...)
+
+ NE: má-li konecná mnozina  dimenzi   # - 1, pak 1  ,
+1  ,  ( 2# - 2 mozností) oddlíme od 2 =   1 nadrovinou
+
+Internet a klasifikacní metody, 2. pednáska          25 (z 37)
+          A jak postupovat v praxi?
+
+ Mám data 1, ... , , dim   , nap.  = ,   
+
+ Vezmu jádro (kernel): zobrazení : 2  ,  ,  =  ,  ,
+
+           ,      , 
+              
+s kazdou                                     pozitivn semidefinitní
+           , 
+                ...  , 
+
+ nap.  ,  = - - 2,  ,  =  +  
+
+ Zavedu mnozinu  = 1, ... ,  , :   ,   =  , 
+
+ pak je dimenze  =  = # (nap. 10000)
+
+Internet a klasifikacní metody, 2. pednáska  26 (z 37)
+Trik pro konstrukci nadroviny
+
+ Konstruovat nadrovinu pro prostor dimenze  vyzaduje:
+
+  1. vektorový prostor  dimenze , 2. skalární soucin na 
+1.  = lineární obal  = =1  |1, ... ,   
+
+2. =1  , =1  = ,=1  ,  , tedy výpoctem
+
+pomocí ,  dimenze   zkonstruujeme nadrovinu
+
+v prostoru  vysoké dimenze  (kernel trick)
+
+Internet a klasifikacní metody, 2. pednáska  27 (z 37)
+       Odlisnost klasifikace od regrese
+
+ Regrese :  ×   , výstupy jsou reálná císla, lze
+   je uspoádat, mit jejich velikost / vzdálenost
+
+     Hlavní typy: lineární regrese, nelineární regrese.
+
+Internet a klasifikacní metody, 2. pednáska  28 (z 37)
+Odlisnost klasifikace od regrese
+
+ Regrese :  ×   , výstupy jsou reálná císla, lze
+
+je uspoádat, mit jejich velikost / vzdálenost
+
+ Hlavní typy: lineární regrese, nelineární regrese.
+
+ Klasifikace :  ×   1, ... ,  , výstupy jsou tídy,
+   nemají pirozené uspoádání ani velikost, vzdálenost
+
+ pechodná metoda - 1, ... ,  uspoádané: ordinální regrese
+
+Internet a klasifikacní metody, 2. pednáska            31 (z 37)
+     Odlisnost klasifikace od shlukování
+
+ Shlukování také pracuje s prostorem píznak
+  + tídami (= shluky) 1, ... , , ale ty neznáme pedem,
+  jsou výsledkem shlukování (,,unsupervised classification")
+
+Internet a klasifikacní metody, 2. pednáska  32 (z 37)
+Odlisnost klasifikace od shlukování
+
+ Shlukování také pracuje s prostorem píznak
+
++ tídami (= shluky) 1, ... , , ale ty neznáme pedem,
+jsou výsledkem shlukování (,,unsupervised classification")
+
+ Pi klasifikaci jsou tídy známy pedem
+
+     klasifikátor není výsledkem klasifikace, ale
+       meziproduktem pro klasifikaci budoucích vstup
+
+Internet a klasifikacní metody, 2. pednáska           35 (z 37)
+Regrese a shlukování pi doporucování
+
+ 2 dlezité role regrese v doporucovacích systémech:
+
+1. Hodnocení produkt uzivateli - reálné nebo ordinální
+
+2. Mení podobnosti mezi uzivateli nebo produkty
+
+ obojí pouzívané hlavn pi kolaborativním filtrování
+
+ Podobnost je základem pro shlukování  shluky
+
+v doporucovacích systémech: A. uzivatel, B. produkt
+
+Internet a klasifikacní metody, 2. pednáska             37 (z 37)
+

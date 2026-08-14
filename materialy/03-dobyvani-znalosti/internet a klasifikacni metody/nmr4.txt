@@ -1,0 +1,469 @@
+Neural networks, machine learning and randomness
+
+      Stochastic methods for
+          machine learning
+
+         Optional course for master students
+                      Martin Holea
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         File:Cc.logo.circle.svg
+              What will it be about?
+
+ Estimation of latent variables from observations
+ Monte Carlo Markov chain (MCMC) estimation method
+ Several particular algorithms for MCMC estimation
+ Efficient estimation by means of variational inference (VI)
+ Evidence lower bound in VI computations
+ VI with mean-field approximations and generative models
+       Observable and latent variables
+
+ A situation frequent in machine learning: a long
+   vector  = 1, ... ,  of observable variables is
+   related to a vector  = 1, ... ,  of latent variables
+Recalling the Bayesian approach
+
+ Latent variables  help govern the distribution of data
+
+· they relate to the observations through    , called likelihood
+
+ The dissimilarity of a distribution 2 to a distribution 1
+
+is most commonly measured with the relative entropy,
+
+aka Kullback-Leibler divergence, from 2 to 1:
+
+KL 1  2  =  log  1  d1 = -  log  2             d1
+                 2               1
+       Observable and latent variables
+
+ A situation frequent in machine learning: a long
+   vector  = 1, ... ,  of observable variables is
+   related to a vector  = 1, ... ,  of latent variables
+
+ Distributions: assumed prior   , observed likelihood   
+
+    · determine joint through the Bayes theorem:  ,  =     
+
+ We are interested in obtaining the posterior   
+      Monte Carlo estimation of   
+
+ Monte Carlo Markov chain (MCMC) method - constructs an
+   ergodic Markov chain with the equilibrium distribution   
+         Principle of MCMC methods
+
+ Monte Carlo methods: all methods based on sampling
+    · MCMC methods: sampling is from a Markov chain
+
+ Most commonly employed is the Metropolis-Hastings algorithm
+ Standard MCMC sweeps over all data every iteration
+
+    · disadvantage if the dataset is large
+    Metropolis-Hastings (MH) algorithm
+
+ Generates a sequence 0, 1, ... ,  on a set ,
+   the distribution of which converges with 
+   in probability to a desired distribution  on 
+
+    · MCMC:  is the Markov chain equilibrium distribution
+
+ Requires: , 0, an unnormalized version  of the density of ,
+   the density  of a distribution on 2 - proposal distribution
+    Pseudocode of the MH algorithm
+
+1.    + 1
+
+2. ~  -1
+
+3.   = min  1,    -1|
+                 -1  |-1
+
+4.  = Bernoulli 
+
+5. if  =1 then  = 
+6. else  = -1
+      Convergence of the MH algorithm
+
+ The convergence of the distribution of 0, 1, ... ,  to 
+   is a consequence of the central limit theorem
+
+ For suitable functions , there exists  > 0 such that
+
+                                            
+
+                            1
+                            -      d
+
+                                          =0
+
+   has asymptotically the normal distribution  0, 2
+  MH algorithm in a Bayesian context
+
+ For the likelihoods    =1, define the average likelihood
+
+                1                   1                1
+
+  =   1,..., =   log    =  log     =  log   
+                =1                       =1
+
+  Due to    =        =   ,  ,  we   can  choose
+                          
+
+    =  ,  =      =   exp  
+
+ Then the 3. step of the MH algorithm reads:
+
+   = min    1,          -1|    exp            -  -1
+                 -1     |-1
+      Monte Carlo estimation of   
+
+ Monte Carlo Markov chain (MCMC) method - constructs an
+   ergodic Markov chain with the ergodic distribution   
+
+ Draw initial  0 ~  and perform transitions   ~    -1 , 
+ Can produce arbitrarily precises estimate of   
+ But only after many iterations, and their number
+
+   for a given precision is actually unknown
+      Monte Carlo Tree Search (MCTS)
+
+ Monte Carlo method for Markov decision processes (MDPs)
+
+    · originally in games, later planning, scheduling, combinatorial optimization
+
+ MDPs model environments with sequential decisions to make
+   to receive rewards after certain sequences of actions
+            Markov decision process
+
+ MDP is represented as the tuple , , , 
+
+    ·  - set of possible states, a.k.a. state space
+    ·   - set of actions available in   
+    ·  ,  - transition probability that the action  entails   
+    ·   - immediate reward for reaching state  by action 
+
+ Deterministic case:  ,  = 1  in state , leads to 
+      Monte Carlo Tree Search (MCTS)
+
+ Monte Carlo method for Markov decision processes (MDPs)
+
+    · originally in games, later planning, scheduling, combinatorial optimization
+
+ MDPs model environments with sequential decisions to make
+   to receive rewards after certain sequences of actions
+
+ MCTS can be stopped anytime and returns  = arg max  ,
+
+                                                                                                  
+
+    ·  ,  - average reward for action  in state 
+         Phases of an MCTS iteration
+
+1. Selection ­ searching the tree portion already in the
+     memory, from the root to a current leaf
+
+2. Expansion ­ adding  1 children below the leaf selected before
+3. Simulation of the problem ­ the MC ( random) phase
+4. Backpropagation ­ propagates the scores back along the path
+
+    from the last visited leaf to the root
+Selection policy
+
+ Purpose of selection policy: balance exploration and exploitation
+
+of insufficiently tested actions  of best already found
+
+ Most common ­ upper confidence bound for trees (UCT ):
+
+first, all actions are checked, then actions  fulfilling:
+
+ = arg max                        ln    ,  > 0
+                   ,  +   , 
+                
+
+·   = # of state  visits,  ,  = # of  samplings in 
+                  Alternatives to UCT
+
+ Upper confidence bound 1-tuned: uses  ,  variance 
+
+ = arg max          ln    1                       2ln  
+                   ,  +   ,  min 4 ,  +  , 
+                
+
+ Rapid value action estimation (RAVE): uses an additional
+
+score RAVE ,  , updated for each action in phase 3
+
+ = arg max                   
+                  3  +  RAVE ,  + 1 - 3  +   , 
+               
+
+·  - a constant called RAVE equivalence constant
+            Variational inference (VI)
+
+ A popular alternative to MCMC estimation
+
+    · can not produce arbitrarily precise estimates
+    · but computes them much faster, especially for
+
+        complicated    and / or for large datasets
+
+ Variational inference is optimization-based
+
+    · whereas MCMC is based on simulation
+    Optimization in variational inference
+
+ Variational inference consists in solving the optimization problem
+                  = arg min KL       
+
+                                                | 
+
+    · : set of easily computable distributions, chosen in advance
+
+ The minimized relative entropy can be reformulated
+ KL        =  | log    -  | log    =
+          =  | log    -  | log  ,  + log  
+             Evidence lower bound
+
+ For observable , call   its evidence, and define
+          ELBO    =  | log  ,  - log   
+
+ This definition has the following consequence:
+        log   = KL        + ELBO    
+
+1. Minimal KL        corresponds to maximal ELBO
+2. log    ELBO    , with equality only if    =   
+   Mean-field approximation
+
+ The set  contains only distributions of  = 1, ... ,  that
+   are, conditioned on , mutually independent:    = =1  
+
+ Each latent variable  has its own distribution   
+
+chosen according to the character of 
+
+·  continuous     is often chosen Gaussian
+
+·   categorical      is categorical    1, ... ,   , e.g.,   =  1
+                                                               
+       Example: Gaussian mixtures
+
+ Consider observable variables 1, ... ,  with distributions that
+
+are mixtures of  univariate unit-variance Gaussian distributions
+
+       ~ , 1 ,  = 1, ... , ,   1, ... ,  ,   
+
+·  = 1, ... ,  are the means of the  Gaussians, ~ 0, 2
+
+·   =  1, ... ,   are categorial random variables, ~  1 ,..., 1
+
+                                                       
+
+ As latent variables for  = 1, ... ,  can serve  = , 
+Properties of Gaussian mixtures
+
+ Joint distribution of ,  = , ,  is   =1     , 
+
+ The evidence includes computing  likelihoods   , 
+
+                     
+
+  =          , d =          , d
+
+=1                   =1
+
+ Mean-field approximation parametrized with , 2 =1,  = 1:
+
+         
+
+ ,   =   ; , 2   ; 
+
+     =1  =1
+
+· the distribution  ; , 2 is chosen Gaussian,  , 2
+                ELBO for Gaussian mixtures
+
+ELBO    = ELBO ,2, , = 1,..., , 2 = 12,...,2 ,  = 1,...,
+
+ Because    depends on the hyperparameters , 2 and 
+
+  ELBO , 2,  =  | log  ,  -  | log    =
+
+                
+
+=   | log  ;,2 +  |   , ;,2, + log  ;
+
+=1              =1
+                                    
+
+  -   | log   ; , 2 -   | log   ; 
+
+  =1              =1
+           Combining VI with MCMC
+
+ Markov chain variational inference (MCVI): every   
+
+   is a Markov chain 0, 1, ... ,  , fulfilling  =  and
+
+                                                                           
+
+              0, ... -1 ,  =  0     , -1
+
+                                                                         =1
+
+ This can be generalized, replacing   , -1 with a
+
+   specific   , -1 for  = 1, ... , , forming a Markov chain
+
+                                                                          
+
+             0, ... -1 ,  =  0     , -1
+
+                                                                         =1
+                 Computing MCVI
+
+ Forward distributions   , -1 are approximated with
+
+   backward distributions  -1 ,  , forming a Markov chain
+
+                                                                   
+
+                   0, ... -1 ,  =   -1 , 
+
+                                                                 =1
+ELBO extension for MCVI
+
+ ELBO    has the following lower bound:
+
+ELBO     ELBO    - KL  0,... -1 ,   0, ... -1 , 
+
+ Combination with the original log    ELBO    yields:
+
+log   ELBOMCVI =  | log  ,  - log    -
+
+                                         
+
+- 0, ... -1 ,  log  0     , -1 - log   -1 ,  =
+
+                 =1                      =1
+
+                      ,                  -1 , 
+                 log  0   +  log          , -1
+=  0, ... -1 ,                
+
+                          =1
+    ELBOMCVI estimation algorithm
+
+ Input: , number of iterations , distributions , ,  + inverse 
+ Initialize: sample 0~ 0  and put 0 = log 0, - log 0 
+ Iterate from  = 1 to  = , performing:
+
+    1. Sample the transition from  - 1 to : ~  , -1
+
+2.  Update  the  lower  bound    =  -1  +  log    ,  -1|,
+                                                 -1,  |,-1
+
+ Output:  - a -iteration unbiased estimate of ELBOMCVI
+                 Computing MCVI
+
+ Forward distributions   , -1 are approximated with
+
+   backward distributions  -1 ,  , forming a Markov chain
+
+                                                                   
+
+                   0, ... -1 ,  =   -1 , 
+
+                                                                 =1
+
+ If  denotes the parameters of  0,...-1 , , 0,...-1 , ,
+   then computing MCVI consists in finding the maximum
+
+   of ELBOMCVI w.r.t. , typically by means of ELBOMCVI
+           VI with generative models
+
+ Consider  ,  =      , where    is parametrized
+    by  and governs a generative model
+
+ Then    is sometimes called recognition model
+
+    · typically, it is computed by a MLP
+    · assumes that      are normal distributions
+                Deep Kalman filter
+
+ Consider the -dimensional observed variables 1, ... ,  ,
+ -dimensional latent 1, ... ,  , -dimensional actions 1, ... , -1
+
+ Deep Kalman filter:  = 1,..., , = 1,..., , = 1,...,-1 if
+
+ 1~ 0,  , ~  -1, -1,  ,  -1, -1,  , ~  
+    · : probability distribution, ,,: parameters, : duration from  -1 to 
+
+    · , ,  are usually implemented by neural networks
+     Relation to a classical Kalman filter
+
+ A classical Kalman filter is governed by 2 equations:
+
+    1.  = -1 + -1 +  with ~ 0,  , a state-transition matrix
+            ×, and a control input model   ×
+
+    2.  =  +  with ~ 0,  , and an observation matrix   ×
+
+ This is actually a deep Kalman filter with
+                   = -1 + -1,  = ,  = 
+           VI with deep Kalman filter
+
+ Consider a VI   ,  =   ,  with a parameter 
+   approximating a deep Kalman filter posterior   , 
+           VI with deep Kalman filter
+
+ Consider a VI   ,  =   ,  with a parameter 
+   approximating a deep Kalman filter posterior   , 
+
+ Moreover, consider only   ,  that can be factorized
+   with respect to the sequence  = 1, ... ,  as follows:
+
+                                                                    
+
+               ,  =  1 ,    -1 , , 
+
+                                                                  =2
+Lower bound for log   
+
+ For a general   ,  , not necessarily factorized
+
+log    = log   ,   d = log    ,     d =
+
+= log     ,     ,       d 
+                    , 
+
+     ,   log    ,       d =
+                 , 
+
+=   ,  log   ,  - KL   ,     
+Case of factorized   , 
+
+ Assume the following conditional independence between :
+
+    
+
+  ,  =    ,  =  1 1    , -1
+
+=1  =2
+
+ Then the lower band 1. term turns to   , log  , =
+
+                                                                 
+
+=   ,  log  1 1 +   1 1 log   , -1
+
+                                                    =2
+
+ And the 2. term turns to KL   ,      =
+
+                                                
+
+= KL  1 ,   1 +  -1 , KL   -1,,    -1,-1
+
+                                               =2
+

@@ -1,0 +1,331 @@
+   Internet a klasifikacní metody, 5. pednáska
+
+Kdy je klasifikace srozumitelná
+               uzivateli?
+
+   volitelný pedmt pro magisterské studium
+                    Martin Holea
+O cem to bude?
+
+ Srozumitelné vyjádení klasifikace pomocí jazyka logiky
+
+     konstrukce pravidel booleovské a fuzzy logiky
+     observacní pravidla a zpsoby jejich konstrukce
+
+ Získávání klasifikacních pravidel z klasifikacních strom
+
+     ucení klasifikacních strom
+     proezávání klasifikacních strom
+
+Internet a klasifikacní metody, 5. pednáska  3 (z 42)
+Jak udlat klasifikátor srozumitelný?
+
+ Pipomenutí: klasifikátor je zobrazení :  1 ,..., 1,-1 1,0 ,...
+
+p.   = arg max                    1 -21 - -1 - , =   1pi    , +  0
+                                 2 
+                        =1,...,                                 
+
+                                                    -1 pi   , + < 0
+
+                                                                
+
+Internet a klasifikacní metody, 5. pednáska         4 (z 42)
+Jak udlat klasifikátor srozumitelný?
+
+ Pipomenutí: klasifikátor je zobrazení :  1 ,..., 1,-1 1,0 ,...
+
+p.   = arg max                    1 -21 - -1 - =   1pi    , +  0
+                                 2 
+                        =1,...,                               
+
+                                                  -1 pi   , + < 0
+
+                                                              
+
+ matematický koncept  málo srozumitelný bznému uzivateli
+
+ Co kdyz :   1,0 popisuje pravdivost njaké    nebo    ?
+
+ pak stací znát implikaci      nebo ekvivalenci     
+
+ pravidlo logiky : srozumitelnjsí nez matematická formule
+
+Internet a klasifikacní metody, 5. pednáska       5 (z 42)
+Booleovská a fuzzy pravidla
+
+ Booleovská ekvivalence: pravdivost    = 1 pi  =  ,
+
+implikace:    = 1 pi  = 0 nebo pi  =  = 1
+
+ typicky pouzíváno pi  = 1, pak    splývá s   
+
+ Fuzzy implikace:    = sup :      , - -norma,
+
+fuzzy ekvivalence:    =       
+
+ dlezité pípady:    (    = 1),  =  (    = 1)
+
+Internet a klasifikacní metody, 5. pednáska  6 (z 42)
+Evoluce klasifikacních pravidel
+
+ Evolucní algoritmy - informatická aplikace biologického vývoje
+   druh: výraznjsí posilování zádoucích vlastností
+
+     nejbznjsí typ - genetické algoritmy: kízení + mutace
+        genomu - etzec kódující hodnoty sledovaných promnných
+
+ Pouzití na klasifikacní pravidla: posilování AC, PR, TPr, TNr, AUC,
+   pokud ,  jsou konjunkce  malý pocet atom
+
+Internet a klasifikacní metody, 5. pednáska  7 (z 42)
+Typy populací pravidel
+
+ Vsechny evolucní algoritmy jsou populacní: paralelní
+
+pro populaci = soubor problémov závislých jedinc
+
+ Michiganský pístup: jedinec = pravidlo, hledáme populaci
+
+ jednoduchý, ale zbytecn dostáváme podobná pravidla
+
+ Pittsburghský pístup: jedinec = hledaný soubor pravidel
+
+ evoluce populace soubor: slozitá + výpocetn nárocná
+
+Internet a klasifikacní metody, 5. pednáska               8 (z 42)
+Pouzití pravidel pi filtraci spamu
+
+ Hlavn filtrace na základ metainformací, nap.
+
+     bylo manipulováno s odesilatelem | datem odeslání
+     hlavní cást tla zprávy je grafika
+
+ Pi kombinování booleovskou disjunkcí: vysoká FP, nap.
+
+ nap. grafické tlo zprávy  automaticky spam
+
+  Lukasiewiczova fuzzy disjunkce pravidel    se stejným 
+
+Internet a klasifikacní metody, 5. pednáska             9 (z 42)
+Pravidla a doporucovací systémy
+
+ Pi kolaborativním filtrování podle chování uzivatele
+
+     uzivatel prosel posloupnost stránek S1,S2,...,Sn  doporuc objekt O
+     obecnji: uzivatel prosel S1,S2,...,Sn  nabídni dalsí stránku Sd
+
+ Jak získávána? - Statistickou analýzou clickstreamových dat.
+
+     odhady pravdpodobností, testování platnosti model (hypotéz)
+     z výsledk analýzy konstruujeme pravidla heuristicky
+
+Internet a klasifikacní metody, 5. pednáska  11 (z 42)
+    Pouzití pravidel pi detekci malware
+
+ Dvod pouzívání: podezelé programy nakonec vyhodnocuje
+   analytik ­ chce rozumt, proc jsou podezelé
+
+ Pravidel obvykle hodn  odstraování redundantních nepesných
+ Typicky hierarchická klasifikace: 2 vrstvy pravidel
+
+    1. pesná pro normál, citlivá pro malware
+
+Internet a klasifikacní metody, 5. pednáska  12 (z 42)
+          Pipomínka: binární míry kvality
+
+ Pesnost (accuracy) AC = TP+TN
+
+                                                           
+
+ Správnost predikce (precision, predictive value) PR = TP
+
+                                                                                                        .+
+
+ Citlivost (sensitivity), vybavování (recall), detekcní pomr = TPr
+
+  Dalsí:  specificita  =  TNr  =             TN  =  1  -  FPr,  -míra  FM  =  2  PRTPr
+                                                                                 PR+TPr
+                                             -.
+
+  AUC - Area Under Curve (= pod ROC)
+
+  Stední hodnota ceny: 1                     ++TP++-FN + -+FP + --TN
+
+                                           
+
+  Internet a klasifikacní metody, 5. pednáska                                    13 (z 42)
+Pouzití pravidel pi detekci malware
+
+ Dvod pouzívání: podezelé programy nakonec vyhodnocuje
+
+analytik ­ chce rozumt, proc jsou podezelé
+
+ Pravidel obvykle hodn  odstraování redundantních nepesných
+
+ Typicky hierarchická klasifikace: 2 vrstvy pravidel
+
+1. pesná pro normál, citlivá pro malware
+2. pro rodiny malware, setídná podle pesnost
+
+Internet a klasifikacní metody, 5. pednáska           14 (z 42)
+Observacní kalkul pro pravidla z dat
+
+ Booleovská logika popisuje data jen 2 zpsoby:
+
+     ,,vsechny objekty splují ()   , resp.   ": nastává zídka
+     ,,existuje objekt splující ()   , resp.   ": slabá informace
+
+ Pro uzitecnjsí popis dat byl navrzen (1978)
+   observacní kalkul: má pravidla ,  - zobecnný kvantifikátor
+
+      zachycuje výsledek njaké analýzy dat odpovídajících , 
+
+Internet a klasifikacní metody, 5. pednáska  16 (z 42)
+  Bzné typy observacních pravidel
+
+1. Základem jsou odhady pravdpodobnosti, pípadn podmínné
+
+ nejbznjsí: asociacní pravidla , s konfidencí   (0,1), podporou   (0,1)
+
+   ,   =  1  pi       &+++                         (   je  nestranný  odhad     |  )
+                 +
+                                                    +
+
+                                                                              #  ¬
+
+2. Základem jsou testy hypotéz (0: nulová, 1: alternativa)   b
+
+ nap.  ,  = 1 kdyz Fisherv jednostranný test na ¬ c d
+
+hladin   0,0.5 zamítá 0: nezávislost ,  proti 1: pozitivní závislost , 
+
+  Internet a klasifikacní metody, 5. pednáska                         17 (z 42)
+      Klasifikacní strom a pravidla z nj
+
+ Binární strom, uzly testují booleovské podmínky,
+   vstup podle výsledku propadne doleva | doprava
+
+     podmínky dlí vstupy kolmo na osy
+
+Internet a klasifikacní metody, 5. pednáska  18 (z 42)
+Klasifikacní strom a pravidla z nj
+
+ Binární strom, uzly testují booleovské podmínky,       21 (z 42)
+   vstup podle výsledku propadne doleva | doprava
+
+     podmínky dlí vstupy kolmo na osy
+
+ Pravidla: pro listy - odpovídají jediné tíd
+     konjunkce podmínek na cest koen  list
+
+     cesty do list téze tídy - disjunkce
+
+           Internet a klasifikacní metody, 5. pednáska
+          Ucení klasifikacních strom
+
+ Dlením v uzlu zmníme rozdlení dat
+
+Internet a klasifikacní metody, 5. pednáska  23 (z 42)
+
+          Ucení klasifikacních strom
+
+ Dlením v uzlu zmníme rozdlení dat
+
+     princip ucení: optimalizovat dlení vci promnné
+        + podprostorm spojitých vstup | podmnozinám diskrétních vstup
+
+Internet a klasifikacní metody, 5. pednáska  26 (z 42)
+
+Ucení klasifikacních strom
+
+ Dlením v uzlu zmníme rozdlení dat
+
+     princip ucení: optimalizovat dlení vci promnné
+        + podprostorm spojitých vstup | podmnozinám diskrétních vstup
+
+ Optimum jaké funkce hledáme? 2 nejcastji pouzívané:
+
+     informacní zisk  Parent;LChild,RChild =  -  + 
+     Giniho index necistoty 1 - = 1   2
+
+Internet a klasifikacní metody, 5. pednáska  28 (z 42)
+    Dalsí vlastnosti klasifikacních strom
+
+ Klasifikace nových vstup: testováním uzlových podmínek
+
+     v listech: rozdlení nových = rozdlení ucicích
+
+Internet a klasifikacní metody, 5. pednáska  29 (z 42)
+    Dalsí vlastnosti klasifikacních strom
+
+ Klasifikace nových vstup: testováním uzlových podmínek
+
+     v listech: rozdlení nových = rozdlení ucicích
+
+ Proezávání (klestní) stromu - mze snízit peucení
+
+Internet a klasifikacní metody, 5. pednáska  31 (z 42)
+    Dalsí vlastnosti klasifikacních strom
+
+ Klasifikace nových vstup: testováním uzlových podmínek
+
+     v listech: rozdlení nových = rozdlení ucicích
+
+ Proezávání (klestní) stromu - mze snízit peucení
+ Zobecnné dlení vstup - místo nadroviny kolmé
+
+    na osu: obecná nadrovina | kvadratická plocha
+
+Internet a klasifikacní metody, 5. pednáska  33 (z 42)
+Dalsí vlastnosti klasifikacních strom
+
+ Klasifikace nových vstup: testováním uzlových podmínek
+
+     v listech: rozdlení nových = rozdlení ucicích
+
+ Proezávání (klestní) stromu - mze snízit peucení
+ Zobecnné dlení vstup - místo nadroviny kolmé
+
+    na osu: obecná nadrovina | kvadratická plocha
+
+     snizuje srozumitelnost pravidel získaných konjunkcí podmínek
+
+Internet a klasifikacní metody, 5. pednáska  37 (z 42)
+    Klasifikacní stromy pi doporucování
+
+1. obvyklé pouzití: klasifikace obrázk pro doporucování
+
+     na základ vysokoúrovových charakteristik (barva pozadí,
+
+         odlisnost popedí  pozadí,...) - získány pedzpracováním pixel
+
+Internet a klasifikacní metody, 5. pednáska  38 (z 42)
+Klasifikacní stromy pi doporucování
+
+1. obvyklé pouzití: klasifikace obrázk pro doporucování
+
+     na základ vysokoúrovových charakteristik (barva pozadí,
+
+         odlisnost popedí  pozadí,...) - získány pedzpracováním pixel
+2. obvyklé pouzití: predikce zákazníkova akceptování doporucení
+
+     dá zbozí do kosíku?, dokoncí nákup?
+     pomocí clickstreamových dat z procházených stránek
+
+Internet a klasifikacní metody, 5. pednáska  40 (z 42)
+Dalsí aplikace klasifikacních strom
+
+ Filtrace spamu - hlavn na základ obsahu
+
+     vstupy: pravdpodobnosti nkterých slov + speciálních znak (!, ;,...),
+       grafické vlastnosti (pocet konsekutivních velkých písmen)
+
+ Detekce malware - hlavn na základ statických
+
+vlastností, tj. struktury + instrukcí program
+
+ vstupy: n-gramy kódující profil programu
+
+Internet a klasifikacní metody, 5. pednáska    42 (z 42)
+

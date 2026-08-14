@@ -82,11 +82,15 @@ come from the slides.
 The slides cover: data analysis and clustering, association rules, decision trees and
 ensembles, SVM with classifier evaluation, Bayesian models and ELM (NDBI023); basic concepts,
 influence modelling, homophily and affiliation, link analysis, and complex networks with
-community detection and link prediction (NAIL116). The most conspicuous gaps are the
-\textbf{KDD process and methodologies} (Chapter~\ref{sec:paradigmata}) and
-\textbf{characteristic and discriminant rules} (Chapter~\ref{sec:pravidla}): the topic names
-them explicitly, but \emph{neither course covers them} --- they are therefore treated here
-following Han--Kamber.
+community detection and link prediction (NAIL116). The most conspicuous gap is the
+\textbf{KDD process and methodologies} (Chapter~\ref{sec:paradigmata}). The chapter on
+\textbf{characteristic and discriminant rules} (Chapter~\ref{sec:pravidla}) is built
+primarily on the slides of the course \emph{Internet and classification methods}
+(Holeňa, lectures \texttt{ikm1}--\texttt{ikm6}, above all \texttt{ikm5}); only the
+delimitation of the two kinds of rules with the t-weight/d-weight measures follows
+Han--Kamber there. The slides \texttt{nmr1}--\texttt{nmr5} from the same folder belong
+to a~different course and do not cover the subject matter of the chapter (see the note
+at its start).
 \end{poznbox}
 \end{minipage}
 \end{center}
@@ -728,6 +732,7 @@ conversely discard an attribute that is useful only \emph{in combination} with a
 (typically an XOR relation).
 
 \subsubsection{Criteria based on contingency tables}
+\label{ssec:kontingencni}
 
 The relation of an input attribute $A$ (values $v_1,\dots,v_R$) and a target attribute $C$
 (classes $v_1,\dots,v_S$) is described by a contingency table with the frequencies $a_{kl}$ of
@@ -817,6 +822,7 @@ attribute). The same bias is addressed by the information gain ratio in C4.5
 (Chapter~\ref{sec:metody}).
 
 \subsection{Relations between attributes: regression and correlation}
+\label{ssec:regrese}
 
 Whereas contingency tables describe the relation of \emph{categorical} attributes, for numeric
 ones regression and correlation analysis is used. \emph{Correlation analysis} answers the
@@ -1900,6 +1906,7 @@ and interpretable coefficients are required --- e.g.\ in link prediction in soci
 (Chapter~\ref{sec:sna}).
 
 \subsubsection{Discriminant analysis}
+\label{ssec:da}
 
 \begin{defbox}[Discriminant analysis]
 \emph{Classification of patterns into known classes}: we search for the dependence of the nominal
@@ -2518,152 +2525,125 @@ DBSCAN & arbitrary & follows from the data & \emph{detects them} & parameters $\
 \label{sec:pravidla}
 %=====================================================================
 
-\mimo{} The whole chapter is beyond the slides of both courses --- but the topic names it
-explicitly and it is standard material, treated here following Han--Kamber. For the connection
-with generalisation in OLAP see Chapter~\ref{sec:paradigmata}.
+The topic sentence asks for \emph{methods for the extraction of characteristic
+discriminant rules and measuring their interestingness}. The chapter is built primarily
+on the slides of the course \emph{Internet and classification methods} (Holeňa), above
+all its 5th lecture \emph{When is a~classification comprehensible to the user?}: why
+rules (Section~\ref{ssec:srozumitelnost}), extraction of rules from classification trees
+(Section~\ref{ssec:extrakce}) and by evolution (Section~\ref{ssec:evoluce}),
+observational rules (Section~\ref{ssec:observacni}), the statistical view
+(Section~\ref{ssec:stat-pohled}), measuring interestingness
+(Section~\ref{ssec:zajimavost}) and applications
+(Section~\ref{ssec:aplikace-pravidel}). The notions of a~\emph{characteristic} and
+a~\emph{discriminant} rule with the t-weight and d-weight measures
+(Section~\ref{ssec:char-diskr}) are added following Han--Kamber, because the topic names
+them explicitly.
 
-\subsection{Characterisation vs.\ discrimination}
+\begin{poznbox}[Sources of the chapter]
+\small
+Of the six lectures of the course \emph{Internet and classification methods}
+(\texttt{ikm1}--\texttt{ikm6}), the key one for this chapter is \texttt{ikm5}
+(comprehensibility of classification: rules, their extraction and the observational
+calculus); the chapter further uses \texttt{ikm1} (applications: spam, recommending,
+network threats), \texttt{ikm2} (quality measures of binary classification) and
+\texttt{ikm3} (discriminant analysis). The material of \texttt{ikm4} (SVM: margin
+maximisation, support vectors, the kernel trick) and \texttt{ikm6} (teams of
+classifiers: bagging, boosting, random forests) coincides with
+Chapter~\ref{sec:metody}, and the confusion matrix and ROC/AUC of \texttt{ikm2} with
+Chapter~\ref{sec:reprez} --- they are treated there. The slides
+\texttt{nmr1}--\texttt{nmr5} from the same folder belong to a~different (optional)
+course by Holeňa and do not cover the subject matter of this chapter. Only
+Section~\ref{ssec:char-diskr} follows Han--Kamber; regression and discriminant analysis
+are also backed by the NDBI023 slides (\emph{Data Analysis}).
+\end{poznbox}
 
-Descriptive data mining answers two related but different questions:
+\subsection{Rules as a comprehensible form of classification}
+\label{ssec:srozumitelnost}
+
+Mathematically, a~classifier is a~mapping $f\colon X\to\{C_1,\dots,C_m\}$ from the
+feature space into a~finite set of classes; more precisely $f\colon
+X\times\Theta\to\{C_1,\dots,C_m\}$, where learning means choosing the parameters
+$\theta\in\Theta$ according to the experience with the quality of classification under
+previous choices (Section~\ref{ssec:supervised}). The concrete learned prescription ---
+say, the sign of $\langle w,x\rangle+b$ for an SVM or the composed nonlinear function of
+a~neural network --- is, however, hardly comprehensible to an ordinary user. If a~binary
+classifier $f\colon X\to\{1,0\}$ describes the truth of some implication
+$\varphi\Rightarrow\psi$ or equivalence $\varphi\Leftrightarrow\psi$ between properties
+of the object, it suffices to know this \emph{rule} instead of the whole $f$: a~rule of
+logic is more comprehensible than a~mathematical formula.
+
+\begin{defbox}[Boolean and fuzzy rules]
+\textbf{Boolean} rules work with truth values $t(\varphi)\in\{0,1\}$: the
+\emph{equivalence} $\varphi\Leftrightarrow\psi$ is true iff $t(\varphi)=t(\psi)$; the
+\emph{implication} $\varphi\Rightarrow\psi$ is true iff $t(\varphi)=0$ or
+$t(\varphi)=t(\psi)=1$. Rules are typically applied to objects on which the antecedent
+holds ($t(\varphi)=1$) --- there the implication coincides with the equivalence.
+
+\textbf{Fuzzy} rules admit degrees of truth $t(\varphi)\in[0,1]$. The fuzzy implication
+is the \emph{residuum} of a~t-norm $T$:
+\[ t(\varphi\Rightarrow\psi)=\sup\{\,c\in[0,1]: T(t(\varphi),c)\le t(\psi)\,\}, \]
+and the fuzzy equivalence is $t(\varphi\Leftrightarrow\psi)
+=T\big(t(\varphi\Rightarrow\psi),\,t(\psi\Rightarrow\varphi)\big)$. Important special
+cases: if $t(\varphi)\le t(\psi)$, then $t(\varphi\Rightarrow\psi)=1$; if
+$t(\varphi)=t(\psi)$, then $t(\varphi\Leftrightarrow\psi)=1$.
+\end{defbox}
+
+Comprehensibility is the reason why rules are used wherever the result of the
+classification is judged by a~human: a~malware analyst wants to know \emph{why}
+a~program is suspicious, and recommender systems increase the user's trust in
+a~recommendation by explaining it (Section~\ref{ssec:aplikace-pravidel}).
+
+\subsection{Characteristic and discriminant rules: t-weight and d-weight}
+\label{ssec:char-diskr}
+
+\mimo{} This section follows Han--Kamber --- the topic names both kinds of rules
+explicitly.
 
 \begin{defbox}[Characterisation vs.\ discrimination]
-\textbf{Data characterisation} --- a summary of the general properties of the \emph{target class}.
-It answers the question: \uv{What does a typical client with a mortgage look like?} The result
-consists of \emph{characteristic rules}.
-
-\textbf{Data discrimination} --- a comparison of the general properties of the target class with
-those of one or more \emph{contrasting classes}. It answers the question: \uv{How does a client
-with a mortgage differ from a client without one?} The result consists of \emph{discriminant
-rules}.
-
-The difference is fundamental: a property can be \emph{typical} of the target class (a high
-proportion inside the class) and still have no \emph{discriminating} power, because it is equally
-typical of the contrasting class.
+\textbf{Data characterisation} --- a~summary of the general properties of the
+\emph{target class} (\uv{what does a~typical client with a~mortgage look like?}); the
+result consists of \emph{characteristic rules}. \textbf{Data discrimination} ---
+a~comparison of the target class with one or more \emph{contrasting classes} (\uv{how
+does it differ from a~client without a~mortgage?}); the result consists of
+\emph{discriminant rules}. A~property can be \emph{typical} of the target class and
+still have no \emph{discriminating} power --- if it is equally typical of the
+contrasting class.
 \end{defbox}
 
-Both tasks are solved by \emph{attribute-oriented induction} (AOI), proposed by Han, Cai and
-Cercone (1991). An alternative is the \emph{data cube} approach known from OLAP: the \emph{roll-up}
-operation corresponds to generalisation, \emph{drill-down} to specialisation. AOI is more flexible
-(it handles attributes without a pre-materialised cube), OLAP is faster (pre-computed aggregations).
+Rules of this kind are obtained by \emph{generalising the data}:
+\emph{attribute-oriented induction} (AOI) replaces attribute values by more general
+ones following concept hierarchies (city $\to$ region, date of birth $\to$ age
+category), removes many-valued attributes without a~hierarchy (name, telephone) and
+merges identical generalised tuples with a~\texttt{count}; the same is done by the
+\emph{roll-up} / \emph{drill-down} operations over an OLAP cube
+(Chapter~\ref{sec:paradigmata}). Over the generalised tuples, two weights are defined:
 
-\subsection{Concept hierarchies}
+\begin{defbox}[t-weight, d-weight and quantitative rules]
+Let $q_1,\dots,q_N$ be the generalised tuples of the target class.
 
-\begin{defbox}[Concept hierarchy]
-A \emph{concept hierarchy} of an attribute $A$ is a partial ordering of its values from the most
-concrete (the leaves) to the most general (the root \texttt{ANY}). Types:
-\begin{itemize}
-\item \emph{schema hierarchy} --- given by the structure of the data: street $\prec$ city $\prec$
-      region $\prec$ country;
-\item \emph{set-grouping} --- an explicit grouping of values: \{20--29\} $\prec$ \emph{young};
-\item \emph{operation-derived} --- derived by a computation: e-mail address $\to$ domain;
-\item \emph{rule-based} --- defined by rules over several attributes.
-\end{itemize}
-The hierarchy is supplied by an expert, or generated automatically (by discretisation for numeric
-attributes, and by the number of distinct values for categorical ones --- an attribute with more
-distinct values is usually at a lower level of the hierarchy).
+The \textbf{typicality} (t-weight) of the tuple $q_a$:
+\[ t\text{-}\mathrm{weight}(q_a)=\frac{\mathrm{count}(q_a)}
+   {\sum_{i=1}^{N}\mathrm{count}(q_i)}\in[0,1], \]
+i.e.\ the fraction of the target-class objects covered by $q_a$ (the sum over all tuples
+is 100~\%). It appears in the \textbf{quantitative characteristic rule} (a~necessary
+condition --- an implication \emph{from} the class):
+\[ \forall X\ \ \mathrm{target}(X)\Rightarrow \mathrm{cond}_1(X)\,[t{:}\,w_1]\ \vee\
+   \cdots\ \vee\ \mathrm{cond}_N(X)\,[t{:}\,w_N]. \]
+
+The \textbf{discriminating weight} (d-weight) of the tuple $q_a$ with respect to the
+target class $C_t$ and the contrasting classes $C_1,\dots,C_m$:
+\[ d\text{-}\mathrm{weight}(q_a)=\frac{\mathrm{count}(q_a\in C_t)}
+   {\mathrm{count}(q_a\in C_t)+\sum_{j=1}^{m}\mathrm{count}(q_a\in C_j)}\in[0,1], \]
+i.e.\ the fraction of the objects covered by $q_a$ that belong to the target class. It
+appears in the \textbf{quantitative discriminant rule} (a~sufficient condition --- an
+implication \emph{into} the class):
+\[ \forall X\ \ \mathrm{target}(X)\Leftarrow \mathrm{cond}(X)\,[d{:}\,w]. \]
+The \emph{quantitative description rule} combines both ($\Leftrightarrow$,
+$[t{:}\,w,\ d{:}\,w']$).
 \end{defbox}
 
-\subsection{Attribute-oriented induction (AOI)}
-
-\begin{defbox}[The AOI algorithm]
-\textbf{Input:} the database, a query delimiting the target class, a list of attributes,
-generalisation thresholds $T_i$ for the individual attributes and an overall threshold $T$ for the
-size of the resulting relation.
-
-\begin{algorithmic}[1]
-\State \textbf{data collection:} select by the query the set of objects of the target class (the
-       \emph{initial working relation})
-\State add to each object the attribute \texttt{count} $=1$
-\For{each attribute $A_i$}
-   \If{$A_i$ has many distinct values and \emph{no} concept hierarchy exists for it}
-      \State \textbf{attribute removal}
-   \ElsIf{$A_i$ has many distinct values but a hierarchy exists}
-      \State \textbf{attribute generalisation}: replace the values by their ancestors one level up,
-      \State until the number of distinct values is $\le T_i$
-   \EndIf
-\EndFor
-\State \textbf{aggregation:} merge identical generalised objects and add up their \texttt{count}
-\While{the number of rows of the resulting relation $>T$}
-   \State generalise further the attribute whose generalisation reduces the number of rows the most
-\EndWhile
-\State \textbf{presentation:} display the \emph{prime relation} as a table, a cross-tabulation, a
-       chart,
-\State or convert it into quantitative rules
-\end{algorithmic}
-\end{defbox}
-
-\textbf{The two basic generalisation operations:}
-\begin{itemize}
-\item \textbf{Attribute removal} --- if an attribute has too many distinct values and (a)~no
-      generalisation operator exists for it, or (b)~its higher levels are expressed by other
-      attributes, the attribute is removed from the relation. Examples: \emph{name},
-      \emph{telephone}, \emph{personal identification number}.
-\item \textbf{Attribute generalisation} --- if a generalisation operator (a concept hierarchy)
-      exists, the values are replaced by values at a higher level. Examples: \emph{date of birth}
-      $\to$ \emph{age} $\to$ \emph{age category}; \emph{city} $\to$ \emph{region} $\to$
-      \emph{macro-region}.
-\end{itemize}
-
-\textbf{Control of the generalisation} is exercised through two thresholds: the
-\emph{attribute generalisation threshold} $T_i$ --- the maximum permitted number of distinct values
-of the attribute (typically 2--8); and the \emph{relation size threshold} $T$ --- the maximum
-number of rows of the resulting prime relation (typically 10--30). Too much generalisation leads to
-trivial results (\uv{all clients are humans}), too little to an unreadable table. A suitable level
-is found interactively (drill-down / roll-up).
-
-The complexity is $O(n\,a)$ for $n$ objects and $a$ attributes (one pass over the data plus
-aggregation), provided the generalisation is realised through a hash table of generalised records
---- AOI is therefore \emph{linear} in the number of objects, which is essential for large
-databases.
-
-\subsection{The t-weight and d-weight measures}
-
-\begin{defbox}[t-weight and d-weight]
-Let the prime relation contain the \emph{generalised tuples} $q_1,\dots,q_N$.
-
-The \textbf{typicality} (t-weight) of the tuple $q_a$ in the target class:
-\[ t\text{-}\mathrm{weight}(q_a)=\frac{\mathrm{count}(q_a)}{\sum_{i=1}^{N}\mathrm{count}(q_i)}
-   \in[0,1], \]
-i.e.\ the fraction of the target-class objects that the tuple $q_a$ covers. The sum of the
-t-weights over all tuples of the prime relation is 1 (100~\%). It serves for
-\emph{characteristic} rules.
-
-The \textbf{discriminating weight} (d-weight) of the tuple $q_a$ with respect to the target class
-$C_{target}$ and the contrasting classes $C_1,\dots,C_m$:
-\[ d\text{-}\mathrm{weight}(q_a)=\frac{\mathrm{count}(q_a\in C_{target})}
-   {\sum_{j=1}^{m}\mathrm{count}(q_a\in C_j)+\mathrm{count}(q_a\in C_{target})}\in[0,1], \]
-i.e.\ the fraction of the objects covered by $q_a$ that belong to the target class. It serves for
-\emph{discriminant} rules. A high d-weight ($\to 1$) means that the tuple strongly distinguishes
-the target class; a value close to the class proportion means no discriminating ability at all.
-\end{defbox}
-
-\begin{defbox}[Quantitative characteristic, discriminant and description rule]
-A \textbf{quantitative characteristic rule} (a necessary condition --- an implication \emph{from}
-the class):
-\[ \forall X\ \ \mathrm{target\_class}(X)\Rightarrow \mathrm{cond}_1(X)\,[t{:}\,w_1]\ \vee\
-   \cdots\ \vee\ \mathrm{cond}_N(X)\,[t{:}\,w_N] \]
-Read: if $X$ belongs to the target class, then it satisfies $\mathrm{cond}_1$ with typicality
-$w_1$, or $\mathrm{cond}_2$ with typicality $w_2$, \dots
-
-A \textbf{quantitative discriminant rule} (a sufficient condition --- an implication \emph{into}
-the class):
-\[ \forall X\ \ \mathrm{target\_class}(X)\Leftarrow \mathrm{cond}(X)\,[d{:}\,w] \]
-Read: if $X$ satisfies the condition $\mathrm{cond}$, it belongs to the target class with
-probability $w$.
-
-A \textbf{quantitative description rule} combines both (a necessary and sufficient condition):
-\[ \forall X\ \ \mathrm{target\_class}(X)\Leftrightarrow \mathrm{cond}_1(X)\,
-   [t{:}\,w_1,\ d{:}\,w_1']\ \vee\ \cdots\ \vee\ \mathrm{cond}_N(X)\,[t{:}\,w_N,\ d{:}\,w_N'] \]
-\end{defbox}
-
-\begin{defbox}[Example --- characterisation and discrimination of bank clients]
-\textbf{Target class:} clients with a mortgage (200 persons). \textbf{Contrasting class:} clients
-without a mortgage (800 persons).
-
-After AOI (\emph{name}, \emph{personal identification number} and \emph{telephone} removed;
-\emph{date of birth} $\to$ \emph{age category}, \emph{salary} $\to$ \emph{income category},
-\emph{municipality} $\to$ \emph{region} generalised) the prime relation is:
-
+\begin{defbox}[Example --- clients with a mortgage (200) vs.\ without one (800)]
+The prime relation after generalisation:
 \begin{center}
 \small
 \begin{tabular}{@{}lllrrrr@{}}
@@ -2675,100 +2655,297 @@ Age & Income & Region & \multicolumn{2}{c}{count} & $t$-weight & $d$-weight \\
 30--40 & middle & Prague & 50 & 150 & 25~\% & 25~\% \\
 40--50 & high & outside Prague & 40 & 160 & 20~\% & 20~\% \\
 20--30 & low & outside Prague & 20 & 480 & 10~\% & 4~\% \\
-\midrule
-\multicolumn{3}{@{}l}{Total} & 200 & 800 & 100~\% & \\
 \bottomrule
 \end{tabular}
 \end{center}
+The computation for the first tuple: $t=90/200=45\,\%$, $d=90/(90+10)=90\,\%$.
 
-\textbf{The computation.} The $t\text{-}\mathrm{weight}$ of the first tuple is $90/200=45\,\%$; its
-$d\text{-}\mathrm{weight}$ is $90/(90+10)=90\,\%$. For the second tuple $t=50/200=25\,\%$,
-$d=50/(50+150)=25\,\%$. For the fourth $t=20/200=10\,\%$, $d=20/(20+480)=4\,\%$.
-
-\textbf{The quantitative characteristic rule:}
-\begin{align*}
-\forall X\ \ \text{mortgage}(X)\Rightarrow\ & \big(\text{age}(X){=}\text{30--40}\wedge
-  \text{income}(X){=}\text{high}\wedge\text{region}(X){=}\text{Prague}\big)\ [t{:}\,45\,\%]\\
-\vee\ & \big(\text{age}(X){=}\text{30--40}\wedge\text{income}(X){=}\text{middle}\wedge
-  \text{region}(X){=}\text{Prague}\big)\ [t{:}\,25\,\%]\ \vee\ \cdots
-\end{align*}
-
-\textbf{The quantitative discriminant rule:}
-\[ \forall X\ \ \text{mortgage}(X)\Leftarrow \big(\text{age}(X){=}\text{30--40}\wedge
-   \text{income}(X){=}\text{high}\wedge\text{region}(X){=}\text{Prague}\big)\ [d{:}\,90\,\%] \]
-
-\textbf{Interpreting the difference.} The last row shows why both measures are needed: the profile
-\uv{20--30, low income, outside Prague} covers 10~\% of the clients with a mortgage (a
-non-negligible typicality), but its d-weight is a mere 4~\% --- markedly \emph{less} than the
-a-priori proportion of the target class, $200/1000=20\,\%$. This profile therefore rather
-\emph{excludes} a mortgage. For the second row the d-weight is only slightly \emph{above} the
-a-priori proportion (25~\% vs.\ 20~\%), so the discriminating power is negligible, and for the
-third row the d-weight \emph{equals} the a-priori proportion exactly (20~\%), so the discriminating
-power is \textbf{zero} --- the profile says nothing at all about the membership in the target
-class, even though it covers a fifth of the clients with a mortgage.
+\textbf{The classic trap:} the 3rd row has $t=20\,\%$, but its $d=40/200=20\,\%$ is
+\emph{exactly} the a-priori proportion of the target class ($200/1000=20\,\%$) --- zero
+discriminating power; the 4th row with $d=4\,\%$, far below the a-priori proportion,
+rather \emph{excludes} a~mortgage. High typicality thus does not by itself mean
+discriminating power: the d-weight must always be compared with the a-priori class
+proportion.
 \end{defbox}
 
-\subsection{Measuring the interestingness of rules}
+\subsection{Extraction of rules from classification trees}
+\label{ssec:extrakce}
 
-The interestingness of the derived rules is judged similarly to association rules
-(Section~\ref{ssec:ar}), with an emphasis on the following measures:
+The most direct method of rule extraction starts from a~classification tree: the nodes
+of a~binary tree test Boolean conditions (typically $x_i\le c$, i.e.\ cuts perpendicular
+to the coordinate axes), the input falls left or right according to the outcome of the
+test, and every leaf corresponds to a~single class.
+
+\begin{defbox}[Rules from a tree]
+\begin{itemize}
+\item To every root $\to$ leaf path corresponds a~\emph{conjunction} of the conditions
+      tested along the path; the class of the leaf provides the consequent:
+      $\big(\mathrm{cond}_1\wedge\cdots\wedge\mathrm{cond}_k\big)\Rightarrow C_j$.
+\item Paths to leaves of the \emph{same} class are joined by a~\emph{disjunction} ---
+      the class is the union of the rectangular regions delimited by the individual
+      paths.
+\end{itemize}
+\end{defbox}
+
+\textbf{Learning the tree} is an optimisation of the split in a~node with respect to
+the choice of the variable and the splitting point (subspaces of continuous inputs,
+subsets of discrete ones); the two most frequently optimised criteria are the
+\emph{information gain}
+$IG(\text{parent};L,R)=H_{\text{parent}}-\big(\tfrac{n_L}{n}H_L+\tfrac{n_R}{n}H_R\big)$
+and the \emph{Gini impurity index} $1-\sum_j p_j^2$; in detail (TDIDT, ID3, C4.5, CART)
+see Section~\ref{ssec:supervised}. New inputs are classified by passing the node tests;
+in the leaves, the distribution of the new inputs is assumed to match the distribution
+of the training data.
+
+\textbf{Pruning} reduces overfitting and at the same time \emph{shortens} the extracted
+rules (cf.\ rule post-pruning in C4.5, Section~\ref{ssec:supervised}).
+\textbf{Generalised splits} --- a~general hyperplane or a~quadratic surface instead of
+an axis-perpendicular cut --- improve the approximation of the class boundary but
+reduce the comprehensibility of the rules obtained as conjunctions of conditions.
+
+\subsection{Evolutionary construction of rules}
+\label{ssec:evoluce}
+
+Rules can also be constructed by a~genetic algorithm --- the computer-science
+application of the biological evolution of species: crossover and mutation of a~string
+(genome) encoding the rule reinforce the desired properties, here the classification
+quality measures (accuracy AC, precision PR, TPr, TNr or AUC ---
+Section~\ref{ssec:zajimavost}). The approach is suitable when both the antecedent and
+the consequent are conjunctions of a~small number of atoms. All evolutionary algorithms
+are \emph{population-based}; according to what constitutes an individual of the
+population, two approaches are distinguished:
 
 \begin{center}
 \small
-\begin{tabular}{@{}lp{11.0cm}@{}}
+\begin{tabular}{@{}lp{5.2cm}p{6.8cm}@{}}
 \toprule
-\textbf{Measure} & \textbf{Meaning} \\
+\textbf{Approach} & \textbf{Individual} & \textbf{Properties} \\
 \midrule
-$t$-weight & the typicality of the profile inside the target class; a rule with a low $t$-weight
-  describes a marginal phenomenon \\
-$d$-weight & the discriminating power of the profile; \emph{interesting} rules are those with a
-  $d$-weight markedly higher (or lower) than the a-priori class proportion \\
-Lift & $\frac{d\text{-weight}}{P(C_{target})}$ --- how many times the profile increases the odds
-  of the target class \\
-Coverage & the fraction of all objects covered by the rule; low coverage $\Rightarrow$
-  statistically unreliable \\
-$\chi^2$ & the statistical significance of the relation between the profile and the class \\
-Information gain & the reduction of the class entropy given the profile \\
-Simplicity & the length of the rule (the number of conditions), the number of rules; Occam's
-  razor \\
-Unexpectedness & a contradiction with the user's model of the world (a subjective measure) \\
-Actionability & one can act on its basis (a subjective measure) \\
+Michigan & a~single rule; the whole population is sought & simple, but the population
+  needlessly converges to similar rules \\
+Pittsburgh & the entire sought set of rules & the result is directly a~consistent set;
+  the evolution of a~population of sets is more complex and computationally demanding \\
 \bottomrule
 \end{tabular}
 \end{center}
 
-\textbf{In practice:} a rule is interesting if it is at the same time (a)~\emph{comprehensible},
-(b)~\emph{valid} on new data with high reliability, (c)~\emph{potentially useful} and
-(d)~\emph{novel}. The first three are objectively measurable, the last requires knowledge of the
-user.
+\subsection{Observational rules: confidence, support and hypothesis tests}
+\label{ssec:observacni}
 
-\textbf{The classic trap:} a rule with a high $t$-weight but a $d$-weight equal to the a-priori
-class proportion is no discovery, however impressive it may look (\uv{80~\% of the clients with a
-mortgage have a bank account} --- but so do 80~\% of the clients without one).
+Boolean logic can say something about data in only two ways: \uv{\emph{all} objects
+satisfy $\varphi\Rightarrow\psi$} (rarely the case), or \uv{\emph{there exists} an
+object satisfying $\varphi\wedge\psi$} (weak information). For a~more useful
+description of data, the \emph{observational calculus} was proposed (Hájek--Havránek
+1978, the basis of the Czech GUHA method).
+
+\begin{defbox}[Observational rules and generalised quantifiers]
+An \emph{observational rule} has the form $\varphi\sim\psi$, where $\sim$ is
+a~\emph{generalised quantifier}: the truth of the rule captures the result of
+a~statistical analysis of the data corresponding to $\varphi$ and $\psi$, summarised by
+a~four-fold table --- $a$ objects satisfy $\varphi\wedge\psi$, $b$ objects
+$\varphi\wedge\neg\psi$, $c$ objects $\neg\varphi\wedge\psi$, $d$ objects
+$\neg\varphi\wedge\neg\psi$, in total $n=a+b+c+d$.
+
+Two common types of observational rules:
+\begin{itemize}
+\item \textbf{based on estimates of probabilities} (possibly conditional) --- the most
+      common are association rules (Section~\ref{ssec:ar}) with confidence
+      $c_0\in(0,1)$ and support $s_0\in(0,1)$:
+      \[ (\varphi\sim\psi)=1\quad\text{iff}\quad
+         \frac{a}{a+b}\ge c_0\ \wedge\ \frac{a}{n}\ge s_0, \]
+      where $\tfrac{a}{a+b}$ is an unbiased estimate of $P(\psi\mid\varphi)$;
+\item \textbf{based on hypothesis tests} ($H_0$ the null, $H_1$ the alternative) ---
+      e.g.\ $(\varphi\sim\psi)=1$ iff the one-sided Fisher test
+      (Section~\ref{ssec:kontingencni}) at the level $\alpha\in(0;0.5\rangle$ rejects
+      $H_0$: independence of $\varphi$ and $\psi$ in favour of $H_1$: positive
+      dependence of $\varphi$ and $\psi$.
+\end{itemize}
+\end{defbox}
+
+\subsection{The statistical view: regression and discriminant analysis}
+\label{ssec:stat-pohled}
+
+A~characteristic and discriminant description of classes need not take the form of
+logical rules --- classical statistics solves the same two tasks by \emph{regression}
+and \emph{discriminant analysis}. The context: classification methods are divided
+according to whether they primarily \emph{seek} the boundary between the classes
+(neural networks, decision trees, SVM --- modern, computationally demanding), or do
+\emph{not} seek it and start from the experience of similar cases or from the class
+probabilities ($k$-NN, Bayesian classification, discriminant analysis --- traditional,
+computationally cheap).
+
+\textbf{Regression analysis} determines the relationship of a~variable $Y$ to one or
+more variables $X_1,\dots,X_n$: linear regression of one variable by the least squares
+method, multi-dimensional linear regression, and logistic regression for
+a~categorical output --- in detail in Sections~\ref{ssec:regrese}
+and~\ref{ssec:logreg}. A~regression model is the quantitative counterpart of
+a~\emph{characteristic} description: it says which output values are typical for the
+given inputs.
+
+\textbf{Discriminant analysis} (DA) classifies patterns into \emph{known} classes but
+does not seek the boundary: to every class $C_j$ it \emph{fits} a~probability
+distribution from a~pre-chosen family of densities
+$F=\{f(\cdot\mid\theta):\theta\in\Theta\}$ --- in Fisher's original DA the multivariate
+normal distribution. Learning is the maximum likelihood estimation of the parameters
+$\theta_j$ from the training data of the class $C_j$; a~new pattern $x$ is classified
+by $\arg\max_j p_j\,f(x\mid\theta_j)$, where $p_j$ is the prior probability of the
+class.
+
+\begin{defbox}[Linear vs.\ quadratic discriminant analysis]
+\textbf{LDA}: the covariance matrix $\Sigma$ is given in advance and shared by all
+classes; the discriminant function is
+\[ g_j(x)=\ln p_j-\tfrac12\,(x-\mu_j)^{\!\top}\Sigma^{-1}(x-\mu_j), \]
+only $\mu_j$ is estimated ($q$ parameters per class for $x\in\mathbb{R}^q$); the set
+$\{x: g_j(x)=g_k(x)\}$ between two classes is a~\emph{hyperplane}.
+
+\textbf{QDA}: in addition, each class has its own covariance matrix $\Sigma_j$ (another
+$\tfrac{q(q+1)}{2}$ parameters per class); the boundary between the classes is
+a~\emph{quadratic surface}.
+\end{defbox}
+
+For two classes, instead of $g_1,g_2$ one can seek a~single function $g=g_1-g_2$ and
+classify by its \emph{sign} --- the condition $g(x)>0$ is the quantitative counterpart
+of a~\emph{discriminant rule} (a~sufficient condition for membership of the first
+class). For the derivation of the linear and quadratic discriminant functions from
+normal distributions see Section~\ref{ssec:da}.
+
+\begin{center}
+\small
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Task} & \textbf{Rule form} & \textbf{Statistical form} \\
+\midrule
+characterisation & characteristic rule ($\Rightarrow$, t-weight) & regression analysis \\
+discrimination & discriminant rule ($\Leftarrow$, d-weight) & discriminant analysis \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Measuring the interestingness of rules}
+\label{ssec:zajimavost}
+
+Extraction typically yields more rules than the user can bear --- the rules have to be
+measured, sorted and filtered. A~rule $\varphi\Rightarrow\psi$ is itself a~binary
+classifier, so the quality measures of binary classification apply to it
+(Section~\ref{ssec:eval}): accuracy AC, precision (predictive value) PR, sensitivity
+(recall) TPr, specificity TNr $=1-{}$FPr, the F-measure
+$FM=\frac{2\,PR\cdot TPr}{PR+TPr}$ and AUC. For observational rules they correspond to
+the \emph{confidence} $\tfrac{a}{a+b}$ (the precision of the rule) and the
+\emph{support} $\tfrac{a}{n}$; for characteristic and discriminant rules, the d-weight
+is the precision of the rule and the t-weight its recall with respect to the target
+class.
+
+The roles of the measures in working with rules:
+\begin{itemize}
+\item the \emph{fitness} in the evolutionary construction of rules
+      (Section~\ref{ssec:evoluce});
+\item \emph{sorting}: the rules for malware families are ordered by precision
+      (Section~\ref{ssec:aplikace-pravidel});
+\item \emph{filtering}: removal of redundant and imprecise rules;
+\item \emph{thresholding}: an observational rule is \uv{interesting} if its confidence
+      and support exceed the chosen thresholds, or if the test rejects independence
+      (Section~\ref{ssec:observacni}) --- every choice of a~measure and a~threshold is
+      a~different generalised quantifier, and hence a~different set of rules found in
+      the data.
+\end{itemize}
+
+\textbf{Different costs of different errors.} Traditional accuracy and error rate
+assume that every error matters equally --- unrealistically: an undelivered ham
+matters more than an unrecognised spam, an unrecognised network intrusion more than
+a~false alarm. The generalisation of the error rate is the \emph{mean cost}
+$\frac1n\sum_{i,j}c(i,j)\,n_{ij}$, where $c(i,j)$ is the cost of classifying class $i$
+as $j$ (the traditional error rate: $c(i,i)=0$, otherwise 1); the interestingness of
+a~rule is then measured by the cost of the errors it commits.
+
+\mimoq{subjective measures following Han--Kamber} Besides the objective measures,
+\emph{subjective} ones decide: comprehensibility (the whole point of rule extraction),
+simplicity (the length of the conjunction, the number of rules), unexpectedness
+(a~contradiction with the user's expectation) and actionability (one can act on the
+rule). In practice: a~rule is interesting if it is at the same time comprehensible,
+valid on new data, potentially useful and novel.
+
+\subsection{Applications: spam, malware and network threats, recommending}
+\label{ssec:aplikace-pravidel}
+
+The three internet applications of classification methods from the 1st lecture of the
+course illustrate the role of rules:
+
+\textbf{Spam filtering} is a~classification \{combinations of feature values\} $\to$
+\{spam, ham\}: features from the content of the message (words, combinations of words,
+images) and from the meta-information (domain, encoding, a~forged sender address;
+anomalies of the SMTP session; the same message sent to many recipients). If low FP and
+FN are not attainable simultaneously, a~third class between spam and ham helps ---
+quarantine/uncertainty (e.g.\ SpamBayes). Rule-based filters work mainly with the
+meta-information; a~plain Boolean disjunction of the rules leads to high false
+positivity (\uv{graphical body of the message $\Rightarrow$ automatically spam}), the
+Łukasiewicz fuzzy disjunction of rules with the same consequent works better. And FP
+(an undelivered ham) matters more than FN.
+
+\textbf{Malware and network threat detection.} Suspicious programs are in the end
+evaluated by an analyst --- who wants to understand \emph{why} they are suspicious,
+hence rules. Many of them arise, so redundant and imprecise ones are removed; typical
+is a~hierarchical classification with two layers of rules (the first precise for
+normal software and sensitive for malware, the second sorting malware families,
+ordered by precision). For network threats (R2L, U2R, DoS and probe attacks), the
+counterpart of rules are the \emph{signatures} of known attacks --- patterns with
+a~certain (one hundred per cent) conclusion.
+
+\textbf{Recommender systems.} In collaborative filtering by the user's behaviour, rules
+of the form \uv{the user visited the pages $S_1,\dots,S_n$ $\Rightarrow$ recommend the
+object $O$ (more generally: offer the next page $S_d$)} are used. They are obtained by
+a~statistical analysis of clickstream data --- probability estimates and tests of the
+validity of models (hypotheses), from whose results the rules are constructed
+heuristically; they are thus observational rules of both types from
+Section~\ref{ssec:observacni}. Recommender systems often explain \emph{why} they
+recommend an object --- the explanation increases the comprehensibility of the
+recommendation for the user.
 
 \subsection{Summary for the examination}
 
 \begin{itemize}
-\item \textbf{Characterisation} describes the target class; \textbf{discrimination} compares it
-      with contrasting classes. The difference: typicality $\neq$ discriminating power.
-\item \textbf{AOI}: data collection by a query $\to$ adding \texttt{count} $\to$ \emph{attribute
-      removal} (many values, no hierarchy) or \emph{attribute generalisation} (following the
-      concept hierarchy) $\to$ aggregation of identical tuples $\to$ further generalisation until
-      the relation is smaller than the threshold $T$ $\to$ presentation. Complexity $O(na)$ ---
-      linear.
-\item \textbf{Concept hierarchies}: schema, set-grouping, operation-derived, rule-based.
-\item \textbf{t-weight} $=\frac{\mathrm{count}(q_a)}{\sum_i\mathrm{count}(q_i)}$ --- the typicality
-      inside the target class, the sum over all tuples being 100~\%; for \emph{characteristic}
-      rules ($\Rightarrow$, a necessary condition).
-\item \textbf{d-weight} $=\frac{\mathrm{count}(q_a\in C_{target})}{\sum_j\mathrm{count}
-      (q_a\in C_j)}$ --- the discriminating power; for \emph{discriminant} rules ($\Leftarrow$, a
-      sufficient condition). A description rule combines both ($\Leftrightarrow$).
-\item Be able to compute both weights from a table and to explain why a high t-weight does not imply
-      a high d-weight (the comparison with the \emph{a-priori} class proportion).
-\item \textbf{Interestingness}: objective (t/d-weight, lift, coverage, $\chi^2$, information gain,
-      simplicity) vs.\ subjective (unexpectedness, actionability).
+\item \textbf{Why rules}: a~classifier $f\colon X\to\{C_1,\dots,C_m\}$ is
+      a~mathematical prescription, hardly comprehensible; a~rule of logic
+      ($\varphi\Rightarrow\psi$, $\varphi\Leftrightarrow\psi$) is more comprehensible.
+      The Boolean implication is true at $t(\varphi)=0$ or $t(\varphi)=t(\psi)=1$; the
+      fuzzy implication $=$ the residuum of a~t-norm, $t(\varphi)\le
+      t(\psi)\Rightarrow$ the implication is true to degree 1.
+\item \textbf{Characteristic vs.\ discriminant rule} (Han--Kamber): characterisation
+      describes the target class ($\Rightarrow$, a~necessary condition,
+      \textbf{t-weight} $=\frac{\mathrm{count}(q_a)}{\sum_i\mathrm{count}(q_i)}$);
+      discrimination distinguishes it from the contrasting ones ($\Leftarrow$,
+      a~sufficient condition, \textbf{d-weight} $=$ the fraction of the covered objects
+      belonging to the target class). Be able to compute both from a~table; always
+      compare the d-weight with the \emph{a-priori} class proportion.
+\item \textbf{Extraction from a tree}: a~root $\to$ leaf path $=$ a~conjunction of
+      conditions, paths to leaves of the same class $=$ a~disjunction; learning by
+      splitting according to the information gain or the Gini index; pruning shortens
+      the rules; generalised (oblique) splits reduce comprehensibility.
+\item \textbf{Evolution of rules}: a~genetic algorithm, fitness $=$ AC/PR/TPr/TNr/AUC;
+      the Michigan approach (individual $=$ a~rule) vs.\ the Pittsburgh approach
+      (individual $=$ a~set of rules).
+\item \textbf{Observational rules} (Hájek--Havránek 1978, GUHA): $\varphi\sim\psi$ with
+      a~generalised quantifier over a~four-fold table $(a,b,c,d)$; (1)~probability
+      estimates --- association rules, $\frac{a}{a+b}\ge c_0$ (confidence) $\wedge$
+      $\frac{a}{n}\ge s_0$ (support); (2)~hypothesis tests --- the one-sided Fisher
+      test rejects independence in favour of positive dependence.
+\item \textbf{Statistically}: regression analysis $=$ a~characteristic description of
+      the relationship of $Y$ to $X_1,\dots,X_n$ (least squares, multi-dimensional,
+      logistic); discriminant analysis $=$ classification into known classes by
+      fitting distributions: ML estimation of $\theta_j$, prediction
+      $\arg\max_j p_j f(x\mid\theta_j)$; \textbf{LDA} (shared $\Sigma$, hyperplane
+      boundary, $q$ parameters) vs.\ \textbf{QDA} (per-class $\Sigma_j$, quadratic
+      boundary, $+\frac{q(q+1)}{2}$ parameters); two classes $\to$ the sign of
+      $g=g_1-g_2$.
+\item \textbf{Interestingness}: a~rule $=$ a~binary classifier $\to$ AC, PR
+      ($=$ confidence), TPr (recall), TNr, F-measure, AUC; roles: fitness, sorting
+      (malware by precision), filtering out redundant rules, thresholding (confidence
+      and support $=$ a~generalised quantifier); different costs of errors (the mean
+      cost). Subjectively: comprehensibility, simplicity, unexpectedness,
+      actionability.
+\item \textbf{Applications}: spam (meta-information, the 3rd class quarantine, the
+      Łukasiewicz disjunction against FP), malware (a~two-layer hierarchy of rules),
+      network threats (signatures), recommending (rules from clickstream data).
 \end{itemize}
-
 %=====================================================================
 \newpage
 \section{Representation, evaluation and visualisation of knowledge}
@@ -4205,8 +4382,8 @@ polynomially solvable in $O(n^2\log n)$ (Karger's randomised minimum cut). Arbit
 The minimum cut often returns an imbalanced partition (one set being a singleton) $\Rightarrow$ we
 change the objective function to consider the \emph{community size}. For a partition
 $\pi=\{C_1,\dots,C_k\}$:
-\[ \mathrm{RatioCut}(\pi)=\sum_{i=1}^{k}\frac{\mathrm{cut}(C_i,\bar C_i)}{|C_i|},\qquad
-   \mathrm{NCut}(\pi)=\sum_{i=1}^{k}\frac{\mathrm{cut}(C_i,\bar C_i)}{\mathrm{vol}(C_i)}, \]
+\[ \mathrm{RatioCut}(\pi)=\frac{1}{k}\sum_{i=1}^{k}\frac{\mathrm{cut}(C_i,\bar C_i)}{|C_i|},\qquad
+   \mathrm{NCut}(\pi)=\frac{1}{k}\sum_{i=1}^{k}\frac{\mathrm{cut}(C_i,\bar C_i)}{\mathrm{vol}(C_i)}, \]
 where $|C_i|$ is the number of nodes in $C_i$, $\mathrm{vol}(C_i)$ the sum of degrees in $C_i$ and
 $\mathrm{cut}(A,B)=\sum_{i\in A,\,j\in B}a_{ij}$. \textbf{Both measures prefer a balanced partition.}
 \end{defbox}
@@ -4444,7 +4621,8 @@ to be the bridge between two communities.
 
 \textbf{Agglomerative hierarchical clustering} --- e.g.\ Louvain, $O(n\log n)$: initialise each node as
 a community; merge communities successively into larger ones following a particular criterion (e.g.\
-based on the \emph{modularity increase}).
+based on the \emph{modularity increase}). Another example is \emph{Walktrap} --- it runs short random
+walks and uses their results to merge separate communities in a bottom-up manner.
 \end{defbox}
 
 \subsection{Link prediction}
@@ -4657,7 +4835,8 @@ or link-correlated content is leveraged for predicting links.
       spectral clustering via the graph Laplacian with the \emph{smallest} eigenvalues; modularity
       maximisation via the modularity matrix with the \emph{largest} --- all unified as the matrix
       factorisation $X\approx S\Sigma S^{\!\top}$, which requires the number of communities to be
-      given), \emph{hierarchy-centric} (divisive $=$ Girvan--Newman, agglomerative $=$ Louvain).
+      given), \emph{hierarchy-centric} (divisive $=$ Girvan--Newman, agglomerative $=$ Louvain,
+      Walktrap).
 \item \textbf{Link prediction}: content-based measures (homophily) vs.\ structural ones (triadic
       closure; stronger). Neighbourhood-based measures: \emph{common neighbours} $|S_i\cap S_j|$ (does
       not account for degrees), \emph{Jaccard} $\frac{|S_i\cap S_j|}{|S_i\cup S_j|}$ (normalises the

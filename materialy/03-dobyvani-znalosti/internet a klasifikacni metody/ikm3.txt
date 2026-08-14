@@ -1,0 +1,314 @@
+Internet a klasifikacní metody, 3. pednáska
+
+          Hlavní typy
+    klasifikacních metod
+
+volitelný pedmt pro magisterské studium
+                Martin Holea
+O cem to bude?
+
+ Základní rozdlení klasifikacních metod do skupin
+
+ Klasifikacní metody nehledající hranici mezi tídami
+
+· klasifikace na základ  nejblizsích soused
+
+· odhadování pravdpodobnosti tíd: bayesovská klasifikace
+
+· prokládání normálních rozdlení: diskriminacní analýza
+
+ Píklad metody hledající hranice: neuronové sít
+
+Internet a klasifikacní metody, 3. pednáska              2 (z 37)
+Rozdlení klasifikacních metod
+
+ Kriterium: hledá metoda hranici mezi tídami?
+
+1. Primárn nehledají hranici, ale zkusenost podobných
+
+    pípad | pravdpodobnost tíd (bodové odhady, rozdlení)
+
+     tradicní metody (pedpocítacové), výpocetn nepílis nárocné
+
+2. Primárn hledají hranici: moderní, výpocetn nárocné
+
+     nap. neuronové sít, rozhodovací stromy, SVM, ...
+
+Internet a klasifikacní metody, 3. pednáska            3 (z 37)
+     Klasifikace dle podobných pípad
+
+ Nový objekt klasifikován jako tída nejcastjsí
+   u  objekt nejpodobnjsích podle zvolené podobnosti
+
+      podmnozina objekt pouzitých pro ucení (= zapamatování)
+
+       metoda  nejblizsích soused ( nearest neigbours, -NN)
+
+Internet a klasifikacní metody, 3. pednáska  4 (z 37)
+Klasifikace dle podobných pípad
+
+ Nový objekt klasifikován jako tída nejcastjsí
+
+u  objekt nejpodobnjsích podle zvolené podobnosti
+
+ podmnozina objekt pouzitých pro ucení (= zapamatování)
+
+  metoda  nejblizsích soused ( nearest neigbours, -NN)
+
+ Casto silná závislost na volb 
+
+ volba  z konecného poctu mozností: krosvalidací
+
+Internet a klasifikacní metody, 3. pednáska        7 (z 37)
+           Podobnosti pouzívané u -NN
+
+    Casto  podobnost    a   ~    1  vzdálenost, obvykle  , =  -
+                                 ,
+
+1.    =    1,...,           =    = 1   ,         1,+ ( = +:  max       )
+
+                                                                
+
+    Internet a klasifikacní metody, 3. pednáska              8 (z 37)
+p=1:
+citi-block
+vzdálenost
+           Podobnosti pouzívané u -NN
+
+    Casto  podobnost    a   ~    1  vzdálenost, obvykle  , =  -
+                                 ,
+
+1.    =    1,...,           =    = 1   ,         1,+ ( = +:  max           )
+
+                                                                
+
+2. Mahalanobisova: náhodné vektory ,,Var = Var =  pozitivndefinitní
+
+     , = -1  -  - -1  -  =  -  -1  - 
+
+                                                                        2
+
+    Hammingova   ,      =#          , Jaccardova podobnost # :
+
+                                                                           # : , =1
+
+ Korelacní koeficient  a , obvykle Pearsonv: = 1 - -
+                                                 = 1 - 2 = 1 - 2
+
+    Internet a klasifikacní metody, 3. pednáska              11 (z 37)
+-NN pi kolaborativním filtrování
+
+ Typicky pouzívané podobnosti: spojité atributy - Pearsonv
+
+korelacní koeficient, nominální atributy - Jaccardova podobnost
+
+ Problém: vychýlenost (bias) doporucovaného | ostatních uzivatel
+
+     nkteí uzivatelé hodnotí systematicky písnji | mírnjí
+     nkteré produkty jsou obvykle nadhodnocené | podhodnocené
+     ped mením podobnosti musíme vychýlenost korigovat
+
+Internet a klasifikacní metody, 3. pednáska  13 (z 37)
+-NN pi odhalování malware
+
+ Pouzívají se statické vlastnosti software (= kód),
+
+ne dynamické (= prbh interakcí s OS)
+
+ Kódování vlastností: n-gramy byt (bigramy, trigramy, ...)
+
+     vhodn vybraná mnozina n-gram: profil software
+
+ K profilu neznámého software hledáme  nejpodobnjsích
+
+v databázi známého software (malware + neskodného)
+
+Internet a klasifikacní metody, 3. pednáska          14 (z 37)
+    Odhadování pravdpodobné tídy
+
+Odhad pravdpodobnosti nálezení bodu  jednotlivým tídám
+
+1.  Pomocí Bayesovy vty:  tída|atributy          =  |        apriorní
+
+                                                         ()
+
+    1. naivní klasifikátor: pedpokládá nezávislost  1,...,| =  1|  |
+
+    2. ne naivní: bayesovské sít (výpocetn nárocné)
+
+2. Pomocí logitového modelu: jen nálezení | nenálezení  ¬
+
+    1                                                -11...-
+  1, ... ,  = 1 + -11...- ,  ¬ 1, ... ,  = 1 + -11...-
+
+    Internet a klasifikacní metody, 3. pednáska              15 (z 37)
+          Bayesovské spamové filtry
+
+ Vtsinou naivní Bayesv klasifikátor, : slova, metainformace
+
+     osálitelné dodatecnými slovy  s   ham    spam
+
+       ve výsledku  ham 1,... , >  spam 1,... , (Bayesian poisoning)
+ Proto alternativn pouzívány jednoduché bayesovské sít.
+
+Internet a klasifikacní metody, 3. pednáska  16 (z 37)
+Bayesovské spamové filtry
+
+ Vtsinou naivní Bayesv klasifikátor, : slova, metainformace
+
+     osálitelné dodatecnými slovy  s   ham    spam
+
+       ve výsledku  ham 1,... , >  spam 1,... , (Bayesian poisoning)
+ Proto alternativn pouzívány jednoduché bayesovské sít.
+
+ Pro klienty | známjsí pro píchozí servery:
+
+SpamAssassin, DSPAM, Bogofilter, SpamBayes (+ 3. tída: nejasné)
+
+Internet a klasifikacní metody, 3. pednáska  18 (z 37)
+     Vyuzití rozdlení pravdpodobnosti
+
+ Diskriminacní analýza (DA):   - z rozdlení odpovídajícího 
+
+Internet a klasifikacní metody, 3. pednáska  19 (z 37)
+  Vyuzití rozdlení pravdpodobnosti
+
+ Diskriminacní analýza (DA):   - z rozdlení odpovídajícího 
+
+ urceno hustotou   rodina  =  | : ,-mozné parametry
+ originální (Fisherova) DA:  = vícerozmrná normální rozdlení
+
+ Ucení klasifikátoru: výpocet odhad  parametr pro , 
+
+    -  maximáln  vrohodný  odhad:    =                  arg  max  ucicí  data     
+
+                                                             
+
+ Predikce pro nové : arg max                                                     21 (z 37)
+
+                                                
+
+           Internet a klasifikacní metody, 3. pednáska
+              Lineární a kvadratická DA
+
+ Lineární (LDA):  =    = 1 -21 - -1 - : dimenze 
+
+                                                        2 
+
+ ,: pedem daná, stejná pro vsechny tídy
+
+ pro    je mnozina   :  = ´  nadrovina (= lineární plocha)
+
+ Kvadratická (QDA):  =    = 1 -12 - -1 - : ,,
+
+                                                               2 
+
+    -  dalsí  parametr    parametry            celkem    +1  dimenzí (LDA: )
+                                                          2
+
+ pro    je mnozina   :   =   kvadratická plocha
+
+  Internet a klasifikacní metody, 3. pednáska                24 (z 37)
+DA pi klasifikaci obrázk a videí
+
+ Cemu odpovídají jednotlivá pravdpodobnostní rozdlení?
+
+    1. konceptm popisujícím zájmy uzivatele
+    2. dodaným píkladm zájm uzivatele
+
+ Atributy: statické (obliceje,...), dynamické (pohyby, události)
+
+ Vyuzití: 1) doporucovací systémy - obsahové filtrování
+
+    2) automatická detekce pornostránek
+
+Internet a klasifikacní metody, 3. pednáska              26 (z 37)
+             Umlé neuronové sít
+
+ Systémy implementující cást funkcionality neuronových sítí
+ Neurony - vstupní, výstupní, skryté
+
+Internet a klasifikacní metody, 3. pednáska  27 (z 37)
+             Umlé neuronové sít
+
+ Systémy implementující cást funkcionality neuronových sítí
+ Neurony - vstupní, výstupní, skryté
+
+     transformují signály (vtsinou nelineárn) - somatické operace
+
+     síení signál: vstupy  skryté neurony  výstupy
+ Spoje - synaptické operace: vtsinou násobení vahou
+
+Internet a klasifikacní metody, 3. pednáska  29 (z 37)
+Umlé neuronové sít
+
+ Systémy implementující cást funkcionality neuronových sítí
+
+ Neurony - vstupní, výstupní, skryté
+
+ transformují signály (vtsinou nelineárn) - somatické operace
+
+ síení signál: vstupy  skryté neurony  výstupy
+
+ Spoje - synaptické operace: vtsinou násobení vahou
+
+ Topologie - propojení neuron spoji: nejcastji vrstevnatá
+
+Internet a klasifikacní metody, 3. pednáska          31 (z 37)
+  Perceptrony a jejich zetzení
+
+ Perceptron - bez skrytých neuron, somatická operace:
+
+skoková aktivacní funkce :  - =0, +0 =1  =  +
+  tída  prnik poloprostor  vyzaduje lineární separabilitu
+
+ Vícevrstvý perceptron (MLP) - zetzení  skryté vrstvy
+
+  somatická operace: sigmoidní aktivacní funkce (   =     1  ,  =  --         ,...)
+                                                       1+-         +-
+
+ nelineární klasifikátory, pi 1 skryté  =     +  + 
+
+  Internet a klasifikacní metody, 3. pednáska                      33 (z 37)
+MLP pi filtraci spamu
+
+ Výhoda: vysoká pesnost, zejména týmového pouzití
+ Nevýhoda: pomalé ucení (+ doucování nových spam)
+  Strategie pro nasazení ve spamových filtrech:
+
+     na stran klienta ( doucování mén casté)
+     doplovány klasifikátory s rychlým doucováním (k-NN, ...)
+
+ Dalsí pouzití: filtrace spamu penáseného obrázky
+
+Internet a klasifikacní metody, 3. pednáska  34 (z 37)
+MLP v doporucovacích systémech
+
+ Pi kolaborativním filtrování castji nez pi obsahovém
+
+ Výhoda: pesnost, zase hlavn v týmu
+
+ Nevýhoda: obtízná vysvtlitelnost (> nez pomalé ucení)
+
+výsledku: proc je konkrétní objekt doporucován
+
+ Alternativní pouzití: predikce nesdlených sociálních atribut
+
+(vk, píjmová skupina, ...) indikujících, co doporucit
+
+Internet a klasifikacní metody, 3. pednáska            35 (z 37)
+MLP pi odhalování malware
+
+ Odhalují podle statických vlastností, tj. kódu
+
+     vstupy: n-gramy byt | operací, metadata binárek
+     kombinování s klasifikátory odhalujícími podle chování
+
+ Problém: spatné ucení tídy zastoupené vzácn
+
+     protiopatení: obohacení ucicích dat zástupci malware
+
+ Píklad komercního pouzití MLP: antivirák IBM
+
+Internet a klasifikacní metody, 3. pednáska                  36 (z 37)
+

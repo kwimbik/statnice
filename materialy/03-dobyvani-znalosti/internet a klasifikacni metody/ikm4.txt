@@ -1,0 +1,313 @@
+       Internet a klasifikacní metody, 4. pednáska
+
+Kdy dlá klasifikátor nejmén chyb
+          na nových datech?
+
+       volitelný pedmt pro magisterské studium
+                        Martin Holea
+O cem to bude?
+
+ Schopnost klasifikátoru generalizovat pro nové vstupy
+
+     souvislost s síkou pásu mezi tídami
+
+ Generalizující klasifikátory pro 2 lineárn separabilní tídy
+
+     oprné vektory a jejich význam
+
+ Zobecnní pro 2 lineárn nesaparabilní tídy
+ Zobecnní pro více tíd + dalsí zobecnní
+
+Internet a klasifikacní metody, 4. pednáska  2 (z 36)
+   Generalizacní schopnost klasifikátoru
+
+ = Schopnost správn klasifikovat mozné nové vstupy
+
+ pi zohlednní pravdpodobnosti jednotlivých nových vstup
+
+  formáln nejcastji Evstupy pesnost = 1 - Evstupy chybovost
+
+ Pro zacátek: 2 tídy ± ,lineárn separabilní, klasifikátor :  1,-1
+
+   =  -11ppii  +       0  ,  Evstupy  chybovost  =    + -1  -1  + - -1 1
+               +    <  0
+
+   Internet a klasifikacní metody, 4. pednáska                  3 (z 36)
+       Souvislost s pásem mezi tídami
+
+ Pedpokládáme, ze nadrovina oddlující 1  1,... a2  1,... se
+
+  1  1,... ani 2  1,... nedotýká  vzdálena  >0od ucicích dat
+
+Internet a klasifikacní metody, 4. pednáska  4 (z 36)
+       Souvislost s pásem mezi tídami
+
+ Pedpokládáme, ze nadrovina oddlující 1  1,... a2  1,... se
+
+  1  1,... ani 2  1,... nedotýká  vzdálena  >0 od ucicích dat
+
+ Domnnka: Evstupychybovost je nerostoucí funkcí (?)
+
+     nezkazí to vliv smru oddlující nadroviny??
+
+ Pi omezených  v definici  (  > 0                 ) a = max                  lze
+
+                                                                  =1,...,
+
+odvodit:   > 0 Evstupychybovost <            22  ln2  +  ln  vstup :           >0
+                                              2
+
+Internet a klasifikacní metody, 4. pednáska                                  6 (z 36)
+      Takze maximalizacní úloha pro 
+
+ Oznacme  =   ,  - smrový vektor nadroviny : + = 0
+
+  max  = max     max  a soucasn min            
+              
+
+     pitom omezení   vzdálenost  od ,  = 1, ... , 
+ Budeme esit dvoustupov, pi omezeních pro  = 1, ... , 
+
+1. stupe: fixujeme , minimalizujeme 
+
+2. stupe: pidáme maximalizaci 
+
+  Internet a klasifikacní metody, 4. pednáska           7 (z 36)
+        Minimalizacní úloha pro 
+
+ Radji minimalizujeme w 2 (má stejné minimum jako  )
+
+ pi castých vyhodnocováních dost usetíme nepocítáním
+
+ Peformulujeme omezení   vzdálenost  od ,  = 1, ... , :
+
+   +          +         +                       =   +  ,   -1,1
+                 
+
+ pipomínka: Lagrangeova funkce  =  2 + = 1  -  +
+
+Lagrangeovy koeficienty  pi min  2 splují KKT podmínky: = 0
+
+   Internet a klasifikacní metody, 4. pednáska        8 (z 36)
+          esení Lagrangeovy funkce
+
+ K ,  = arg min  2 splujícím     +  existují 1, ... ,  ze
+    1.  má v ,,1 ,...,  minimum vci , , maximum vci 1,...,
+
+  2. ve ,,1 ,...,  platí KKT podmínky,  -  + = 0, =1,...,
+
+  Z  ,   ,,1 ,...,   = 0 vychází                 =  =1       , =1   =  0
+                                                        2
+      
+
+   zjednodusíme peznacením new = 12old  = = 1 ,= 1 = 0
+
+     2 =  = ,=1   ,  = - ,=1   + 2 =1 
+
+  Internet a klasifikacní metody, 4. pednáska                9 (z 36)
+Výsledek: kvadratická optimalizace
+
+  má v , , 1 , ... ,  maximum vci 1,...,  1 ,...,  je esením
+
+úlohy  2= 1   -  ,=1   =  max     2= 1           - ,=1
+
+                          1,...,
+
+pi omezeních = 1 = 0a KKT:   -   + =0-duální úloha
+
+ + pidáme 2. stupe maximalizacní úlohy pro : maximalizaci 
+
+  kvadratická optimalizace: 1 lokální optimum = globální
+
+ snadno vyesí kazdý optimalizacní software       10 (z 36)
+
+    Internet a klasifikacní metody, 4. pednáska
+Oprné vektory
+
+ Získané 1 ,...,  dosadíme do  = = 1 ; uvdomme si, ze:
+      =  ,kde  = : > 0 , takze pro   ,-  + =0díky KKT
+
+     pomocí získaného  = max pro libovolné    dopocítáme  =  -
+
+  Vektory ,   lezí v nadrovin +: + + nebo -: +  -
+
+ názvy: +|- -oprné nadroviny , +|- 1,... , ,   - oprné vektory
+
+  oznacení metody: Support Vector Machine (SVM)
+
+Internet a klasifikacní metody, 4. pednáska      12 (z 36)
+               Rekapitulace SVM algoritmu
+
+ Vstup: ucicí data x1, c1 , ... , xq, cq
+
+1.  1 ,..., ,  =  arg   max    2= 1    -  ,=1    pi  = 1     =  0a   KKT
+
+                       1,...,
+
+2.  = :  > 0 a vybereme njaké   
+
+3.  =   ,  =   - 
+
+ Výstup: klasifikátor ,        =        1 pi              +       0
+                                        -1 pi             +    <  0
+
+    Internet a klasifikacní metody, 4. pednáska                14 (z 36)
+    Pipomínka: jak k lineární separabilit?
+
+ Transformací do prostoru vyssí dimenze
+
+Internet a klasifikacní metody, 4. pednáska  15 (z 36)
+Pipomínka: jak k lineární separabilit?
+
+ Transformací do prostoru vyssí dimenze
+
+ Metoda pomocí jádra: zobrazení : 2  ,  ,  =  ,  ,
+
+           ,      , 
+              
+s kazdou                                     pozitivn semidefinitní
+           , 
+                ...  , 
+
+ -dimenzionální mnozina  = 1,...,  ,:  ,  =  ,
+ vektorový prostor  = =1  |1, ... ,    = lineární obal 
+ skalární soucin na : =1  , =1  = ,=1  , 
+
+Internet a klasifikacní metody, 4. pednáska  18 (z 36)
+Pro SVM se hodí jiz známý trik
+
+ Pipomínka: kernel trick ­ pocítáme skalární soucin
+
+   v prostoru  dimenze  pomocí  ,  , tj. pomocí ,   
+
+      - pocet dat  vtsinou   
+
+ Vhodnost pro SVM: skalárním soucinem klasifikátor 
+
+kompletn definujeme:    =  1 pi    ,                 +   0
+                            -1 pi    ,               +  < 0
+
+Internet a klasifikacní metody, 4. pednáska          19 (z 36)
+           SVM pro vícetídní klasifikaci
+
+ Výrazn nejpouzívanjsí pístup: pomocí více 2-tídních
+
+1.  Kazdá  ze  tíd  1,  ...  ,    proti   kazdé    (  -1   klasifikací)
+                                                       2
+
+     výsledek:  s nejvíce z  - 1 mozných vítzství
+
+2. Kazdá tída  proti sjednocení   zbývajících
+
+     ,  1, -1 volíme tak, aby , = 1    , , = -1     
+
+      výsledek:     s   =    arg   max             ,  ,    ,   + 
+
+                                  =1,...
+
+      Internet a klasifikacní metody, 4. pednáska                        20 (z 36)
+        SVM s tolerujícími omezeními
+
+ Místo omezení   vzdálenost  od       + 
+   uvazujeme  -   vzdálenost  od    -     +  ,   0
+
+Internet a klasifikacní metody, 4. pednáska  21 (z 36)
+        SVM s tolerujícími omezeními
+
+ Místo omezení   vzdálenost  od       + 
+   uvazujeme  -   vzdálenost  od    -     +  ,   0
+
+     význam: mensí vliv sumu v datech
+
+Internet a klasifikacní metody, 4. pednáska  23 (z 36)
+SVM s tolerujícími omezeními
+
+ Místo omezení   vzdálenost  od       + 
+   uvazujeme  -   vzdálenost  od    -     +  ,   0
+
+     význam: mensí vliv sumu v datech
+
+ Snaha udrzet tolerující (slack) promnné  malé 
+
+v 1. stupni maximalizace pásu minimalizujeme w 2 +  =1 ,  > 0
+
+  - pomr mezi tolerancí  a pvodní minimalizací w 2 (~0)
+
+Internet a klasifikacní metody, 4. pednáska      26 (z 36)
+SVM pi filtraci spamu
+
+ Výhoda: lepsí generalizacní schopnost
+
+     casto vyuzívány specificky pro obrázkový spam
+     + píbuzný problém odfiltrování pornografických webových stránek
+
+ Nevýhoda: velká výpocetní nárocnost
+
+     kvli esení optimalizacního problému
+     protiopatení: paralelní a distribuované implementace
+
+Internet a klasifikacní metody, 4. pednáska  28 (z 36)
+SVM v doporucovacích systémech
+
+ Obsahové filtrování, hlavn obrázk a videí
+
+ obrázky: piazování cástí obrázku sémantickým konceptm
+
+ videa: rozpoznávání událostí, slov mluveného jazyka
+
+ Nelineární, krom mluveného jazyka ( vysocedimenzionální píznaky)
+
+ Vícetídní, kazdá tída proti sjednocení zbývajících,
+
+krom sémantických koncept: kazdá tída proti kazdé
+
+Internet a klasifikacní metody, 4. pednáska           29 (z 36)
+SVM pi detekci malware
+
+ Pouzívají dynamické vlastnosti software = prbh interakcí
+   s OS ­ kódován posloupností volání API
+
+     kombinovány s klasifikátorem pouzívajícím statické vlastnosti
+
+ Nelineární, pouzívají se s rznými kernely
+
+ Bu 2-tídní: neskodný software × malware, nebo
+
+vícetídní: neskodný software × rzné druhy malware
+
+Internet a klasifikacní metody, 4. pednáska        30 (z 36)
+Aktivn se ucící SVM
+
+ Aktivní ucení klasifikátoru: ucení, pi kterém
+1. cást ucicích dat dodávána na vyzádání
+
+     obvykle  od zacátku, od uzivatele vyzádáno   -1,1
+
+2. výbr vyzádaných urcený ocekávaným zlepsením kvality
+
+ Pouzitelné pro libovolný klasifikátor; nejrelevantnjsí SVM 
+
+ ocekávané zlepsení pocítáno pes nové vstupy     32 (z 36)
+
+    Internet a klasifikacní metody, 4. pednáska
+      Internet a SVM s aktivním ucením
+
+ Doporucovací systémy: obsahové filtrování podle píklad
+     velké mnozství mozností  uzivatel pozádán ohodnotit
+
+       píklady nejvíce pomáhající zpesnit jeho pání
+
+Internet a klasifikacní metody, 4. pednáska  34 (z 36)
+      Internet a SVM s aktivním ucením
+
+ Doporucovací systémy: obsahové filtrování podle píklad
+     velké mnozství mozností  uzivatel pozádán ohodnotit
+
+       píklady nejvíce pomáhající zpesnit jeho pání
+
+ Detekce malware nebo síových útok
+     mnozství nového software | záznam síového provozu 
+         aktivní ucení: kde nejpotebnjsí klasifikace clovkem
+
+Internet a klasifikacní metody, 4. pednáska  36 (z 36)
+

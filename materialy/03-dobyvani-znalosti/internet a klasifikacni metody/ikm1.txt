@@ -1,0 +1,292 @@
+    Internet a klasifikacní metody,1. pednáska
+
+Ti dlezité internetové aplikace
+       klasifikacních metod
+
+    volitelný pedmt pro magisterské studium
+                     Martin Holea
+                 O cem to bude?
+
+ Filtrace spamu
+
+ klasifikace spamu na základ obsahu + metainformací
+
+ Doporucovací systémy
+
+     klasifikace pi obsahovém filtrování + kolaborativním filtrování
+
+ Systémy pro odhalování hrozeb v síti
+
+ klasifikace pítomnosti + druhu anomálního chování sít
+
+Internet a klasifikacní metody, 1. pednáska             2 (z 34)
+                   Filtrace spamu
+
+ Oddlování spamu od zádoucí posty (hamu)
+
+ Filtrace se provádí na nkolika místech:
+
+ filtracní servery pedazené : spam typicky nedorucen
+
+ servery píchozí posty spam dorucen, ale
+
+ postovní klienti  explicitn oznacen oddlen
+
+Internet a klasifikacní metody, 1. pednáska           3 (z 34)
+                   Filtrace spamu
+
+ Oddlování spamu od zádoucí posty (hamu)
+
+ Filtrace se provádí na nkolika místech:
+
+ filtracní servery pedazené : spam typicky nedorucen
+
+ servery píchozí posty spam dorucen, ale
+
+ postovní klienti  explicitn oznacen oddlen
+
+ servery odchozí posty: odchozí (egresní) filtrace
+
+Internet a klasifikacní metody, 1. pednáska           5 (z 34)
+Proc je filtrace spamu klasifikace?
+
+ Rozpoznání spamu závisí na mnoha píznacích:
+
+     obsah zprávy: slova, kombinace slov, obrázky
+     postoj adresáta zprávy k jejímu obsahu
+     atributy hlavicky: pedmt, odesilatel, podvrzené atributy
+
+ {kombinace hodnot jednotlivých píznak}{spam, ham}
+
+ kazdé zobrazení {kombinace}{tídy} je klasifikátor
+
+Internet a klasifikacní metody, 1. pednáska                    6 (z 34)
+Prbh filtrace spamu
+
+Internet a klasifikacní metody, 1. pednáska  7 (z 34)
+Prbh filtrace spamu
+
+1. Extrakce hodnot píznak ze zprávy
+
+     pouzité píznaky urcují typ klasifikace:
+         podle obsahu zprávy, podle metainformací, hybridní
+
+2. Ucení klasifikátoru = hledání parametr jeho modelu
+
+     kazdý typ klasifikátoru odpovídá specifickému modelu
+
+3. Pouzití nauceného klasifikátoru na nové zprávy
+
+Internet a klasifikacní metody, 1. pednáska                  9 (z 34)
+Filtrace podle obsahu
+
+ Pouzívané píznaky: slova, kombinace slov, obrázky
+ Ucení klasifikátor filtrujících na základ obsahu:
+
+     Moznost doucování zptnou vazbou od adresát
+    1. globální klasifikátor ­ zptnou vazbou vsech
+    2. lokální klasifikátory ­ zptnou vazbou jednotlivých adresát
+
+         (doucování majitelem sexshopu: ,,levná viagra" = ham)
+
+Internet a klasifikacní metody, 1. pednáska  11 (z 34)
+Filtrace podle metainformací
+
+ Metainformace (= informace o zpráv) z hlavicky
+
+     doména, kódování (azbuka), podvrzená adresa odesilatele
+
+ Metainformace z prbhu posílání zpráv
+
+     jedné: nedodrzení SMTP ukoncení spojení (QUIT),...
+     více: stejná/podobná zpráva mnoha adresátm
+
+ Kombinování s obsahem zprávy  hybridní filtry
+
+Internet a klasifikacní metody, 1. pednáska  12 (z 34)
+Píklady spamových filtr
+
+ Soucást bzných mailových klient + webmailových server
+
+     Outlook, Groupwise, Gmail, Email.cz (Seznam)
+
+ SpamBayes ­ pythonovský program pedazený klientovi
+
+     Klasifikuje do 3 tíd: spam, ham, nejistota
+
+ Dalsí filtry ve form samostatných program:
+
+     DSPAM, SpamAssassin, Bogofilter, ASSP, Babletext
+
+Internet a klasifikacní metody, 1. pednáska  13 (z 34)
+             Doporucovací systémy
+
+ Doporucují uzivateli, co ho pravdpodobn zaujme:
+   zbozí, literatura, filmy, rekreace, jiní uzivatelé
+
+Internet a klasifikacní metody, 1. pednáska            14 (z 34)
+Doporucovací systémy
+
+ Doporucují uzivateli, co ho pravdpodobn zaujme:
+
+zbozí, literatura, filmy, rekreace, jiní uzivatelé
+
+ Výstup: 1. bu jen doporucený/é objekt/y zájmu
+
+2. nebo seznam s odhadem pravdpodobné zajímavosti
+
+ Casto vysvtlují, proc objekt zájmu doporucují
+
+ vyssí srozumitelnost doporucení pro uzivatele      17 (z 34)
+
+     Internet a klasifikacní metody, 1. pednáska
+Proc je doporucování klasifikace?
+
+ Rozhodnutí zda + co doporucit závisí na:
+
+     píznacích popisujících obsah objektu zájmu
+     píznacích chování uzivatele, kterému je doporucováno
+     píznacích chování ostatních uzivatel
+
+  2 typy rozhodování zda + co doporucit, podle
+
+píznak: 1. obsahové filtrování, 2. kolaborativní filtrování
+
+Internet a klasifikacní metody, 1. pednáska                19 (z 34)
+Obsahové filtrování
+
+ Doporucovaný objekt vybrán podle podobnosti s
+
+     objekty vyhodnoceými jako zajímající uzivatele dosud:
+       explicitn (hodnocení) | implicitn (koup, stazení, streamování)
+
+     nkdy: explicitním stanovením urcitych píznak uzivatelem
+
+ Píklady: Internet Movie Database  doporucování videí,
+
+Pandora Radio  skladby ,,podobné" pvodn zvoleným
+
+Internet a klasifikacní metody, 1. pednáska  20 (z 34)
+Kolaborativní filtrování
+
+ Princip: uzivatelé s podobnou historií chování
+   se casto zajímají o podobné objekty
+
+     historie chování: zadávané dotazy, prolézané stránky,
+         projevený zájem o stejné objekty: explicitn, implicitn
+
+ Problém nábhu systému: o málo dat
+ Hybridní systémy: obsahové i kolaborativní filtrování
+
+Internet a klasifikacní metody, 1. pednáska                      21 (z 34)
+       Kolaborativní a hybridní píklady
+
+ Amazon: 2 zpsoby vyuzití informace kupující  zbozí
+ Last.fm: skladby dle podobné historie poslouchání
+ LinkedIn, Facebook: doporucují kontakty + clenské skupiny
+
+Internet a klasifikacní metody, 1. pednáska  23 (z 34)
+Internet a klasifikacní metody, 1. pednáska  24 (z 34)
+Kolaborativní a hybridní píklady
+
+ Amazon: 2 zpsoby vyuzití informace kupující  zbozí
+
+ Last.fm: skladby dle podobné historie poslouchání
+
+ LinkedIn, Facebook: doporucují kontakty + clenské skupiny
+
+ hybridní systémy Netflix, See This Next:
+
+ videa podobná tm, co uzivatel chválil
+ + dle uzivatelské podobnosti historie pjcování + hledání
+
+Internet a klasifikacní metody, 1. pednáska                25 (z 34)
+Internet a klasifikacní metody, 1. pednáska  26 (z 34)
+Systémy pro odhalení hrozeb v síti
+
+ Systémy odhalující v síti pokusy o:
+
+     neoprávnný síový pístup (remote to local)
+     neoprávnná administrátorská práva (local to root)
+     zabránní vyuzívání zdroj (denial of service)
+     shromazování informací o slabinách zabezpecení sít
+
+ Píklad: Minnesota Intrusion Detection System (MINDS)
+
+Internet a klasifikacní metody, 1. pednáska  27 (z 34)
+Proc je odhalování hrozeb klasifikace?
+
+ K odhalení pítomnosti hrozby v síti
+   je teba znát hodnoty ady píznak:
+
+     zdrojové + cílové adresy, protokoly, pocty paket, ...
+
+ {kombinace hodnot píznak}  {normál, anomálie}
+
+                            {normál, R2L, L2R, DoS,...}
+
+ Signatury: známé , s pravdpodobností 100%                  29 (z 34)
+
+           Internet a klasifikacní metody, 1. pednáska
+Probe Attack: to gain vulnerability information
+DoS: denial of service
+R2L: remote to local
+U2R: user to root
+Souvislost s data-miningem
+
+ Píznaky pouzívané systémem pro odhalení hrozeb
+
+ke klasifikaci vytváí tzv. auditová data
+
+ Objevování nových znalostí v = data mining
+
+ cesky: dobývání znalostí, vytzování dat, datokopectví
+ popisné statistiky, modely casových ad, shlukování, ...
+
+ Systém ADAM (Audit Data Analysis & Mining)
+
+Internet a klasifikacní metody, 1. pednáska               31 (z 34)
+Co vám tento pedmt chce dát?
+
+ Povdomí o velkém spektru klasifikacních metod
+
+ o jejich zajímavosti, dmyslnosti, uzitku pro internet
+
+ Základní vybavení pro jejich tvrcí pouzívání
+
+ s porozumním, vhledem pod povrch, samostatn
+
+ nejenom na problémy esené jimi dnes
+
+ i problémy, které potkáte za 10-20 rok
+
+Internet a klasifikacní metody, 1. pednáska             32 (z 34)
+O cem si proto budeme povídat?
+
+1. Základní koncepty týkající se klasifikace
+
+2. Hlavní typy klasifikacních metod
+
+3. Pesnost klasifikace nov píchozích dat
+
+4. Srozumitelnost výsledku klasifikace pro uzivatele
+
+5. Spojování klasifikátor do tým
+
+ Dnesní 3 aplikace vsechno ilustrují, nikoliv vymezují
+
+Internet a klasifikacní metody, 1. pednáska             33 (z 34)
+Cvicení: peer pednásky
+
+ 6 cvicení stídav s pednáskami
+
+     ve výjovém prostedí Matlab (seznámení: 1. cvicení)
+
+ 2 stupn obtíznosti procvicované látky:
+
+     jednoduché píklady procvicující probírané téma
+     1 nárocnjsí komplexní úkol jako semestrální práce
+     pi cviceních i konzultace vybraných semestrálek
+
+Internet a klasifikacní metody, 1. pednáska              34 (z 34)
+
