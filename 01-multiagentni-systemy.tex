@@ -24,6 +24,14 @@
 \usepackage[colorlinks=true,linkcolor=linkblue,urlcolor=linkblue]{hyperref}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
+\usepackage{graphicx}
+\graphicspath{{obrazky/mas/}}
+% Obrázek ze slidů: nepoužívá float (dokument floaty nemá), jen centrovaný blok s~popiskem.
+\newcommand{\slajd}[3]{%
+  \begin{center}%
+  \includegraphics[width=#2\textwidth]{#1}\\[1.2mm]%
+  {\small\itshape #3}%
+  \end{center}}
 
 % Značka pro látku, která není ve slidech NAIL106 (mas-18en.pdf).
 \newcommand{\mimo}{\textcolor{markcol}{\textsf{\footnotesize[$\blacklozenge$~nad rámec slidů]}}}
@@ -339,9 +347,9 @@ Nechť $I$ je množina vnitřních stavů agenta a~$\mathit{Per}$ množina jeho 
 \mathit{next} &: I \times \mathit{Per} \to I && \text{(aktualizace vnitřního stavu)}\\
 \mathit{action} &: I \to A && \text{(výběr akce)}
 \end{align*}
-\textbf{Cyklus:} agent startuje ve stavu $i_0$; vnímá prostředí ($\mathit{see}(e)$); aktualizuje
-stav ($i \leftarrow \mathit{next}(i, \mathit{see}(e))$); vybere akci ($a \leftarrow \mathit{action}(i)$);
-vykoná ji a~opakuje.
+\slajd{mas-agent-stav.png}{0.42}{Agent s~vnitřním stavem za práce: agent startuje ve stavu
+$i_0$, funkce \emph{see} převede stav prostředí na vjem, \emph{next} z~vjemu a~starého stavu
+spočítá nový stav, \emph{action} z~něj vybere akci --- a~ta zpětně mění prostředí.}
 
 \textbf{Věta (bez důkazu):} Ke každému agentovi s~vnitřním stavem existuje funkčně ekvivalentní
 standardní agent. Vnitřní stav tedy \emph{nezvyšuje vyjadřovací sílu}, ale je zásadní pro
@@ -863,9 +871,9 @@ Praktická nasazení: OASIS (systém řízení letového provozu v~Sydney), SPOC
 podnikových procesů), SWARMM (letecký simulátor australského letectva).
 \end{defbox}
 
-\textbf{Komponenty PRS agenta:} databáze \emph{beliefs} (atomy FOL, prologovského typu),
-\emph{desires} (cíle), \emph{knihovna plánů} (\emph{plan library}), zásobník \emph{intentions}
-a~\emph{interpret}, který vše propojuje. Data ze senzorů vstupují do beliefs, interpret vydává akce.
+\slajd{mas-prs.png}{0.46}{Architektura PRS agenta. Data ze senzorů vstupují do databáze
+\emph{beliefs} (atomy FOL prologovského typu); \emph{interpret} propojuje beliefs, \emph{desires}
+(cíle), \emph{knihovnu plánů} a~zásobník \emph{intentions} a~vydává akce.}
 
 \begin{defbox}[Plán v~PRS]
 Agent má knihovnu hotových plánů reprezentujících jeho \emph{procedurální znalosti}.
@@ -1218,6 +1226,11 @@ Baars, 1988--97) --- jedna z~teorií vědomí:
 emoce), a~právě to je jeho slabina --- řada rozhodnutí je \emph{ad hoc} a~sladit tak
 heterogenní kolekci modelů do optimálně spolupracujícího celku je velmi obtížné.
 \end{defbox}
+
+\slajd{mas-ida.png}{0.96}{Architektura IDA. Modré bloky jsou moduly vnímání a~paměti, zelené
+deliberace a~vyjednávání, červené učení a~výstup; vše se potkává v~\uv{Consciousness}
+(globálním pracovním prostoru) a~v~\emph{Behavior Net}, který vybírá akci. Dobře je vidět,
+proč se architektura pokládá za nejsložitější --- a~proč je obtížné ji sladit.}
 
 Pro srovnání mechanismů výběru akce je IDA užitečný jako \emph{čtvrtý} typ arbitráže:
 subsumpce rozhoduje \textbf{pevnou prioritou}, síť Maes \textbf{úrovní aktivace},
@@ -2045,6 +2058,12 @@ nelže o~svých schopnostech) --- jinak je nutné použít aukční mechanismy o
 (odst.~\ref{ssec:aukce}).
 \end{defbox}
 
+\slajd{mas-cnet.png}{0.98}{Contract Net jako interakční protokol FIPA-ACL. Iniciátor rozešle
+\emph{cfp} (\emph{call for proposals}) s~termínem; účastník odpoví \emph{not-understood},
+\emph{refuse}, nebo \emph{propose}. Iniciátor pak nabídku \emph{reject-proposal}, nebo
+\emph{accept-proposal}; vítěz nakonec hlásí \emph{failure}, \emph{inform-done}, nebo
+\emph{inform-ref} s~výsledkem.}
+
 \subsection{Systémy s~tabulí (blackboard)}
 
 \begin{defbox}[Blackboard system (BBS)]
@@ -2226,6 +2245,12 @@ v~kooperativních scénářích --- když jsou agenti z~jednoho týmu, mají jed
 jednu úlohu; čím homogennější systém, tím lépe. Maximum sociálního blahobytu je vždy
 Pareto-optimální, opačně to neplatí.
 \end{defbox}
+
+\slajd{mas-pareto.png}{0.86}{Paretova mez. \emph{Vlevo:} červené body $A$--$H$ jsou
+Pareto-optimální --- od žádného z~nich nelze získat víc jedné položky, aniž bychom ubrali
+z~druhé; šedé body uvnitř (např.\ $K$) optimální nejsou, protože existuje bod lepší v~obou
+souřadnicích současně. \emph{Vpravo:} totéž pro dvě kriteriální funkce $f_1$, $f_2$ --- bod $A$
+dominuje bodu $C$, mez samotná je množina nedominovaných řešení.}
 \subsection{Klasické hry}
 
 \begin{defbox}[Vězňovo dilema (\emph{Prisoner's dilemma})]

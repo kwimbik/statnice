@@ -24,6 +24,14 @@
 \usepackage[colorlinks=true,linkcolor=linkblue,urlcolor=linkblue]{hyperref}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
+\usepackage{graphicx}
+\graphicspath{{../obrazky/mas/}}
+% Figure from the slides: no float (the document uses none), just a centred block with a caption.
+\newcommand{\slajd}[3]{%
+  \begin{center}%
+  \includegraphics[width=#2\textwidth]{#1}\\[1.2mm]%
+  {\small\itshape #3}%
+  \end{center}}
 
 % Quotation macro carried over from the Czech original (babel-czech \uv).
 \providecommand{\uv}[1]{``#1''}
@@ -358,9 +366,10 @@ agent is determined by a triple of functions:
 \mathit{next} &: I \times \mathit{Per} \to I && \text{(internal state update)}\\
 \mathit{action} &: I \to A && \text{(action selection)}
 \end{align*}
-\textbf{The cycle:} the agent starts in state $i_0$; it perceives the environment
-($\mathit{see}(e)$); it updates its state ($i \leftarrow \mathit{next}(i, \mathit{see}(e))$); it
-selects an action ($a \leftarrow \mathit{action}(i)$); it executes the action and repeats.
+\slajd{mas-agent-stav.png}{0.42}{An agent with internal state at work: the agent starts in state
+$i_0$, \emph{see} turns the state of the environment into a perception, \emph{next} computes the
+new state from the perception and the old state, \emph{action} selects an action from it --- and
+that action in turn changes the environment. (\emph{Prostředí} $=$ environment.)}
 
 \textbf{Theorem (without proof):} For every agent with internal state there exists a functionally
 equivalent standard agent. Internal state therefore does \emph{not increase expressive power}, but
@@ -911,10 +920,10 @@ Practical deployments: OASIS (the air traffic control system in Sydney), SPOC (b
 organisation), SWARMM (an air combat simulator of the Australian air force).
 \end{defbox}
 
-\textbf{Components of a PRS agent:} a database of \emph{beliefs} (FOL atoms of the Prolog kind),
-\emph{desires} (goals), a \emph{plan library}, a stack of \emph{intentions}, and an
-\emph{interpreter} that ties everything together. Sensor data enter the beliefs, and the interpreter
-issues actions.
+\slajd{mas-prs.png}{0.46}{The architecture of a PRS agent. Sensor data enter the database of
+\emph{beliefs} (FOL atoms of the Prolog kind); the \emph{interpreter} ties together the beliefs,
+the \emph{desires} (goals), the \emph{plan library} and the stack of \emph{intentions}, and issues
+actions.}
 
 \begin{defbox}[A plan in PRS]
 The agent has a library of ready-made plans representing its \emph{procedural knowledge}.
@@ -1274,6 +1283,12 @@ memory, deliberation, emotions), and that is precisely its weakness --- many of 
 \emph{ad hoc}, and tuning such a heterogeneous collection of models into an optimally cooperating
 whole is very difficult.
 \end{defbox}
+
+\slajd{mas-ida.png}{0.96}{The IDA architecture. The blue blocks are perception and memory modules,
+the green ones deliberation and negotiation, the red ones learning and output; everything meets in
+\uv{Consciousness} (the global workspace) and in the \emph{Behavior Net}, which selects the action.
+It is easy to see why the architecture is considered the most complicated one --- and why tuning it
+is so hard.}
 
 For comparing action selection mechanisms, IDA is useful as a \emph{fourth} type of arbitration:
 subsumption decides by \textbf{fixed priority}, the Maes network by \textbf{activation level},
@@ -2126,6 +2141,12 @@ not lie about its capabilities) --- otherwise it is necessary to use auction mec
 against manipulation (section~\ref{ssec:aukce}).
 \end{defbox}
 
+\slajd{mas-cnet.png}{0.98}{Contract Net as a FIPA-ACL interaction protocol. The initiator sends
+out a \emph{cfp} (\emph{call for proposals}) with a deadline; the participant answers
+\emph{not-understood}, \emph{refuse}, or \emph{propose}. The initiator then sends
+\emph{reject-proposal} or \emph{accept-proposal}; the winner finally reports \emph{failure},
+\emph{inform-done}, or \emph{inform-ref} with the result.}
+
 \subsection{Blackboard systems}
 
 \begin{defbox}[Blackboard system (BBS)]
@@ -2312,6 +2333,12 @@ in cooperative scenarios --- when the agents are on the same team, have a single
 single task; the more homogeneous the system, the better. The maximum of social welfare is always
 Pareto optimal, but not conversely.
 \end{defbox}
+
+\slajd{mas-pareto.png}{0.86}{The Pareto frontier. \emph{Left:} the red points $A$--$H$ are
+Pareto optimal --- from none of them can one gain more of one item without giving up some of the
+other; the grey points inside (e.g.\ $K$) are not optimal, because a point exists that is better
+in both coordinates at once. \emph{Right:} the same for two criterion functions $f_1$, $f_2$ ---
+point $A$ dominates point $C$, and the frontier itself is the set of non-dominated solutions.}
 
 \subsection{Classical games}
 
