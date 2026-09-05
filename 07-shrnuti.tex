@@ -1,0 +1,947 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[czech]{babel}
+\usepackage[margin=2.2cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{parskip}
+\usepackage{enumitem}
+\setlist{nosep,leftmargin=1.4em}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{xcolor}
+\definecolor{linkblue}{RGB}{20,60,150}
+\definecolor{defbg}{RGB}{240,244,252}
+\definecolor{defframe}{RGB}{100,130,190}
+\definecolor{markcol}{RGB}{176,84,0}
+\definecolor{markbg}{RGB}{253,246,236}
+\usepackage[most]{tcolorbox}
+\newtcolorbox{defbox}[1][]{breakable,colback=defbg,colframe=defframe,boxrule=0.6pt,arc=1.5mm,left=2mm,right=2mm,top=1mm,bottom=1mm,title={#1},fonttitle=\bfseries}
+\newtcolorbox{poznbox}[1][]{breakable,colback=markbg,colframe=markcol,boxrule=0.6pt,arc=1.5mm,left=2mm,right=2mm,top=1mm,bottom=1mm,title={#1},fonttitle=\bfseries}
+\newtheorem{veta}{Věta}[section]
+\theoremstyle{definition}
+\newtheorem{definice}{Definice}[section]
+\usepackage[colorlinks=true,linkcolor=linkblue,urlcolor=linkblue]{hyperref}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\renewcommand{\algorithmicrequire}{\textbf{Vstup:}}
+\renewcommand{\algorithmicensure}{\textbf{Výstup:}}
+\usepackage{graphicx}
+\graphicspath{{obrazky/mas/}}
+\newcommand{\mimo}{\textcolor{markcol}{\textsf{\footnotesize[$\blacklozenge$~nad rámec slidů]}}}
+\newcommand{\mimoq}[1]{\textcolor{markcol}{\textsf{\footnotesize[$\blacklozenge$~nad rámec slidů: #1]}}}
+
+\title{\textbf{Shrnutí ke zkoušce}\\[0.3em]\large Opakovací výtah ze všech tří okruhů}
+\author{SZZ Umělá inteligence, MFF UK}
+\date{září 2026}
+
+\begin{document}
+\maketitle
+\vspace{-1.5em}
+\begin{center}
+\begin{minipage}{0.93\textwidth}
+\small
+Generovaný dokument: pouze oddíly \uv{Shrnutí ke zkoušce} z~učebních textů
+\texttt{01-multiagentni-systemy}, \texttt{02-prirodou-inspirovane-pocitani}
+a~\texttt{03-dobyvani-znalosti}, beze změny obsahu. Číslování kapitol odpovídá zdrojovým
+textům (= položkám okruhu). Odkazy na oddíly zdrojových textů jsou vypuštěny.
+Znovu vygenerovat: \texttt{python zkouseni/gen-07-shrnuti.py} a~2$\times$ \texttt{pdflatex}.
+\end{minipage}
+\end{center}
+\tableofcontents
+\newpage
+
+\part{Multiagentní systémy}
+\setcounter{section}{0}
+
+\section{Architektura autonomního agenta a~mechanismus výběru akcí}
+\begin{itemize}
+\item Agent = autonomní systém zasazený do prostředí, vnímá a~jedná, plní delegované cíle.
+ MAS = interagující agenti \emph{bez nutně sdíleného cíle}.
+\item Tři vlastnosti: reaktivita, proaktivita, sociálnost; těžké je vyvážení.
+\item Dennett: intencionální systém, tři postoje (fyzikální, návrhový, intencionální);
+ intencionální postoj = abstrakce pro zvládnutí složitosti.
+\item Prostředí: 4 dichotomie (pozorovatelnost, statické/dynamické, determinismus,
+ diskrétnost); reálná prostředí v~nejtěžší variantě.
+\item Formalismus: $E$, $A$, běh $r = e_0 a_0 e_1 \dots e_n$, $R^A$/$R^E$,
+ $\tau : R^A \to 2^E$ (historie + nedeterminismus),
+ $\mathit{Env}=\langle E,e_0,\tau\rangle$, $Ag : R^E \to A$, systém $\langle Ag,\mathit{Env}\rangle$.
+\item Funkční ekvivalence (vzhledem k~prostředí / prostá). Čistě reaktivní $Ag: E \to A$
+ (slabší); agent s~vnitřním stavem ($\mathit{see}$, $\mathit{next}$, $\mathit{action}$) ---
+ oba převeditelné na standardního agenta.
+\item Utilita $u : E \to \mathbb{R}$ vs.\ $u : R \to \mathbb{R}$; optimální agent maximalizuje
+ \emph{očekávanou} utilitu --- nekonstruktivní. Tileworld, $u(r)=N_f/N_a$.
+\item Prostředí úlohy $\langle \mathit{Env}, \Psi\rangle$; pesimista/optimista/realista;
+ úlohy dosažení ($G$) a~udržení ($B$).
+\item \textbf{Mechanismus výběru akcí} = jádro otázky: vyjmenovat rodiny mechanismů
+ a~zástupce (tabulka výše).
+\end{itemize}
+
+\section{Metody pro řízení agentů: symbolické a~konekcionistické reaktivní plánování, hybridní přístupy}
+\begin{itemize}
+\item \textbf{Deduktivní agent}: $\mathit{DB} \in 2^L$, $\mathit{DB} \vdash_\rho \mathit{Do}(a)$;
+ dvoufázový výběr akce (dokazatelná akce $\to$ konzistentní akce $\to$ nic).
+ Elegantní, nepraktický; problém transdukce a~vypočitatelné racionality.
+\item \textbf{BDI}: dvě fáze --- deliberace ($\mathit{brf}$, $\mathit{options}$, $\mathit{filter}$)
+ a~means-ends reasoning (plánování). Beliefs subjektivní a~omylné, desires mohou být
+ nekonzistentní, intentions = závazky: přetrvávají, omezují další deliberaci.
+\item \textbf{STRIPS}: deskriptor akce $\langle P_a,D_a,A_a\rangle$, plánovací problém
+ $\langle B_0,O,G\rangle$, $B_i = (B_{i-1}\setminus D_{a_i})\cup A_{a_i}$;
+ plán \emph{přípustný} ($B_{i-1}\models P_{a_i}$) vs.\ \emph{korektní} (navíc $B_n \models G$).
+ Umět projít svět kostek.
+\item \textbf{BDI smyčka} a~role $\mathit{reconsider}$ a~$\mathit{sound}$.
+\item \textbf{Commitment}: blind / single-minded / open-minded; bold vs.\ cautious agent;
+ efektivita $=$ dosažené/všechny záměry; pomalé prostředí $\to$ bold, rychlé $\to$ cautious.
+\item \textbf{PRS}: první implementace BDI; plán = Goal + Context + Body; knihovna plánů místo
+ plánování; zásobník záměrů; deliberace metaplány nebo utilitou; potomci AgentSpeak/Jason,
+ JAM, JACK, Jadex.
+\item Reaktivní přístup: trojice \emph{situatedness --- embodiment --- emergence};
+ odmítá symbolickou reprezentaci.
+\item \textbf{Subsumpce} (Brooks) = \emph{symbolické} reaktivní plánování: jednoduchá chování
+ \emph{situace~$\to$~akce}, paralelní, pevná priorita.
+ Umět Steelsova průzkumníka Marsu a~roli stigmergie (drobky).
+\item \textbf{Agent network architecture} (Maes) = \emph{konekcionistické} reaktivní
+ plánování: moduly s~předpoklady a~efekty (add, delete); aktivace se šíří následnickými,
+ předchůdcovskými a~konfliktními spoji; zdroje: stav světa, cíle, inhibice od chráněných
+ cílů; vybere se proveditelný modul s~nejvyšší aktivací nad prahem. $\gamma/\phi$ ladí
+ proaktivitu vs.\ reaktivitu.
+\item Omezení reaktivních agentů: bez modelu světa, krátkodobý pohled, neinženýrský návrh,
+ neškálovatelné množství vrstev.
+\item \textbf{Hybridní}: horizontální (paralelní vrstvy + mediátor, $m^n$ kombinací, úzké hrdlo)
+ vs.\ vertikální (sériové, one-pass/two-pass, $n-1$ rozhraní, křehké).
+\item \textbf{TouringMachines} = horizontální 3~vrstvy (modelling, planning, reactive) + řídicí
+ pravidla. \textbf{InteRRaP} = vertikální two-pass 3~vrstvy (kooperativní plánování, lokální
+ plánování, behaviorální) + vlastní KB na vrstvu. \textbf{Stanley} = reálné nasazení.
+\item \textbf{IDA} (Franklin) + \emph{global workspace theory} (Baars): mysl jako MAS
+ jednoduchých nevědomých procesů komunikujících přes blackboard; koalice soutěží o~vstup do
+ \uv{vědomí}, vítězná se vykoná; hierarchie kontextů. Nejsložitější architektura, mnoho
+ ad hoc rozhodnutí.
+\item Čtyři typy arbitráže mezi chováními: \textbf{pevná priorita} (subsumpce),
+ \textbf{úroveň aktivace} (Maes), \textbf{mediační funkce} (vrstvené), \textbf{soutěž koalic}
+ (IDA).
+\end{itemize}
+
+\section{Problém hledání cesty}
+\begin{itemize}
+\item A*: $f = g+h$; \emph{přípustnost} $h \le h^*$ $\Rightarrow$ optimalita;
+ \emph{konzistence} $h(n) \le w(n,m)+h(m)$ $\Rightarrow$ každý vrchol se expanduje jednou.
+ $h\equiv 0$ dá Dijkstru; weighted A* je $\varepsilon$-suboptimální.
+\item Dynamické prostředí: LPA* (hodnoty $g$ a~\emph{rhs}, lokální konzistence
+ $g=\mathit{rhs}$), D*~Lite (prohledávání od cíle, inkrementální oprava), freespace assumption.
+\item MAPF: vrcholové a~hranové (swap) konflikty, sum-of-costs vs.\ makespan;
+ optimální MAPF je NP-těžký.
+\item Prioritizované plánování / Cooperative A* s~rezervační tabulkou --- rychlé, ale neúplné.
+ \textbf{CBS} --- nízká úroveň A* s~omezeními, vysoká úroveň větvení stromu omezení podle
+ konfliktu; optimální a~úplný.
+\end{itemize}
+
+\section{Komunikace a~znalosti v~MAS: ontologie, řečové akty, FIPA-ACL, protokoly}
+\begin{itemize}
+\item Ontologie = explicitní formalizovaný popis části reality (glosář + tezaurus);
+ Gruberova definice. Formalismus: třídy, instance, vlastnosti, relace (tranzitivní
+ \emph{is-a}), fakta. Ontologie + fakta = znalostní báze.
+\item Škála formalizace od slovníku po libovolná logická omezení; aplikační / doménové /
+ horní ontologie.
+\item RDF = trojice \emph{subjekt--predikát--objekt}, jednoduché a~rychlé; RDFS přidává třídy.
+\item OWL = deskripční logika (rozhodnutelný fragment FOL), \emph{open world assumption},
+ T-Box vs.\ A-Box; profily Lite/DL/Full ($\mathcal{SHIF}$, $\mathcal{SHOIN}$),
+ OWL~2 = $\mathcal{SROIQ}$ + profily EL/QL/RL.
+\item KIF = FOL v~LISPovské syntaxi, obsah zprávy; KQML = obálka.
+\item Epistemická logika: $K_i\varphi$ + možné světy; znalost = S5 (axiom~T), přesvědčení
+ = KD45. Společná znalost $C_G\varphi$ nevznikne nespolehlivou komunikací (koordinovaný útok).
+\item Komunikace agentů = \emph{akce}, ne volání metody --- příjemce není povinen vyhovět.
+\item Austin: řečové akty; lokuce / ilokuce / perlokuce. Searle: podmínky zdařilosti,
+ pět kategorií (asertiva, direktiva, komisiva, expresiva, deklarace); performativní sloveso
+ + propoziční obsah.
+\item Cohen \& Perrault: sémantika řečových aktů ve stylu STRIPS (pre / efekt) s~modálními
+ operátory; umět Request(S,H,A) a~Inform(S,H,$\varphi$) --- efekt Inform =
+ \emph{$H$ věří, že $S$ věří $\varphi$}.
+\item KQML (obálka) + KIF (obsah); parametry a~performativa; kritika (chybí commit, nejasná
+ sémantika).
+\item FIPA-ACL: struktura zprávy (performative, sender/receiver, content, language, ontology,
+ protocol, conversation-id, reply-by), 22 performativ, sémantika FP a~RE v~jazyce SL;
+ neverifikovatelnost.
+\item Protokoly: FIPA-Request, FIPA-Query, Contract Net (+ iterovaný), Subscribe, Brokering,
+ aukční protokoly.
+\end{itemize}
+
+\section{Distribuované řešení problémů, kooperace, teorie her a~aukce}
+\begin{itemize}
+\item Koherence (výkon celku) vs.\ koordinace (minimalizace synchronizační režie).
+\item CDPS: benevolence + sdílený cíl; odlišit od PPS (homogenní procesory, paralelní algoritmus)
+ a~od MAS (vlastní cíle, konflikty, vyjednávání).
+\item Tři fáze CDPS: dekompozice --- řešení podproblémů --- syntéza. Sdílení úloh (dohoda)
+ vs.\ sdílení výsledků (proaktivní/reaktivní), čtyři přínosy: jistota, úplnost, přesnost,
+ včasnost.
+\item \textbf{CNET}: recognition --- announcement --- bidding --- awarding/expediting; manažer
+ a~dodavatel, hierarchické subkontrakty; standardizován jako FIPA-Contract-Net.
+\item \textbf{BBS}: tabule (hierarchie abstrakce, mutex), experti (skills), arbitr (výběr
+ experta); volná vazba mezi experty; úzké hrdlo přístupu k~tabuli.
+\item DisCSP / DCOP: proměnné a~omezení rozdělené mezi agenty, nikdo nevidí celý problém;
+ ABT (\texttt{ok?} / \texttt{nogood}); DCOP maximalizuje sociální blahobyt.
+\item Sobecký agent maximalizuje \emph{svoji} očekávanou utilitu za předpokladu, že ostatní
+ dělají totéž; společná utilita se tím nemaximalizuje.
+\item Hra v~normální formě, ryzí vs.\ smíšené strategie, dominance a~dominantní strategie,
+ iterované odstraňování dominovaných strategií.
+\item \textbf{Nashovo ekvilibrium} = vzájemně nejlepší odpovědi, nikdo nemá důvod se
+ jednostranně odchýlit; naivní hledání $m^n$; \textbf{Nashova věta} (existence ve smíšených
+ strategiích); hledání PPAD-úplné.
+\item \textbf{Paretova optimalita} (nelze zlepšit jednomu bez přitížení jinému)
+ vs.\ \textbf{sociální blahobyt} (součet utilit); maximum sw je Pareto-optimální, obráceně ne.
+\item \textbf{Vězňovo dilema}: $T>R>P>S$; $D$ dominantní; $(D,D)$ jediné NE a~jediné
+ ne-Pareto-optimální; $(C,C)$ maximalizuje sw. Tragedy of the commons.
+ Iterované PD, stín budoucnosti, Axelrod a~TFT (slušná, odvetná, odpouštějící, nezávistivá,
+ srozumitelná).
+\item Umět spočítat smíšené NE pro $2\times2$: pravděpodobnosti volím tak, aby byl
+ \emph{protihráč} indiferentní.
+\item Sociální volba: plurality / IRV / sekvenční / Borda / Slater; Condorcetův paradox
+ (cyklická kolektivní preference); kritéria Pareto, Condorcetův vítěz, IIA, univerzalita,
+ nediktátorství; \textbf{Arrowova věta} (Pareto + IIA $\Rightarrow$ diktatura);
+ Gibbard--Satterthwaite (každý systém lze manipulovat).
+\item Aukce = mechanismus alokace vzácných zdrojů; efektivní aukce dá zdroj tomu, kdo ho oceňuje
+ nejvíc. Dimenze: private/common value, open cry/sealed bid, first/second price, počet kol.
+\item Čtyři základní typy a~strategie: anglická (přihazuj po $\varepsilon$ do svého ocenění)
+ a~Vickrey (nabídni pravdivě) mají \emph{dominantní} strategii; holandská (čekej na ocenění
+ $-\varepsilon$) a~FPSB (nabídni pod oceněním) dominantní strategii \textbf{nemají}.
+ Umět \textbf{důkaz pravdomluvnosti} Vickreyho.
+\item Ekvivalence: anglická $\leftrightarrow$ Vickreyova, holandská $\leftrightarrow$ FPSB.
+ \textbf{Věta o~ekvivalenci výnosů} a~kdy neplatí (averze k~riziku, common values, prokletí
+ vítěze, koluze). Umět příklad s~oceněními 80/60/30.
+\item Návrh mechanismů (obrácená teorie her), princip odhalení; kombinatorické aukce a~WDP
+ (NP-těžký); \textbf{VCG} = alokace maximalizující sw + platba rovná externalitě.
+\item Vyjednávání: monotónní protokol ústupků + Zeuthenova strategie (ustupuje ten s~nižším
+ rizikem).
+\end{itemize}
+
+\section{Metody pro učení agentů a~zpětnovazební učení}
+\begin{itemize}
+\item Metody učení agentů: s~učitelem / bez učitele / zpětnovazební; imitační učení
+ a~inverzní RL; evoluční metody (LCS, neuroevoluce); co se agent učí (model prostředí,
+ model protivníka, politiku); individuální vs.\ sociální učení. RL je nejběžnější.
+\item \textbf{MDP} $= \langle S,A,T,R,\gamma\rangle$, Markovská vlastnost, politika $\pi$,
+ hodnotové funkce $V^\pi$, $Q^\pi$; Bellmanova rovnice optimality; value iteration
+ (kontrakce, konverguje) a~policy iteration.
+\item \textbf{Q-learning}: $Q(s,a) \leftarrow Q(s,a) + \alpha[r + \gamma\max_{a'}Q(s',a') - Q(s,a)]$,
+ off-policy, tabulkový; umět spočítat jeden krok s~čísly.
+\item \textbf{SARSA}: $\dots + \alpha[r + \gamma Q(s',a') - Q(s,a)]$, on-policy, opatrnější
+ (cliff walking). $\varepsilon$-greedy jako řešení dilematu průzkum/využití.
+\item \textbf{Policy gradient} (REINFORCE, $\nabla \ln \pi$ krát výnos) a~\textbf{actor-critic}
+ (herec = politika, kritik = hodnotová funkce, výhoda $A = Q - V$); DQN (replay buffer,
+ target network).
+\item \textbf{Markovská hra} = MDP pro $N$ agentů se sdruženým akčním prostorem
+ a~individuálními odměnami; nejlepší odpověď, Nashovo ekvilibrium, Pareto-optimalita.
+ \textbf{Minimax-Q} (nulový součet, LP v~každé aktualizaci), Nash-Q (obecný součet).
+\item Problémy MARL: nestacionarita, exponenciální sdružený akční prostor, částečná
+ pozorovatelnost, přiřazení zásluh; řešení CTDE. Self-play a~AlphaZero.
+\end{itemize}
+
+\section{Metodologie návrhu, jazyky a~prostředí MAS}
+\begin{itemize}
+\item Proč nestačí OO metodologie: autonomie, vlastní cíle, organizační (nikoli strukturální)
+ vztahy.
+\item \textbf{Gaia}: organizace + role; analýza = model rolí (permissions, responsibilities
+ s~liveness a~safety, activities, protocols) + model interakcí; návrh = model agentů,
+ služeb a~známostí. Předpoklad kooperativních agentů a~statické organizace.
+\item \textbf{FIPA platforma}: AMS (bílé stránky, AID, životní cyklus: initiated, active,
+ waiting, suspended, transit), DF (žluté stránky, služby), MTS/ACC (doručování ACL zpráv).
+\item \textbf{JADE} = Java, FIPA, \texttt{Agent} + \texttt{Behaviour} + \texttt{ACLMessage},
+ hotové protokoly a~ladicí nástroje. \textbf{Jason/AgentSpeak} = BDI jazyk,
+ plán \texttt{spouštěč : kontext <- tělo}, potomek PRS. \textbf{NetLogo} = ABM simulace
+ (turtles/patches/links). \textbf{SPADE} = Python + XMPP.
+\item \textbf{Jason prakticky}: testovací cíl \texttt{?g}, aktualizace \texttt{-+b};
+ \texttt{not} (negace jako neúspěch) vs.\ \texttt{\textasciitilde} (silná negace); anotace
+ \texttt{[source(...)]}; \texttt{.send} s~performativy tell/achieve = řečové akty; prostředí
+ v~Javě (\texttt{executeAction}, \texttt{addPercept}), projekt \texttt{.mas2j}; přizpůsobení
+ přes selekční funkce cyklu, \texttt{AgArch} a~vlastní interní akce.
+\end{itemize}
+
+\part{Přírodou inspirované počítání}
+\setcounter{section}{0}
+
+\section{Genetické algoritmy, genetické a~evoluční programování}
+\begin{itemize}
+\item EA = populační stochastické prohledávání; cyklus \emph{inicializace $\to$
+ ohodnocení $\to$ rodičovská selekce $\to$ rekombinace $\to$ mutace $\to$
+ ohodnocení $\to$ environmentální selekce}.
+\item Variace (křížení, mutace) tvoří diverzitu, selekce ji odebírá a~směřuje
+ hledání; návrh EA = hledání rovnováhy explorace/exploatace.
+\item Selekce: \textbf{ruleta} ($p_i = f_i/\sum f_j$, vysoký rozptyl, citlivá na
+ škálování), \textbf{SUS} (stejné střední hodnoty, nízký rozptyl),
+ \textbf{turnaj} (tlak řízen $k$, invariantní k~transformacím fitness, nepotřebuje
+ explicitní fitness), \textbf{pořadová} (konstantní tlak),
+ \textbf{Boltzmannova} (tlak roste s~časem).
+\item Elitismus zaručuje monotonii nejlepší fitness; generační vs.\ steady-state
+ model se liší podílem nahrazované populace.
+\item No Free Lunch: neexistuje univerzálně nejlepší algoritmus $\Rightarrow$
+ doménová specializace reprezentace a~operátorů.
+\item Historické větve GA / ES / EP / GP a~jejich charakteristické volby
+ (viz srovnávací tabulka) je dobré umět vyjmenovat zpaměti.
+\item SGA = binární řetězce + ruleta + 1-bodové křížení + bit-flip mutace
+ + generační náhrada. Parametry: $n$, $p_C \approx 0{,}7$, $p_M \approx 1/m$.
+\item Binární kódování reálných čísel: $x = a + z(b-a)/(2^k-1)$; problém
+ Hammingových útesů řeší Grayův kód.
+\item Křížení: 1-bodové (rozbití schématu s~pravděpodobností $d(S)/(m-1)$),
+ 2-bodové (bez okrajového biasu), uniformní (nejvíce disruptivní, bez
+ pozičního biasu).
+\item Mutace je v~GA sekundární --- brání nevratné ztrátě alel; inverze je
+ historický operátor pro evoluci uspořádání genů.
+\item Škálování fitness (lineární, sigma truncation, mocninné, pořadové,
+ Boltzmannovo) opravuje slabiny fitness-proporcionální selekce: dominanci
+ supermanů na začátku a~ztrátu tlaku na konci.
+\item Reprezentace $+$ operátory $=$ fitness krajina. Pro nominální atributy
+ jen nezaujaté mutace, pro ordinální i~zaujaté (creep).
+\item Reálná reprezentace: gaussovská mutace $x' = x + \sigma N(0,1)$;
+ aritmetické křížení $\alpha \vec x + (1-\alpha)\vec y$ (zmenšuje rozptyl),
+ proto BLX-$\alpha$ a~SBX.
+\item Permutace: PMX (pozice + mapování), OX (relativní pořadí),
+ CX (absolutní pozice pomocí cyklů), ER (hrany, nejlepší pro TSP).
+ Umět předvést PMX a~OX na konkrétním osmiprvkovém příkladu!
+\item Mutace permutací: swap, insert, inverze (2-opt), scramble.
+\item Stromové GP (Koza): terminály + neterminály, uzavřenost a~dostatečnost;
+ inicializace grow / full / ramped half-and-half; křížení = výměna podstromů
+ (neterminály s~vyšší pravděpodobností), více typů mutací včetně mutace
+ konstant; fitness = spuštění programu.
+\item Bloat = růst velikosti bez zlepšení fitness (introny); tři vysvětlení:
+ replication accuracy, removal bias, crossover bias. Obrana: limity
+ velikosti, penalizace (parsimony pressure), anti-bloat operátory
+ (hoist, shrink, size-fair), vícekriteriální přístup.
+\item ADF = evolvované podprogramy (modularita); operátory pracují na větvích
+ odděleně. Typované GP a~gramatické GP omezují prostor na smysluplné programy.
+\item Varianty: lineární GP (byte kód, Tierra), grafové GP,
+ Cartesian GP (lineární genotyp $\to$ 2D DAG, bodová mutace, $(1+4)$-ES),
+ vývojové GP (strom staví graf --- obvody, sítě).
+\item Gramatická evoluce: lineární genom celých čísel, výběr pravidla
+ gramatiky pomocí modula, derivační strom $\to$ fenotyp; robustní kódování,
+ standardní operátory GA, ale nelokální mapování.
+\item EP: konečné automaty, genotyp = fenotyp, jen mutace, turnajová selekce
+ z~rodičů i~potomků; příklad predikce prvočísel (degenerace fitness).
+\item Headless chicken experiment: test, zda křížení skutečně kombinuje
+ stavební bloky, nebo je jen makromutací.
+\end{itemize}
+
+\section{Teorie schémat a~pravděpodobnostní modely SGA}
+\begin{itemize}
+\item Schéma = slovo nad $\{0,1,*\}$; $o(S)$ = počet pevných pozic;
+ $d(S)$ = vzdálenost první a~poslední pevné pozice; $F(S)$ = průměrná fitness
+ reprezentantů \emph{v~dané populaci}. Celkem $3^m$ schémat, jedinec je
+ reprezentantem $2^m$ z~nich.
+\item TST: $\mathbb{E}[C(S,t+1)] \ge C(S,t)\frac{F(S)}{\bar f}
+ [1 - p_C \frac{d(S)}{m-1} - p_M o(S)]$; odvození ve třech krocích
+ (selekce $\to$ exponenciální růst, křížení $\to$ $d(S)/(m-1)$,
+ mutace $\to$ $(1-p_M)^{o(S)}$).
+\item BBH: GA skládá krátká, nízkého řádu, nadprůměrná schémata (stavební
+ bloky). Důsledky: záleží na kódování, na velikosti populace, škodí předčasná
+ konvergence.
+\item Implicitní paralelismus ($\sim n^3$ užitečně zpracovaných schémat),
+ analogie s~$k$-rukým banditou (exponenciální alokace pokusů vítězi).
+\item Kritika: nerovnost pro jeden krok, konečné populace, deceptivní úlohy,
+ kolaterální konvergence, velký rozptyl fitness, ignorování konstruktivních
+ efektů, závislost schémat.
+\item Voseho model: řetězce ztotožníme s~čísly $0..2^l-1$; populaci popisuje
+ vektor relativních četností $p(t)$ v~simplexu a~vektor selekčních
+ pravděpodobností $s(t)$.
+\item Hledáme $\mathcal{G} = \mathcal{M} \circ \mathcal{F}$ s~$p(t+1)=\mathcal{G}(p(t))$.
+ $\mathcal{F}$ (selekce) je dána diagonální maticí fitness:
+ $s = \mathbf{F}p / \sum_j \mathbf{F}_{jj}p_j$;
+ $\mathcal{M}$ (křížení + mutace) je kvadratický operátor
+ $\mathbb{E}[p_k'] = \sum_{i,j} s_i s_j\, r(i,j,k)$. Díky symetrii
+ $r(i,j,k) = r(i\oplus k, j \oplus k, 0)$ stačí jediná míchací matice.
+\item Pevné body: $\mathcal{F}$ --- populace kopií nejlepšího jedince;
+ $\mathcal{M}$ --- rovnoměrné rozdělení. Kombinace vede k~přerušovaným
+ rovnováhám. Pevné body $\mathcal{G}$ nejsou známy.
+\item Konečné populace: Markovův řetězec se stavy = populace,
+ $N = \binom{n+2^l-1}{2^l-1}$ stavů, matice $\mathbf{Q}$ je exaktní, ale
+ astronomicky velká. Ireducibilita při $p_M>0$; elitistický GA konverguje
+ k~optimu s~pravděpodobností 1.
+\item Nekonečné populace = deterministický model (exaktní, nepraktický),
+ konečné = stochastický (realistický, nezvládnutelný). Limitní přechod je
+ spojuje.
+\end{itemize}
+
+\section{Evoluční strategie, diferenciální evoluce, koevoluce, otevřená evoluce}
+\begin{itemize}
+\item ES: reálné vektory, mutace hlavní operátor, náhodná rodičovská selekce,
+ deterministická environmentální selekce; jedinec $= [\vec x, \vec\sigma]$.
+\item $(\mu,\lambda)$ vs.\ $(\mu+\lambda)$: umět vyjmenovat rozdíly
+ (elitismus, konvergence, lokální optima, samoadaptace).
+\item $(1+1)$-ES a~pravidlo 1/5: $p > 1/5 \Rightarrow$ zvětši $\sigma$,
+ $p < 1/5 \Rightarrow$ zmenši; jde o~adaptivní, nikoli samoadaptivní řízení.
+\item Samoadaptace: $\sigma' = \sigma \exp(\tau'N(0,1) + \tau N_i(0,1))$,
+ poté $x' = x + \sigma' N(0,1)$; \textbf{nejdřív $\sigma$, pak $x$}.
+ Počet strategických parametrů: 1 (izotropní), $n$ (nekorelované),
+ $n(n+1)/2$ (korelované, s~úhly natočení).
+\item Rekombinace: lokální ($\rho=2$) / globální ($\rho=\mu$),
+ diskrétní (dominantní) / intermediární (aritmetická).
+\item CMA-ES: $\theta = (\vec m,\sigma,\mathbf C,\vec p_\sigma,\vec p_c)$,
+ vzorkování $\mathcal N(\vec m, \sigma^2\mathbf C)$, evoluční cesty,
+ rank-1 a~rank-$\mu$ update, řízení kroku podle délky $\vec p_\sigma$;
+ invariantní vůči monotónním transformacím fitness a~lineárním transformacím
+ prostoru.
+\item DE/rand/1/bin: dárce $\vec v = \vec x_a + F(\vec x_b - \vec x_c)$;
+ binomické křížení s~prahem $C$ a~pojistkou $j = I_{\mathrm{rand}}$;
+ souboj potomka s~vlastním rodičem (nahrazení jen při zlepšení).
+\item Parametry: $F \in [0,2]$ (typ.\ $0{,}5$--$0{,}9$), $C \in [0,1]$,
+ $N \approx 10D$.
+\item Geometrická podstata: měřítko a~orientace kroků se přebírají z~aktuálního
+ rozptylu populace $\Rightarrow$ automatická adaptace bez strategických
+ parametrů.
+\item Varianty: rand/1, rand/2, best/1, best/2, current-to-best;
+ \texttt{bin} vs.\ \texttt{exp} křížení.
+\item Umět předvést jeden krok s~konkrétními čísly (mutace $\to$ křížení
+ $\to$ selekce).
+\item Koevoluce = kontextová fitness + dynamická krajina.
+ \emph{Kompetitivní}: predátor--kořist, host--parazit, Hillisovy řadicí
+ sítě. \emph{Kooperativní}: dekompozice na komponenty, CCGA,
+ moduly $+$ blueprinty.
+\item Patologie: cyklení (in\-tran\-zi\-ti\-vi\-ta), odpojení, efekt Červené
+ královny, průměrné stabilní stavy, přespecializace, zapomínání.
+ Léky: archivy (hall of fame), sdílená fitness, měření proti pevné sadě.
+\item Vězňovo dilema: $T>R>P>S$, $2R > T+S$; $D$ dominantní, $DD$ Nashovo
+ ekvilibrium a~jediné Pareto-neoptimální; iterovaná verze $\Rightarrow$ TFT;
+ čtyři vlastnosti úspěšné strategie (slušnost, dráždivost, odpouštění,
+ nezávistivost) $+$ srozumitelnost jako pátá; Pavlov v~zašuměném prostředí.
+\item Diverzita: fitness sharing, crowding, speciace, ostrovní model,
+ nenáhodné páření.
+\item Dynamická fitness: diploidie, hypermutace, náhodná migrace, udržování
+ diverzity, $(\mu,\lambda)$-ES.
+\item Otevřená evoluce: bez pevného cíle; znaky = trvalá novost, neomezený růst
+ složitosti, nové třídy entit, evoluce evolvability. Systémy Tierra, Avida,
+ Polyworld, ECHO --- všechny se dříve či později zaseknou.
+ Generativní (nepřímé) reprezentace: L-systémy, celulární automaty,
+ buněčné kódování, CPPN.
+\item Novelty search měří řídkost $\rho(x)$ v~prostoru chování vůči populaci
+ \emph{a} permanentnímu archivu, účelovou funkci vůbec nepoužívá;
+ navazuje quality-diversity a~MAP-Elites (mřížka deskriptorů chování).
+\item Interaktivní evoluce: fitness = člověk (Biomorphs, Picbreeder,
+ EndlessForms); omezením je malá populace a~únava uživatele.
+\end{itemize}
+
+\section{Rojové optimalizační algoritmy}
+\begin{itemize}
+\item PSO: rovnice
+ $\vec v \gets w\vec v + c_1r_1(\vec p - \vec x) + c_2r_2(\vec g - \vec x)$,
+ $\vec x \gets \vec x + \vec v$; setrvačnost $w$ (klesá 0{,}9 $\to$ 0{,}4),
+ kognitivní a~sociální složka, $c_1=c_2=2$; omezení $v_{\max}$ nebo
+ constriction $\chi \approx 0{,}729$; topologie gbest vs.\ lbest (kruh,
+ mřížka).
+\item Rozdíl PSO vs.\ GA: žádné operátory, částice mají paměť
+ ($\vec p_i$, $\vec g$), informace teče jednosměrně od lepších.
+\item ACO: pravděpodobnost přechodu
+ $p_{ij} \propto \tau_{ij}^{\alpha}\eta_{ij}^{\beta}$ s~$\eta = 1/d$;
+ aktualizace $\tau \gets (1-\rho)\tau + \sum_k Q/L_k$ (odpařování + uložení
+ úměrné kvalitě).
+\item AS (původní, všichni aktualizují) vs.\ ACS (globální update jen
+ nejlepším, lokální update při průchodu, pseudonáhodné pravidlo $q_0$)
+ vs.\ MAX--MIN (meze feromonu). Akce démona = lokální prohledávání.
+\item ABC (dělnice / pozorovatelky / průzkumnice s~limitem = restart),
+ firefly (přitažlivost klesá exponenciálně se vzdáleností).
+\item Klíčová slova: stigmergie, emergence, decentralizace, kladná zpětná
+ vazba + odpařování, vhodnost pro dynamické prostředí.
+\end{itemize}
+
+\section{Lokální prohledávání a~memetické algoritmy}
+\begin{itemize}
+\item Hill climbing: steepest ascent / first improvement / stochastic /
+ s~náhodnými restarty; problémy: lokální optima, plošiny, hřebeny.
+\item SA: Metropolisovo kritérium $P = \min(1, e^{-\Delta/T})$; rozvrh chlazení
+ (geometrický v~praxi, logaritmický pro důkaz konvergence); pro pevné $T$
+ konverguje k~Boltzmannovu rozdělení $\propto e^{-f/T}$.
+\item Tabu search: tabu list tahů, tenure, aspirační kritérium, střednědobá
+ a~dlouhodobá (frekvenční) paměť; vždy se jde do nejlepšího nezakázaného
+ souseda, i~když je horší.
+\item Scatter search: referenční množina kombinující kvalitu a~diverzitu,
+ aritmetické kombinace + vylepšení.
+\item Memetický algoritmus = EA + lokální prohledávání nad jedinci;
+ \textbf{lamarckismus} (mění genotyp, rychlejší) vs.\ \textbf{baldwinismus}
+ (mění jen fitness, zachovává diverzitu). Memetic computing: memy v~genomu
+ nebo v~koevolvující populaci.
+\item Ladění vs.\ řízení parametrů; pevné / adaptivní / samoadaptivní strategie.
+\end{itemize}
+
+\section{Aplikace evolučních algoritmů}
+\begin{itemize}
+\item \textbf{Michigan}: jedinec = jedno pravidlo, řešením je celá populace,
+ nutné rozdělení odměny (credit assignment).
+ \textbf{Pittsburgh}: jedinec = celá sada pravidel, fitness přímočará,
+ operátory složité (GIL).
+\item Hollandův LCS: podmínky nad $\{0,1,*\}$, vnitřní zprávy a~receptory,
+ bucket brigade (pravidlo platí předchůdci za právo jednat).
+\item ZCS: bez zpráv; match set $M$ $\to$ ruletový výběr akce $\to$ action set
+ $A$; posílení $A$ a~$A_{-1}$, daň pro $M \setminus A$; cover operátor.
+\item XCS: klasifikátor $(c,a,p,\epsilon,F)$, \textbf{fitness podle přesnosti
+ predikce} $\kappa = \alpha(\epsilon/\epsilon_0)^{-\nu}$, aktualizace
+ Q-learningem, nikový GA v~action setu; evolvuje úplnou a~minimální mapu
+ vstup--výstup. Varianty: UCS (učení s~učitelem), XCSF (aproximace funkcí).
+\item Umět vysvětlit, proč přesnost jako fitness řeší nedostatky
+ \uv{strength-based} systémů.
+\item Co se evolvuje: váhy / topologie / obojí / hyperparametry učení.
+ Výhody EA: bez gradientu, rekurentní sítě, RL, paralelizace.
+\item Problém konkurujících konvencí (permutační problém) --- křížení sítí
+ je bez opatření destruktivní.
+\item Kódování architektury: přímé (matice), gramatické (Kitano), buněčné
+ (Gruau, GP program pro růst sítě); GNARL = EP nad grafy, strukturální
+ i~parametrické mutace řízené teplotou.
+\item NEAT: seznam hran s~\textbf{inovačními čísly} (křížení jen shodných
+ genů), \textbf{speciace} podle podobnosti genomů se sdílenou fitness
+ (ochrana nových topologií), \textbf{complexification} od minimální sítě.
+\item HyperNEAT: substrát $S:\mathbb{R}^4 \to \mathbb{R}$ generující váhy
+ z~souřadnic neuronů, reprezentovaný CPPN (DAG s~různými aktivačními
+ funkcemi) evolvovaným pomocí NEAT; zachycuje symetrie a~regularity.
+\item NAS: prostor (lineární / DAG buněk / super síť), strategie (EA, RL,
+ bayesovská, gradientní), odhad výkonu (sdílení vah --- ENAS);
+ DeepNEAT a~CoDeepNEAT (moduly + blueprinty); ES pro deep RL.
+\item Batoh: bitová mapa, triviální operátory, problém s~omezením kapacity.
+ Tři strategie pro omezení: \textbf{penalizace} (volba váhy $\alpha$),
+ \textbf{oprava} (lamarckovsky/baldwinovsky), \textbf{dekodér}
+ (\uv{přidej, pokud se vejde} --- každý genotyp je přípustný);
+ čtvrtá možnost = vícekriteriální formulace.
+\item TSP: fitness triviální, problém je kódování. Sousednostní a~ordinální
+ reprezentace nepoužívat; permutační + PMX/OX/CX/ER, případně maticová.
+ Inicializace: nejbližší soused, vkládání hran. Mutace: inverze (2-opt).
+\item SAT: fitness = počet splněných klauzulí (samotné $f$ nestačí),
+ vážení klauzulí, zjemňující funkce; reprezentace bitová, reálná,
+ klauzulová, cestová; WalkSAT jako lokální heuristika.
+ U~reálné reprezentace ($x \mapsto (1-y)^2$, $\neg x \mapsto (1+y)^2$,
+ minimalizace) pozor: hodnoty jsou \emph{penalty}, takže disjunkce
+ (klauzule) je \textbf{součin} a~konjunkce (formule) \textbf{součet}.
+\item Rozvrhování: přímé maticové kódování, tvrdá omezení řešit v~operátorech,
+ měkká ve fitness; job shop --- permutace s~dekodérem vs.\ přímé kódování.
+\item Obecné pravidlo: u~kombinatorických úloh rozhoduje kódování a~operátory
+ respektující strukturu úlohy; hybridizace s~lokální heuristikou (2-opt,
+ WSAT) je téměř vždy výhodná.
+\item Dominance ($x \prec y$: ve všech kritériích ne horší a~alespoň v~jednom
+ lepší), Pareto množina a~Pareto fronta; dvojí cíl = konvergence + diverzita.
+\item Skalarizace: lineární (jednoduchá, ale nenajde nekonvexní části fronty),
+ $\varepsilon$-constraint, Čebyševova.
+\item NSGA-II: nedominované třídění do front, crowding distance
+ $d_i = \sum_m (f_m(i+1)-f_m(i-1))/(f_m^{\max}-f_m^{\min})$, krajní body
+ $\infty$; crowded comparison (nižší fronta, při shodě větší crowding);
+ elitismus spojením $P_t \cup Q_t$. Umět spočítat crowding distance na
+ příkladu.
+\item SPEA2 (archiv, síla dominujících, hustota přes $\sigma$-tého souseda),
+ MOEA/D (Čebyševova skalarizace, váhové vektory, sousedství),
+ SMS-EMOA (příspěvek k~hypervolume), NSGA-III (referenční body pro
+ many-objective).
+\item Hypervolume: objem dominovaný frontou vůči referenčnímu bodu; jediná
+ běžná metrika monotónní vůči dominanci a~bez znalosti skutečné fronty.
+ Dále GD, IGD, spread, $\varepsilon$-indikátor.
+\end{itemize}
+
+\part{Dobývání znalostí}
+\setcounter{section}{0}
+
+\section{Základní paradigmata dobývání znalostí}
+\begin{itemize}
+\item \textbf{KDD} $=$ netriviální proces získávání implicitních, dosud neznámých
+ a~potenciálně užitečných informací z~dat; interaktivní a~iterativní.
+\item \textbf{Pět fází KDD}: výběr $\to$ předzpracování $\to$ transformace $\to$ dobývání
+ $\to$ interpretace. Příprava dat spotřebuje 60--80~\% času.
+\item \textbf{Kořeny oboru}: umělá inteligence (strojové učení), databáze, statistika
+ $+$ potřeba podpory rozhodování. \textbf{OLAP} odpovídá na předem položené otázky,
+ KDD hledá vzory, o~nichž nevíme.
+\item \textbf{Tři typy úloh}: klasifikace/predikce (přesnost $>$ jednoduchost), popis
+ (srozumitelnost, plné pokrytí), hledání nugetů (překvapivost, nemusí pokrývat).
+\item \textbf{Deskriptivní vs.\ prediktivní} úlohy; \textbf{s~učitelem vs.\ bez učitele}
+ vs.\ \textbf{poloučené}.
+\item \textbf{Škály atributů}: nominální, ordinální, intervalová, poměrová --- určují
+ přípustné operace i~metody. Nominální $\to$ $v$ binárních atributů; poměrový
+ s~exponenciálním chováním $\to$ logaritmovat.
+\item \textbf{Metodologie}: SEMMA (Sample, Explore, Modify, Model, Assess), CRISP-DM
+ (6 fází, pořadí není striktní, cyklické), ASUM-DM (CRISP-DM $+$ projektové řízení).
+\item Nejčastější doplňující otázka: \emph{proč pořadí fází CRISP-DM není striktní?} ---
+ protože výsledky fáze určují další kroky; např.\ zjištěná kvalita dat vede zpět
+ k~přeformulování cíle.
+\end{itemize}
+
+\section{Příprava dat, výběr atributů a~analýza jejich relevance}
+\begin{itemize}
+\item \textbf{Cíl přípravy dat}: vybrat relevantní data, reprezentovat je pro zvolený
+ algoritmus, výsledkem \emph{jedna} tabulka objekty $\times$ atributy.
+\item \textbf{Chybějící hodnoty}: ignorovat objekt / nová hodnota \uv{nevím} / existující
+ hodnota (modus, poměrně, libovolně) / doplnit modelem. Umět říct, kdy je která volba
+ vhodná (absence jako informace $\to$ \uv{nevím}).
+\item \textbf{Odlehlé hodnoty}: $\mathrm{IQR}=Q_3-Q_1$, outlier mimo
+ $[Q_1-1{,}5\,\mathrm{IQR},\,Q_3+1{,}5\,\mathrm{IQR}]$. Umět spočítat kvartily
+ z~vzestupně seřazených dat (pravidlo $n/4$ a~$3n/4$, zaokrouhlení nahoru) a~nakreslit
+ box plot.
+\item \textbf{Standardizace}: desítkové škálování, min-max do $[0,1]$ a~$[-1,1]$, z-skóre
+ podle střední absolutní odchylky (robustní k~outlierům).
+ Motivace: bez ní vzdálenost ovládne atribut s~největším rozsahem.
+\item \textbf{Diskretizace}: ekvidistantní (stejná délka), ekvifrekvenční (stejný počet
+ objektů), s~využitím třídy (entropie shora dělením, $\chi^2$ zdola slučováním);
+ \textbf{fuzzy diskretizace} --- procedura Interval, rozostřené hranice, jedné hodnotě
+ dvě kategorie se součtem charakteristických funkcí 1, váha objektu $\prod_j\mu_j$.
+ \textbf{KEX} seskupuje hodnoty kategoriálního atributu (Assign: kód třídy podle
+ $\chi^2$ testu proti apriornímu rozdělení tříd, jinak \uv{?}; Group: hodnoty se
+ stejným kódem).
+\item \textbf{Redukce dat}: příliš mnoho objektů $\to$ vzorkování (reprezentativnost!),
+ efektivní uložení, více modelů nad podmnožinami; nevyvážené třídy $\to$ váhy chyb nebo
+ různé pravděpodobnosti výběru. Příliš mnoho atributů $\to$ \emph{transformace} (PCA:
+ méně nových atributů jako lineární kombinace, ale nutné znát všechny původní a~chybí
+ interpretace) vs.\ \emph{selekce} (podmnožina původních, interpretace zůstává).
+\item \textbf{Filtry vs.\ wrappery}: filtr počítá charakteristiku pro každý atribut
+ samostatně a~je nezávislý na modelu (rychlý, ale nezachytí interakce); wrapper staví
+ model nad podmnožinou a~vyhodnocuje jej (drahý, zohledňuje interakce). Prohledávání
+ \emph{bottom-up} (přidávání) nebo \emph{top-down} (odebírání).
+\item \textbf{Filtrační kritéria}: $\chi^2$ (větší $=$ lepší), entropie $H(A)$ (menší $=$
+ lepší), $\mathrm{MI}(A,C)$, $\mathrm{ID}(A,C)=\mathrm{MI}/H(C)$ (větší $=$ lepší).
+ Umět zdůvodnit normalizaci $\mathrm{ID}$: bez ní jsou zvýhodněny atributy s~mnoha
+ hodnotami.
+\item \textbf{$\chi^2$ test}: $(R-1)(S-1)$ stupňů volnosti, podmínka $r_ks_l/n\ge 5$; pro
+ malé četnosti \textbf{Fisherův exaktní test}. Umět projít výpočet na čtyřpolní tabulce
+ (příklad s~úvěrem: $\chi^2=42{,}857>3{,}84$ $\Rightarrow$ závislost).
+\item \textbf{Regrese}: metoda nejmenších kvadrátů, $\beta$ jako kovariance dělená
+ rozptylem, $\alpha=\bar y-\beta\bar x$; vícerozměrně
+ $\beta=(X^{\!\top}\!X)^{-1}X^{\!\top}Y$.
+\end{itemize}
+
+\section{Metody pro dobývání znalostí}
+\textbf{Asociační pravidla.}
+\begin{itemize}
+\item \textbf{Support} $=$ podíl transakcí s~$i$ i~$j$; \textbf{confidence} $=$ podíl
+ transakcí s~$i$ i~$j$ mezi transakcemi s~$i$; \textbf{lift}
+ $=p(i\wedge j)/\big(p(i)p(j)\big)$. Lift $<1$ $\Rightarrow$ pravidlo horší než náhoda,
+ negace závěru může být lepší. Umět spočítat všechny tři z~malé tabulky transakcí.
+\item \textbf{Apriori} využívá \emph{uzavřenost dolů} (každá podmnožina frekventované množiny
+ je frekventovaná), prohledává \emph{do šířky}; \textsc{Apriori-Gen} $=$ krok spojení
+ (kombinace shodné v~$k-2$ kategoriích) $+$ krok prořezání (chybí-li podkombinace délky
+ $k-1$). Prostor pravidel je $O(2^m)$, MBA produkuje \emph{nadměrné množství pravidel}.
+\item \textbf{Taxonomie a~virtuální položky} řeší volbu úrovně položek; vzácné položky výše
+ v~taxonomii, časté níže; virtuální položky nesou informaci o~transakci (den, čas,
+ zákazník) --- pozor na redundanci pravidel.
+\item \textbf{MS-Apriori}: problém vzácných položek $\to$ každá položka má vlastní
+ $\mathrm{MIS}$, minsup pravidla je \emph{minimum} MIS jeho položek, plus omezení
+ rozdílu supportů $\varphi$. \emph{Uzavřenost dolů přestává platit} $\Rightarrow$ položky
+ se setřídí vzestupně podle MIS, používá se množina semen $L$ (ne $F_1$)
+ a~\texttt{tailCount} pro generování pravidel. Umět uvést protipříklad k~uzavřenosti dolů.
+\item \textbf{CAR}: transakce označkované třídou, pravidlo $X\to y$; dolují se
+ \emph{přímo v~jednom kroku} přes pravidlové položky $(\mathit{condset},y)$; lze zadat
+ různé minsupy různým třídám (101~\% $=$ zakázat třídu).
+\item \textbf{Sekvenční vzory}: sekvence $=$ uspořádaný seznam množin položek;
+ \emph{velikost} $=$ počet prvků, \emph{délka} $=$ počet položek; podsekvence přes
+ vnořené inkluze. Algoritmus \textbf{GSP} pracuje obdobně jako Apriori. Pozor:
+ $\langle\{3\}\{8\}\rangle$ a~$\langle\{3,8\}\rangle$ se navzájem \emph{neobsahují}.
+\item \textbf{FP-Growth}: 2 průchody daty, žádné generování kandidátů; FP-strom sdílí
+ \emph{prefixy} (pořadí položek podle klesajícího supportu --- heuristika), spojové
+ seznamy položek; extrakce zdola nahoru \emph{rozděl a~panuj} přes \emph{prefixové
+ podstromy} a~\emph{podmíněné FP-stromy} (aktualizovat počítadla $\to$ odstranit uzly
+ položky $\to$ odstranit nefrekventované položky). Nejhorší případ: unikátní transakce
+ $\Rightarrow$ strom větší než data.
+\end{itemize}
+
+\textbf{Učení s~učitelem.}
+\begin{itemize}
+\item \textbf{Rozhodovací stromy}: TDIDT (rozděl a~panuj), volba atributu podle
+ \emph{minimální vážené entropie} $H(A)=\sum_v\frac{|A(v)|}{|D|}H(A(v))$, ekvivalentně
+ maximálního \emph{informačního zisku}. Umět projít příklad s~úvěrem (příjem 0,5747;
+ konto 0,6667; pohlaví 0,9183; nezaměstnaný 0,825) a~převést strom na pravidla.
+ Složitost indukce $O(np\log p)$, klasifikace $O(q\log p)$.
+\item \textbf{ID3} (Quinlan 1986) --- hladový, informační zisk. \textbf{C4.5} (1993) ---
+ chybějící a~spojitá data, prořezávání validací (\emph{reduced-error pruning},
+ \emph{subtree raising}), \emph{rule post-pruning}, odhad přesnosti dolní mezí
+ $\mathit{acc}-1{,}96\sqrt{\mathit{acc}(1-\mathit{acc})/n}$, \emph{poměrný} informační
+ zisk (penalizuje nadměrné větvení). \textbf{C5.0} --- komerční, boosting.
+ \textbf{CART} --- \emph{binární} stromy, Gini index $G(v_i)=1-\sum_j p_j^2$ (nižší $=$
+ lepší), kritérium $\Phi=2P_LP_R\sum_j|P(C_j|t_L)-P(C_j|t_R)|$.
+\item \textbf{Bayes}: $H_{MAP}=\arg\max_H P(E\mid H)P(H)$ (jmenovatel lze zanedbat);
+ \emph{naivní} předpoklad podmíněné nezávislosti $\Rightarrow$
+ $\arg\max_{H_t}P(H_t)\prod_i P(E_i\mid H_t)$. Umí nekompletní vzory; problém nulových
+ pravděpodobností. Umět spočítat příklad (0,1042 vs.\ 0,0416).
+\item \textbf{SVM}: maximální okraj $2/\|w\|$, primární úloha $\min\frac{\langle w\cdot
+ w\rangle}{2}$ za podmínek $y_i(\langle w\cdot x_i\rangle+b)\ge 1$; Kuhn--Tuckerovy
+ podmínky jsou pro konvexní úlohu s~lineárními omezeními nutné \emph{i~postačující};
+ $\alpha_i>0$ jen pro \emph{podpůrné vektory} (plyne z~\emph{komplementarity}).
+ \textbf{Wolfeho duál} vznikne ve dvou krocích: vynulovat $\partial L_P/\partial w$
+ a~$\partial L_P/\partial b$ (dá $w=\sum_i y_i\alpha_i x_i$ a~$\sum_i y_i\alpha_i=0$)
+ a~dosadit zpět do $L_P$, čímž se $w,b$ vyeliminují; je to úloha \emph{vázaná}
+ --- $\max L_D$ za podmínek $\sum_i y_i\alpha_i=0$, $\alpha_i\ge 0$. Zpět:
+ $w$ ze stacionarity, $b=y_k-\langle w\cdot x_k\rangle$ z~komplementarity.
+ \textbf{Kernelový trik}:
+ duál potřebuje jen skalární součiny $\Rightarrow$ $K(x,z)=\langle\phi(x)\cdot\phi(z)\rangle$,
+ $\phi$ nikdy nevyčíslíme (Mercerova věta). Jen 2 třídy, jen reálný prostor,
+ neinterpretovatelné.
+\item \textbf{Logistická regrese}: $\ln\frac{p}{1-p}=\beta^{\!\top}x$, tedy
+ $p=\sigma(z)=1/(1+e^{-z})$; učení maximální věrohodností / minimalizací křížové
+ entropie; $\sigma'=\sigma(1-\sigma)$ $\Rightarrow$ adaptační pravidlo
+ $\Delta\beta_j=\eta\sum_i(y_i-\sigma(z_i))x_{ij}$.
+\item \textbf{Diskriminační analýza}: $g_j(x)$ pro každou třídu, klasifikuje se maximem; pro
+ dvě třídy stačí znaménko $g=g_1-g_2$; optimální je $g_j\propto P(C_j\mid x)$; normální
+ rozdělení $\to$ kvadratická funkce, při shodných kovariančních maticích \emph{lineární}
+ $\Rightarrow$ stačí odhadnout $\mu_j$ a~$S$.
+\item \textbf{ELM}: náhodné parametry skrytých neuronů (i~bez znalosti dat), výstupní váhy
+ \emph{jednou} pseudoinverzí $\beta=H^{+}T$; regularizace $I/C$ na diagonále. Rychlé,
+ bez lokálních minim, funguje s~libovolnou omezenou po částech spojitou přenosovou funkcí.
+\item \textbf{Ensembly}: \emph{bagging} snižuje \emph{rozptyl} ($\sigma^2\to\sigma^2/k$ pro
+ i.i.d.), bootstrap obsahuje $\approx 63{,}2\,\%$ různých bodů ($1-1/e$), stromy jsou
+ ideální komponenty (nízké zkreslení, vysoký rozptyl); zkreslení nesnižuje.
+ \emph{Náhodné lesy} řeší korelaci komponent --- rozptyl je
+ $\rho\sigma^2+(1-\rho)\sigma^2/k$, první člen na $k$ nezávisí; náhodnost přes bootstrap
+ \emph{a} náhodnou podmnožinu $m\approx\sqrt{\#\text{příznaků}}$ příznaků v~každém uzlu.
+ \emph{Boosting}/\textbf{AdaBoost} snižuje \emph{zkreslení}, váhy chybně klasifikovaných
+ vzorů rostou, $\alpha_t=\frac12\ln\frac{1-\epsilon_t}{\epsilon_t}$, běží
+ \emph{sekvenčně}, je citlivý na šum. Umět srovnat lesy vs.\ boosting (paralelní
+ a~levné vs.\ vyčerpávající a~přesnější při stejném počtu stromů).
+\end{itemize}
+
+\textbf{Klastrová analýza.}
+\begin{itemize}
+\item \textbf{Metriky}: Hammingova/Manhattan ($L_1$), euklidovská ($L_2$), Čebyševova
+ ($L_\infty$), Minkowského ($L_q$, ostatní jsou její speciální případy);
+ \textbf{Mahalanobisova} $d_M^2=(x_1-x_2)^{\!\top}S^{-1}(x_1-x_2)$ pro veličiny
+ s~různým rozptylem. Před shlukováním \emph{normalizovat}.
+\item \textbf{Vzdálenost klastrů}: nejbližší soused (min), nejvzdálenější soused (max),
+ průměrná vzdálenost, centroidní metoda.
+\item \textbf{$k$-means} (Lloyd 1982): náhodné rozdělení $\to$ centroidy $\to$ přesuny
+ $\to$ opakuj, dokud dochází k~přesunům. Nikdy nezvýší cenu, ale bez záruky aproximace
+ $\Rightarrow$ \textbf{$k$-means++} (pravděpodobnost $\propto$ kvadrát vzdálenosti
+ k~nejbližšímu centroidu), \textbf{LocalSearch++}.
+\item \textbf{$k$-medians} (Manhattan, medián po dimenzích, robustnější) vs.\
+ \textbf{$k$-medoids} (reprezentanti \emph{z~dat}, hill-climbing s~výměnami,
+ $O(knd)$ na iteraci, libovolný typ dat). \textbf{PAM} testuje všech $k(n-k)$ výměn
+ ($O(kn^2d)$); \textbf{CLARA} aplikuje PAM na vzorky (riziko špatného vzorku),
+ \textbf{CLARANS} zkouší náhodné výměny nad plnými daty (\emph{MaxAttempt},
+ \emph{MaxLocal}).
+\item \textbf{Hierarchické shlukování} zdola nahoru: každý vzor svůj klastr $\to$ slučuj dva
+ nejbližší; výstupem \textbf{dendrogram}, počet klastrů se volí až řezem.
+ \textbf{CURE}: škálovatelná varianta (vzorkování, hierarchické slučování po částech);
+ rychlá, libovolný tvar klastrů.
+\item \textbf{LVQ}: shlukování \emph{s~učitelem} --- vítězný váhový vektor se ke vzoru
+ přitáhne při souhlasu tříd a~odtlačí při nesouhlasu; $\mu$ klesá jako $\mu(k-1)/(k+1)$.
+\item \textbf{Mřížkové a~hustotní metody} (MAFIA, \textbf{DBSCAN}): klastry libovolného
+ tvaru jako souvislé husté oblasti; DBSCAN --- jádrové body ($\ge\tau$ bodů v~radiu
+ $\varepsilon$), klastry $=$ komponenty souvislosti grafu jádrových bodů, šum $=$
+ odlehlé hodnoty.
+\end{itemize}
+
+\section{Charakteristická a~diskriminační pravidla a~jejich zajímavost}
+\begin{itemize}
+\item \textbf{Proč pravidla}: klasifikátor $f\colon X\to\{C_1,\dots,C_m\}$ je
+ matematický předpis, málo srozumitelný; pravidlo logiky
+ ($\varphi\Rightarrow\psi$, $\varphi\Leftrightarrow\psi$) je srozumitelnější.
+ Booleovská implikace pravdivá při $t(\varphi)=0$ nebo $t(\varphi)=t(\psi)=1$;
+ fuzzy implikace $=$ reziduum t-normy, $t(\varphi)\le t(\psi)\Rightarrow$
+ implikace pravdivá se stupněm 1.
+\item \textbf{AOI --- indukce orientovaná na atributy}: zvedne data na vyšší pojmovou
+ úroveň podle \emph{koncepčních hierarchií} a~teprve nad nimi hledá pravidelnosti.
+ Dvě operace: \emph{odstranění} atributu (mnoho hodnot a~žádná hierarchie --- jméno,
+ rodné číslo) a~\emph{zobecnění} atributu (hodnoty $\to$ pojmy o~úroveň výš), po
+ každém kroku sloučení shodných záznamů s~čítačem \texttt{count}. Kdy přestat: práh
+ na počet různých hodnot \emph{atributu} (2--8) a~práh na počet záznamů \emph{relace}
+ (10--30); příliš nízké prahy $\Rightarrow$ \textbf{přílišné zobecnění}
+ (\uv{všichni klienti jsou lidé}). Odpovídá operaci \emph{roll-up} v~OLAP, ale běží
+ automaticky nad relací. Puštěna na cílovou třídu dá \emph{charakterizaci}, na
+ cílovou i~kontrastní \emph{diskriminaci}.
+\item \textbf{Charakteristické vs.\ diskriminační pravidlo} (Han--Kamber):
+ charakterizace popisuje cílovou třídu ($\Rightarrow$, nutná podmínka,
+ \textbf{t-weight} $=\frac{\mathrm{count}(q_a)}{\sum_i\mathrm{count}(q_i)}$);
+ diskriminace ji odlišuje od kontrastních ($\Leftarrow$, postačující podmínka,
+ \textbf{d-weight} $=$ podíl pokrytých objektů patřících do cílové třídy). Umět
+ spočítat z~tabulky; d-weight vždy srovnat s~\emph{apriorním} podílem třídy.
+\item \textbf{Extrakce ze stromu}: cesta kořen $\to$ list $=$ konjunkce podmínek, cesty
+ do listů téže třídy $=$ disjunkce; učení dělením podle informačního zisku či
+ Giniho indexu; prořezávání pravidla zkracuje; zobecněná (šikmá) dělení snižují
+ srozumitelnost.
+\item \textbf{Evoluce pravidel}: genetický algoritmus, fitness $=$ AC/PR/TPr/TNr/AUC;
+ michiganský přístup (jedinec $=$ pravidlo) vs.\ pittsburghský (jedinec $=$ soubor
+ pravidel).
+\item \textbf{Observační pravidla} (Hájek--Havránek 1978, GUHA): $\varphi\sim\psi$ se
+ zobecněným kvantifikátorem nad čtyřpolní tabulkou $(a,b,c,d)$; (1)~odhady
+ pravděpodobností --- asociační pravidla, $\frac{a}{a+b}\ge c_0$ (konfidence)
+ $\wedge$ $\frac{a}{n}\ge s_0$ (podpora); (2)~testy hypotéz --- jednostranný
+ Fisherův test zamítá nezávislost ve prospěch pozitivní závislosti.
+\item \textbf{Statisticky}: regresní analýza $=$ charakteristický popis vztahu $Y$ na
+ $X_1,\dots,X_n$ (nejmenší čtverce, vícerozměrná, logistická); diskriminační
+ analýza $=$ klasifikace do známých tříd prokládáním rozdělení: ML odhad
+ $\theta_j$, predikce $\arg\max_j p_j f(x\mid\theta_j)$; \textbf{LDA} (společná
+ $\Sigma$, hranice nadrovina, $q$ parametrů) vs.\ \textbf{QDA} (vlastní $\Sigma_j$,
+ hranice kvadratická plocha, $+\frac{q(q+1)}{2}$ parametrů); dvě třídy $\to$
+ znaménko $g=g_1-g_2$.
+\item \textbf{Zajímavost}: pravidlo $=$ binární klasifikátor $\to$ AC, PR
+ ($=$ konfidence), TPr (recall), TNr, F-míra, AUC; role: fitness, třídění
+ (malware podle precision), filtrace redundantních, prahování (konfidence
+ a~podpora $=$ zobecněný kvantifikátor); různé ceny chyb (střední hodnota ceny).
+ Subjektivně: srozumitelnost, jednoduchost, neočekávanost, akceschopnost.
+\item \textbf{Aplikace}: spam (metainformace, 3.~třída karanténa, Łukasiewiczova
+ disjunkce proti FP), malware (dvouvrstvá hierarchie pravidel), síťové hrozby
+ (signatury), doporučování (pravidla z~clickstreamu).
+\end{itemize}
+
+\section{Reprezentace, vyhodnocování a~vizualizace znalostí}
+\begin{itemize}
+\item \textbf{Formy reprezentace znalostí}: IF-THEN pravidla (nejsrozumitelnější, lokální),
+ rozhodovací strom (globální, čitelný do hloubky 4--5), rozhodovací tabulka, matematická
+ funkce (kompaktní, neinterpretovatelná), prototypy/centroidy, pravděpodobnostní model,
+ grafy a~sítě, instance ($k$-NN, CBR). Umět ke~každé formě říct, z~jaké metody vzniká
+ a~čím se platí za její srozumitelnost.
+\item \textbf{Kritéria hodnocení metod}: prediktivní přesnost, efektivita (čas konstrukce
+ i~použití), robustnost, škálovatelnost, interpretovatelnost, kompaktnost modelu.
+\item \textbf{Odhad chyby}: \emph{holdout} (velká data; trénovací a~testovací množina se
+ nesmí míchat), \emph{$k$-násobná křížová validace} (menší data; 5 a~10 je běžné;
+ přesnost jako průměr $k$ přesností $+$ interval spolehlivosti s~$t_{N,k-1}$),
+ \emph{leave-one-out} (velmi malá data, $m$-násobná CV), \emph{validační množina} (třetí
+ část dat, na ní se ladí \emph{parametry} algoritmu).
+\item \textbf{Matice záměn}: $TP$, $FN$, $FP$, $TN$; $p=\frac{TP}{TP+FP}$,
+ $r=\frac{TP}{TP+FN}$, $F_1=\frac{2pr}{p+r}$ (harmonický průměr --- blíž menšímu
+ z~čísel). Umět vysvětlit, \emph{proč} accuracy nestačí u~nevyvážených dat (1~\% průniků
+ $\Rightarrow$ 99~\% přesnosti \uv{nedělat nic}).
+\item \textbf{ROC}: $\mathit{TPR}=\frac{TP}{TP+FN}$ (senzitivita $=$ recall pozitivní třídy)
+ proti $\mathit{FPR}=\frac{FP}{FP+TN}$; $\mathit{TNR}$ $=$ specificita
+ $=1-\mathit{FPR}$. Křivka vede z~$(0,0)$ do $(1,1)$, diagonála $=$ náhodné hádání.
+ Umět popsat konstrukci ze žebříčku (dělení na každém případu). \textbf{AUC}: 1 pro
+ perfektní, 0,5 pro náhodný klasifikátor; potřebná proto, že se ROC křivky dvou
+ klasifikátorů mohou \emph{křížit}.
+\item \textbf{Skórování a~lift}: místo třídy se přiřadí odhad pravděpodobnosti (u~stromu
+ confidence v~listu), vzory se seřadí a~rozdělí do přihrádek; lift křivka proti
+ diagonále náhodného výběru. Umět provést ekonomickou úvahu (kolik zásilek se vyplatí).
+\item \textbf{Tři roviny \uv{vyhodnocování}}: statistická kvalita modelu, zajímavost vzorů,
+ vyhodnocení uživatelem. První dvě objektivní, třetí subjektivní. \textbf{Čtyři kritéria
+ zajímavosti znalosti}: srozumitelnost, platnost, užitečnost, novost.
+\item \textbf{Vizualizace}: technika podle úlohy (histogram, box plot, scatter, SPLOM,
+ paralelní souřadnice, heatmapa, dendrogram, projekce, ROC/lift); tři role v~KDD
+ (explorace --- Anscombeho kvartet, vizualizace modelu, prezentace); zásady (Tufte,
+ nezkreslovat osami, barva podle typu dat). Znát omezení: t-SNE a~UMAP zkreslují
+ globální vzdálenosti.
+\end{itemize}
+
+\section{Modely pro analýzu sociálních sítí, centralita a~detekce komunit}
+\begin{itemize}
+\item \textbf{SNA} $=$ sociální vědy $+$ analýza sítí $+$ teorie grafů; soustředí se na
+ \emph{vztahy}, ne na entity a~jejich atributy. Reprezentace: obrázek, seznam hran, matice
+ sousednosti (u~orientovaných grafů nesymetrická). \emph{Ego síť} vs.\ \uv{celá} síť ---
+ \emph{problém specifikace hranic}: žádná studovaná síť není celá.
+\item \textbf{Síla vazeb}: silné vs.\ slabé; \emph{síla slabých vazeb} (Granovetter 1973).
+ Homofilie, tranzitivita a~přemostění; homofilie $+$ tranzitivita $\to$ \emph{kliky}.
+ Most $=$ hrana, jejíž odstranění rozpojí koncové uzly; \emph{zkratkový most} $=$
+ vzdálenost po odstranění vzroste nad 2. \textbf{Překryv sousedství}
+ $O(i,j)=\frac{|N_i\cap N_j|}{|N_i\cup N_j|-2}$ --- čím větší, tím silnější vazba.
+\item \textbf{Čtyři míry centrality}: \emph{stupňová} (kolik lidí přímo dosáhne),
+ \emph{mezilehlá} (na kolika nejkratších cestách leží; kde se síť rozpadne),
+ \emph{blízkostní} (převrácená průměrná délka nejkratších cest; rychlost šíření),
+ \emph{vlastní} ($Ax=\lambda x$, jen \emph{největší} vlastní číslo dává nezáporný vektor;
+ jak dobře je spojen s~dobře propojenými). Umět interpretační tabulku a~vysvětlit, proč
+ nestačí jedna míra (uzly 3 a~5 \emph{společně} $>$ uzel 10). \textbf{Strukturní
+ ekvivalence}: pozice lze vyměnit bez změny struktury.
+\item \textbf{Koheze}: reciprocita (jen orientované grafy), hustota
+ ($|E|/\binom{|V|}{2}$; klika $=1$; orientované mají poloviční), \textbf{klastrovací
+ koeficient} $C_i=\frac{2|\{e_{jk}\}|}{k_i(k_i-1)}$ a~sítě jako průměr, průměr sítě
+ (\emph{diameter}) $=$ nejdelší nejkratší cesta, průměrná vzdálenost, excentricita.
+ \textbf{Malý svět} $=$ vysoký $C$ $+$ krátká průměrná cesta.
+\item \textbf{Šest vlastností reálných komplexních sítí}: efekt malého světa (Milgram, medián
+ 6), tranzitivita/klastrování, mocninné rozdělení stupňů, odolnost (robustní k~náhodnému,
+ zranitelná cíleným odstraněním hubů), vzorce míchání (asortativní míchání $=$ homofilie),
+ komunitní struktura. \textbf{Bezškálové sítě}: růst $+$ \emph{preferenční připojování}
+ (rich-get-richer, Matoušův efekt, kumulativní výhoda); důvody --- popularita, kvalita,
+ smíšený model (halo efekt). \textbf{Centralizace} a~struktura \emph{jádro--periferie}
+ (bow-tie analýza).
+\item \textbf{Modelování vlivu}: společné rysy (orientovaný graf, aktivní/neaktivní,
+ \emph{aktivovaný uzel nelze deaktivovat}). \textbf{LTM} --- prah $\theta_v$ uniformně
+ z~$[0,1]$, aktivace při $\sum_{\text{aktivní}}w_{u,v}\ge\theta_v\sum w_{u,v}$; soustředí
+ se na \emph{příjemce}. \textbf{ICM} --- \emph{jediná} příležitost aktivovat každého
+ souseda s~pravděpodobností $p_{v,u}$; soustředí se na \emph{vysílající}.
+ \textbf{Maximalizace vlivu} je NP-těžká, hladový přístup dává \textbf{63~\%} optima.
+\item \textbf{Vliv vs.\ korelace}: \emph{test korelace} (podíl hran mezi různými hodnotami
+ atributu vs.\ $2p(1-p)$; příklad kuřáků $14\,\%<49\,\%$); tři procesy --- homofilie,
+ \emph{zmatení}, vliv; logistický model $\ln\frac{p(a)}{1-p(a)}=\alpha\ln(a+1)+\beta$,
+ $\alpha$ $=$ koeficient sociální korelace; \textbf{shuffle test} --- zpřeházej časové
+ značky; liší-li se $\alpha'$ významně od $\alpha$, jde o~důkaz \emph{vlivu}.
+\item \textbf{Test homofilie}: heterogenních hran je významně méně než $2pq$ $\Rightarrow$
+ homofilie; významně \emph{více} $\Rightarrow$ \emph{inverzní} homofilie (partnerské
+ vztahy). Umět příklad: 5 z~18 vs.\ $2pq=8$ z~18.
+\item \textbf{Výběr vs.\ sociální vliv}: výběr $=$ charakteristiky řídí tvorbu vazeb; vliv $=$
+ vazby formují \emph{mutabilní} charakteristiky. \emph{Imutabilní} (pohlaví, rasa, věk)
+ vs.\ \emph{mutabilní} (chování, názory). Rozlišit lze jen \emph{longitudinálními}
+ studiemi (obezita: Christakis \& Fowler, 12\,000 lidí / 32 let $\to$ důkaz pro
+ \emph{sociální vliv}).
+\item \textbf{Afiliační sítě}: bipartitní (osoby $\times$ fokusy), sociálně-afiliační má dva
+ typy hran. \textbf{Tři uzávěry}: tranzitivní (společný přítel), \emph{fokální} (společný
+ fokus; \emph{výběr}), \emph{členský} (přítel už ve fokusu; \emph{sociální vliv}).
+ Metodika měření $T(k)$ ze dvou snímků; bázový model $T_{\text{base}}(k)=1-(1-p)^k$;
+ empiricky velký nárůst z~1 na 2 a~poté \emph{klesající výnosy}.
+\item \textbf{Schellingův model}: agenti dvou typů v~mřížce, spokojeni při $\ge t$ sousedech
+ téhož typu, nespokojení se přesouvají $\Rightarrow$ \emph{samovolná segregace}. Ukazuje,
+ jak se \emph{imutabilní} charakteristika stane silně korelovanou s~\emph{mutabilní}
+ (volbou místa) a~jak lokální homofilie vytvoří globální vzorec.
+\item \textbf{Strukturní balance}: balancované trojúhelníky jsou $+{+}{+}$ a~$+{-}{-}$
+ (tj.\ všechny tři pozitivní, nebo právě jedna pozitivní). \textbf{Věta o~balanci}: úplný
+ balancovaný graf $\Rightarrow$ všichni přátelé, nebo rozdělení na dvě skupiny vnitřních
+ přátel a~vzájemných nepřátel --- umět důkaz ($X$ $=$ přátelé $A$, $Y$ $=$ nepřátelé
+ $A$, tři kroky). \textbf{Slabá balance}: zakázána jen konfigurace \emph{dvě pozitivní
+ a~jedna negativní} $\Rightarrow$ rozdělení na \emph{libovolný počet} skupin. Aplikace:
+ evropské aliance 1872--1907, Bangladéš 1972.
+\item \textbf{HITS}: dotazově \emph{závislý}; kořenová množina $S$ ($t=200$) $\to$ bázová
+ množina $B$; $a=L^{\!\top}h$, $h=La$, mocninná iterace s~\textbf{nutnou normalizací};
+ $a_k=(L^{\!\top}L)^{k-1}a_0$ konverguje k~hlavnímu vlastnímu vektoru $L^{\!\top}L$.
+ Slabiny: snadné spamování, drift tématu, neefektivnost v~době dotazu.
+\item \textbf{PageRank}: dotazově \emph{nezávislý}, $P(i)=\sum_{(j,i)\in E}P(j)/O_j$,
+ \emph{nepotřebuje normalizaci} (celkový PageRank je konstantní --- \uv{kapalina}).
+ Problém \uv{pomalého úniku} $\Rightarrow$ \emph{škálované} pravidlo s~tlumicím faktorem
+ $d$ (0,8--0,9; $0{,}85$ v~článku), \uv{vodní cyklus}. Markovský řetězec potřebuje
+ \emph{stochastickou, ireducibilní a~aperiodickou} matici --- webový graf nesplňuje ani
+ jednu (visící stránky, není silně souvislý, periodicita); vše se řeší \emph{jedinou}
+ strategií (odkaz z~každé stránky na každou s~malou pravděpodobností). Finální tvar
+ $P(i)=(1-d)+d\sum_{(j,i)\in E}P(j)/O_j$, výpočet mocninnou iterací. Výhody: odolnost
+ proti spamu (vstupní odkazy nelze snadno získat), globální offline míra; kritika:
+ dotazová nezávislost.
+\item \textbf{Tematické komunity}: $K=(T,M)$, téma určuje komunitu, komunity se mohou
+ \emph{překrývat}, hierarchie subkomunit. \emph{Bipartitní jádra} --- $(i,j)$-jádro,
+ vějíře $=$ huby, středy $=$ autority; prořezání $+$ generování jader; najde jen jádra,
+ ne témata ani hierarchii. \emph{Komunity pojmenovaných entit}: graf ze společných výskytů
+ ve větě $\to$ trojúhelníky $\to$ jádra $\to$ klastrování podle textové podobnosti.
+\item \textbf{Detekce komunit --- definice je subjektivní}; explicitní vs.\ implicitní skupiny.
+ \emph{Minimální řez}: nevyvážené skupiny, $O(n^5)$ / Karger $O(n^4)$, s~obecnými vahami
+ a~balančními omezeními \textbf{NP-těžké} $\Rightarrow$ \emph{poměrový} a~\emph{normalizovaný
+ řez} (dělení $|C_i|$, resp.\ $\mathrm{vol}(C_i)$).
+\item \textbf{Girvanové--Newman}: divizivní, odstraňuje hrany s~nejvyšší \emph{mezilehlostí},
+ $O(m^2n)$ / $O(n^3)$; počet komunit se vybere podle nejvyšší \textbf{modularity}
+ $Q=\frac{1}{2m}\sum_{i,j}(A_{ij}-\frac{k_ik_j}{2m})\delta(c_i,c_j)$, $Q\in[-1,1]$,
+ smysluplné komunity $Q\ge 0{,}3$.
+\item \textbf{Louvain}: hladová aglomerativní maximalizace modularity ve dvou fázích (lokální
+ přesuny $\to$ supergraf), $O(n\log n)$; nevýhody: citlivost na pořadí, \emph{nesouvislé
+ komunity}, lokální optima. \textbf{Leiden} přidává fázi \emph{upřesnění rozdělení}; jen
+ tvrdé rozdělení. Výzvy: neznámý počet komunit, heterogenní velikosti a~hustoty.
+\item \textbf{Čtyři kategorie metod}: \emph{uzlově orientované} (kliky --- NP-těžké, rekurzivní
+ prořezávání uzlů se stupněm $<k-1$, \textbf{CPM} pro \emph{překrývající se} komunity
+ přes graf klik sdílejících $k-1$ uzlů; $k$-klika / $k$-klub / $k$-klan; $k$-jádro
+ a~$k$-plex jsou komplementární; LS množiny a~$k$-komponenty), \emph{skupinově
+ orientované} ($\gamma$-husté kvazikliky), \emph{síťově orientované} (podobnost vrcholů ---
+ Jaccard, kosinus $+$ $k$-means; MDS; blokové modely; spektrální shlukování přes grafový
+ laplacián s~\emph{nejmenšími} vlastními čísly; maximalizace modularity přes matici
+ modularity s~\emph{největšími} --- vše sjednoceno jako maticová faktorizace
+ $X\approx S\Sigma S^{\!\top}$, vyžaduje zadat počet komunit), \emph{hierarchicky
+ orientované} (divizivní $=$ Girvanové--Newman, aglomerativní $=$ Louvain, Walktrap).
+\item \textbf{Predikce vazeb}: obsahové míry (homofilie) vs.\ strukturní (tranzitivní uzávěr;
+ silnější). Sousedské míry: \emph{společní sousedé} $|S_i\cap S_j|$ (nezohledňuje stupně),
+ \emph{Jaccard} $\frac{|S_i\cap S_j|}{|S_i\cup S_j|}$ (normalizuje stupně obou uzlů, ne
+ prostředních sousedů), \emph{Adamic--Adar} $\sum_{k}\frac{1}{\log|S_k|}$ (váha klesá se
+ stupněm společného souseda). \textbf{Katzova míra}
+ $\sum_t\beta^tW_{ij}^{(t)}=(I-\beta A)^{-1}-I$ pro \emph{řídké} sítě s~málo společnými
+ sousedy; součet přes ostatní uzly $=$ \emph{Katzova centralita}. \textbf{Klasifikační
+ pojetí}: pozitivně-neoznačkovaná úloha, vzorek negativ, logistická regrese jako bázový
+ klasifikátor, cenově citlivé varianty; výhoda --- klasifikátor se sám naučí relevanci
+ příznaků a~lze použít \emph{asymetrické} příznaky u~orientovaných sítí.
+\end{itemize}
+
+\section{Praktické využití technik}
+\begin{itemize}
+\item Ke každé aplikaci umět říct \textbf{trojici}: typ úlohy (deskriptivní / prediktivní,
+ s~učitelem / bez učitele), použitá metoda, způsob vyhodnocení.
+\item \textbf{Vlajkové aplikace dobývání znalostí}: analýza nákupního košíku (asociační
+ pravidla), detekce podvodů (příklad zdravotní pojišťovny --- stroj \emph{zaostřuje}
+ pozornost experta, nenahrazuje jej), kreditní skórování (stromy a~Bayes; požadavek
+ srozumitelnosti), segmentace zákazníků (klastrování, centroid $=$ typický zákazník),
+ churn a~cílený marketing (nevyvážená data $\to$ ROC/AUC a~\emph{lift}), klasifikace textu
+ (SVM), predikce časových řad (posuvné okno), web usage mining (sekvenční vzory).
+\item \textbf{Vlajkové aplikace SNA}: identifikace klíčových hráčů v~kriminálních
+ a~teroristických sítích (centralita), doporučování přátel (predikce vazeb), optimalizace
+ komunikačních sítí, epidemiologie (Rockdale County 1996), vakcinace cílená na \emph{huby},
+ marketing a~kaskádové finanční krachy v~bezškálových sítích, segmentace zákazníků
+ operátora podle jazykových komunit (Louvain, 2~mil.\ zákazníků).
+\item \textbf{Klíčová vlastnost SF sítí pro praxi}: odolnost proti náhodným poruchám (až 80~\%
+ uzlů) vs.\ zranitelnost cíleným útokem (5--15~\% hubů) --- z~toho plyne jak strategie
+ vakcinace, tak nemožnost vymýtit internetové viry.
+\item \textbf{Nasazení není konec}: monitoring driftu, zpětná vazba modelu do dat, soukromí
+ (i~anonymizovaný graf lze deanonymizovat), spravedlnost (chráněný atribut lze
+ rekonstruovat z~ostatních), GDPR čl.~22 a~AI Act.
+\end{itemize}
+
+\end{document}

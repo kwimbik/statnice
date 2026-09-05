@@ -1,0 +1,1533 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[czech]{babel}
+\usepackage[margin=2.0cm,top=2.0cm,bottom=2.2cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{parskip}
+\usepackage{enumitem}
+\setlist{nosep,leftmargin=1.4em}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{xcolor}
+\definecolor{linkblue}{RGB}{20,60,150}
+\definecolor{blokcol}{RGB}{20,70,140}
+\definecolor{mostcol}{RGB}{20,110,80}
+\definecolor{defbg}{RGB}{240,244,252}
+\definecolor{defframe}{RGB}{100,130,190}
+\definecolor{markcol}{RGB}{176,84,0}
+\definecolor{markbg}{RGB}{253,246,236}
+\usepackage[most]{tcolorbox}
+\newtcolorbox{nitbox}[1][]{breakable,colback=defbg,colframe=defframe,boxrule=0.6pt,arc=1.5mm,
+  left=2mm,right=2mm,top=1mm,bottom=1mm,title={#1},fonttitle=\bfseries}
+\newtcolorbox{poznbox}[1][]{breakable,colback=markbg,colframe=markcol,boxrule=0.6pt,arc=1.5mm,
+  left=2mm,right=2mm,top=1mm,bottom=1mm,title={#1},fonttitle=\bfseries}
+\usepackage[colorlinks=true,linkcolor=linkblue,urlcolor=linkblue]{hyperref}
+
+\setlength{\parskip}{0.35em}
+
+% --- sazba osnov ---------------------------------------------------
+% \blok{číslo}{název bloku} + \tema{jména témat oddělená \tb}
+\newcommand{\tb}{\ \textcolor{defframe}{\textbullet}\ }
+\newcommand{\blok}[2]{\par\addvspace{2.4mm}\noindent
+  \textcolor{blokcol}{\textbf{#1}}\ \ \textbf{#2}\par\nobreak}
+\newcommand{\tema}[1]{\par\nobreak\noindent #1\par}
+% \most{...} = jednou větou, čím se blok přiváže na následující
+\newcommand{\most}[1]{\par\nobreak\noindent
+  {\small\itshape\textcolor{mostcol}{$\hookrightarrow$\ #1}}\par}
+% \apl{metoda}{oblast využití} + 1--2 věty inline (jen u~otázky o~praktickém využití)
+\newcommand{\apl}[2]{\par\addvspace{1.5mm}\noindent
+  \textbf{#1}\ \textcolor{defframe}{$\rightarrow$}\ \textbf{#2}.\ \ignorespaces}
+% \lbl{...} = malý oranžový popisek, text pokračuje inline
+\newcommand{\lbl}[1]{\par\addvspace{1.8mm}\noindent
+  \textcolor{markcol}{\textbf{\small #1}}\ \ignorespaces}
+% oficiální znění věty okruhu pod nadpisem otázky
+\newcommand{\zneni}[1]{\par\nobreak\vspace{-1.2mm}\noindent
+  {\small\itshape\uv{#1}}\par\addvspace{1.2mm}}
+
+% oddělovač okruhů: #1 = číslo zdrojového PDF, #2 = název okruhu, #3 = podtitul
+\newcommand{\okruh}[3]{%
+  \clearpage
+  \setcounter{section}{0}%
+  \phantomsection
+  \addcontentsline{toc}{part}{#1\quad #2}%
+  \begingroup\centering
+    {\Huge\bfseries #1\quad #2\par}\vspace{1.5mm}%
+    {\small\itshape #3\par}%
+  \endgroup
+  \vspace{4mm}}
+
+\makeatletter
+\renewcommand\section{\@startsection{section}{1}{\z@}%
+  {-2.6ex \@plus -1ex \@minus -.2ex}{1.0ex \@plus.2ex}{\normalfont\Large\bfseries}}
+\renewcommand\subsection{\@startsection{subsection}{2}{\z@}%
+  {-2.0ex \@plus -1ex \@minus -.2ex}{0.6ex \@plus.2ex}{\normalfont\large\bfseries}}
+\makeatother
+
+\setcounter{tocdepth}{1}
+\setcounter{secnumdepth}{2}
+
+\title{\textbf{Strategie výkladu ke~SZZ}\\[2mm]
+\large Osnovy patnáctiminutových odpovědí na velké otázky}
+\author{SZZ Umělá inteligence, MFF UK}
+\date{srpen 2026}
+
+\begin{document}
+\maketitle
+
+\begin{center}
+\begin{minipage}{0.93\textwidth}
+\small
+Jedna \textbf{velká otázka} $=$ jedna \texttt{\textbackslash section} v~učebních textech
+\texttt{01}--\texttt{03}. Na každou z~nich se má dát mluvit \textbf{patnáct minut} souvisle
+a~s~logickou návazností. Tento text neobsahuje látku --- ta je v~příslušném textu
+a~v~\texttt{04-vzorce} --- ale \textbf{trasu}: v~jakém pořadí témata otevřít, čím jeden blok
+navázat na druhý, co si nechat jako rezervu a~co naopak obětovat, aby se odpověď do patnácti
+minut vešla. U~každého bloku jsou jen \emph{jména témat}; co k~nim říct, je v~odpovídající
+podkapitole zdrojového textu.
+
+Text pokrývá všechny tři okruhy. Nejvíc práce je odvedeno u~otázek, jejichž \emph{znění
+nejmenuje, co má odpověď obsahovat} (např. \uv{Problém hledání cesty} nebo \uv{Rojové
+optimalizační algoritmy}) --- tam osnovu určuje tenhle text. U~otázek s~vyjmenovaným
+obsahem stačí držet pořadí a~přechody.
+\end{minipage}
+\end{center}
+
+\vspace{2mm}
+
+%=====================================================================
+\section*{Jak se staví patnáctiminutová odpověď}
+\addcontentsline{toc}{section}{Jak se staví patnáctiminutová odpověď}
+
+\begin{enumerate}[label=\arabic*.,leftmargin=1.8em]
+\item \textbf{Nejdřív anons, pak výklad.} První dvě věty: co téma je a~jak ho projdeš ---
+      nahlas jmenovat bloky osnovy. Komise pak ví, že máš plán, a~nepřerušuje po první
+      minutě. Bez anonsu vypadá i~dobrá odpověď jako přeskakování.
+\item \textbf{Nikdy nezačínat výčtem metod.} Vždy: \emph{formulace úlohy} $\to$
+      \emph{co je vzor a~co výstup} $\to$ \emph{jak se hledá} $\to$ \emph{jak se pozná, že
+      je dobrý}. Tenhle skelet je univerzální záchrana, když se ztratíš.
+\item \textbf{Návaznost $=$ slabina předchozího je motivace pro následující.} Nespojovat
+      témata slovem \uv{dále}, ale kauzálně: \emph{Apriori generuje kandidáty} $\Rightarrow$
+      \emph{proto FP-Growth}; \emph{accuracy selže na nevyvážených datech} $\Rightarrow$
+      \emph{proto ROC}. Přechody říkat nahlas --- právě ony odlišují výklad od odříkání.
+\item \textbf{Hloubka u~jednoho reprezentanta, šíře u~ostatních.} Z~každé rodiny jeden
+      algoritmus doopravdy (mechanismus, cena, kde selže), ostatní jednou větou \uv{tenhle
+      řeší to a~to}. Snaha probrat všechno stejně hluboko je nejčastější důvod, proč
+      odpověď nedojde do konce.
+\item \textbf{Jeden příklad nebo obrázek na otázku.} Malá tabulka transakcí, box plot,
+      matice záměn, ROC, tři uzly a~most --- kreslit na tabuli. Dokazuje, že látku umíš
+      použít, a~dává čas na rozmyšlení dalšího bloku.
+\item \textbf{Držet si rezervu.} Dva až tři pojmy schválně nezmínit a~mít je připravené na
+      doplňující dotaz. Doplňující otázka pak přijde na půdu, kterou máš zvládnutou.
+\item \textbf{Uzávěr.} Na konci rekapitulovat osnovu jednou větou a~zasadit téma do většího
+      obrázku (typicky: kam patří v~procesu KDD, na co navazuje v~jiné otázce). Odpověď,
+      která skončí uprostřed technického detailu, působí nedokončeně, i~když byla obsáhlá.
+\end{enumerate}
+
+\begin{poznbox}[Když je otázka větší než patnáct minut]
+\small
+U~nejobsáhlejších otázek (\emph{Metody pro dobývání znalostí}, \emph{Analýza sociálních
+sítí}) je úplné pokrytí nemožné. Správný postup je to \textbf{přiznat v~anonsu} a~nabídnout
+volbu: \uv{Osnova má pět bloků; do hloubky půjdu u~$\langle$X$\rangle$
+a~$\langle$Y$\rangle$, zbytek zmíním --- pokud chcete jinak, přesměrujte mě.} Komise tím
+dostane kontrolu nad časem a~ty záruku, že hloubku předvedeš na látce, kterou umíš nejlépe.
+\end{poznbox}
+
+%=====================================================================
+\okruh{01}{Multiagentní systémy}{Sedm velkých otázek podle oficiálního znění okruhu
+  --- kostry odpovědí}
+
+\section*{Přehled: kostry odpovědí}
+\addcontentsline{toc}{section}{Přehled: kostry odpovědí (okruh 01)}
+
+\begin{center}
+\small
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{3.0cm}>{\raggedright\arraybackslash}p{13.4cm}@{}}
+\toprule
+\textbf{Otázka} & \textbf{Kostra (bloky za sebou)} \\
+\midrule
+1 Architektura & co je agent $\to$ prostředí $\to$ abstraktní architektura $\to$ utilita
+  a~specifikace úlohy $\to$ mechanismus výběru akcí \\
+2 Řízení agentů & deliberativní pól $\to$ BDI a~plánování $\to$ symbolické reaktivní
+  $\to$ konekcionistické reaktivní $\to$ omezení reaktivních $\to$ hybridní \\
+3 Hledání cesty & formulace $\to$ A* $\to$ dynamické prostředí $\to$ MAPF $\to$ praxe
+  a~vazba na MAS \\
+4 Komunikace & proč je jiná $\to$ ontologie a~znalosti $\to$ řečové akty $\to$ KQML
+  a~FIPA-ACL $\to$ protokoly \\
+5 Kooperace a~hry & koherence a~CDPS $\to$ mechanismy kooperace $\to$ sobecký agent a~hry
+  $\to$ aukce $\to$ návrh mechanismů \\
+6 Učení & mapa učení $\to$ MDP $\to$ učení bez modelu $\to$ aproximace a~politika $\to$
+  multiagentní RL \\
+7 Metodologie & proč ne OO $\to$ metodologie návrhu $\to$ FIPA a~platforma $\to$ jazyky
+  a~prostředí \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+%---------------------------------------------------------------------
+\section{Architektura autonomního agenta a~mechanismus výběru akcí}
+\zneni{Architektura autonomního agenta; mechanismus výběru akcí.}
+
+\begin{nitbox}[Červená nit]
+Znění vypadá jako dvě otázky, ale je to jedna linka: nejdřív \emph{co je agent a~v~jakém
+prostředí žije} (formální rámec), pak \emph{jak z~vjemu vznikne akce}. Mechanismus výběru
+akcí je přesně to místo, ve kterém se pak liší všechny architektury z~otázky~2 --- tím se
+odpověď zakončí a~zároveň připraví půda pro doplňující dotazy.
+\end{nitbox}
+
+\blok{1}{Co je agent}
+\tema{agent $=$ autonomní systém zasazený do prostředí, který v~něm vnímá a~jedná, aby
+splnil delegované cíle
+\tb MAS $=$ interagující agenti \emph{bez nutně sdíleného cíle}
+\tb tři vlastnosti inteligentního agenta: reaktivita, proaktivita, sociálnost --- a~proč je
+těžké je vyvážit
+\tb agent vs.\ objekt (vlastní vlákno řízení, autonomie nad přijetím požadavku)
+\tb intencionální systém a~tři Dennettovy postoje; intencionální postoj jako legitimní
+abstrakce}
+\most{Chování agenta má smysl jen vůči prostředí --- druhá polovina rámce je tedy prostředí.}
+
+\blok{2}{Prostředí a~jeho vlastnosti}
+\tema{čtyři dichotomie: pozorovatelnost, statické vs.\ dynamické, determinismus, diskrétnost
+\tb reálná prostředí jsou v~nejtěžší kombinaci
+\tb co která vlastnost zakazuje --- např. dynamika ruší platnost jednou spočítaného plánu}
+\most{Aby se dalo o~agentovi něco dokázat, potřebuju formalismus.}
+
+\blok{3}{Abstraktní architektura agenta}
+\tema{prostředí $\mathit{Env}=\langle E,e_0,\tau\rangle$, běh $r=e_0a_0e_1\dots$
+\tb $\tau: R^A \to 2^E$ --- odtud závislost na historii i~nedeterminismus
+\tb agent $Ag: R^E \to A$, systém $\langle Ag,\mathit{Env}\rangle$
+\tb funkční ekvivalence agentů (prostá vs.\ vzhledem k~prostředí)
+\tb čistě reaktivní agent $Ag: E \to A$ (slabší) vs.\ agent s~vnitřním stavem
+\tb role funkcí: $\mathit{see}$ vjem, $\mathit{next}$ \emph{aktualizace stavu},
+$\mathit{action}$ výběr akce}
+\most{Formalismus říká, \emph{jak} agent jedná; nic zatím neříká, \emph{co} má dělat.}
+
+\blok{4}{Jak agentovi říct, co má dělat}
+\tema{utilita nad stavy vs.\ nad běhy --- a~proč stavy nestačí (ignorují průběh)
+\tb proč se neohodnocují rovnou akce (prozradilo by řešení)
+\tb optimální agent maximalizuje \emph{očekávanou} utilitu; definice je nekonstruktivní
+\tb Tileworld a~$u(r)=N_f/N_a$
+\tb predikátová specifikace úlohy $\langle \mathit{Env},\Psi\rangle$; pesimista, optimista,
+realista
+\tb úlohy dosažení a~udržení}
+\most{Zbývá poslední díl: jak se ta akce v~každém kroku konkrétně vybere.}
+
+\blok{5}{Mechanismus výběru akcí (jádro otázky)}
+\tema{co to je: mapování vnitřní stav $+$ vjem $\to$ akce
+\tb rodiny mechanismů a~jejich zástupci: logická dedukce (deduktivní agent) \tb praktické
+uvažování a~plánování (BDI, STRIPS, PRS) \tb pevná priorita chování (subsumpce) \tb úroveň
+aktivace v~síti modulů (Maes) \tb mediační funkce ve vrstvách (hybridní) \tb soutěž koalic
+(IDA) \tb naučená politika (RL)
+\tb osy srovnání: kvalita rozhodnutí vs.\ reakční doba, potřeba modelu světa, návrhová
+složitost}
+
+\lbl{Rezerva:} rozdíl prosté a~prostředím podmíněné funkční ekvivalence \tb Tileworld jako
+testbed \tb agent vs.\ objekt vs.\ expertní systém.
+
+%---------------------------------------------------------------------
+\section{Metody pro řízení agentů}
+\zneni{Metody pro řízení agentů; symbolické a~konekcionistické reaktivní plánování,
+hybridní přístupy.}
+
+\begin{nitbox}[Červená nit]
+Znění jmenuje tři body, ale dávají smysl jen na \textbf{jedné ose od deliberativního pólu
+k~reaktivnímu a~zpět} --- proto je pořadí dané a~netřeba nad ním váhat. Ke~každé
+architektuře říct stejnou trojici: \emph{jak vybírá akci --- co umí --- kde selže}; selhání
+je pokaždé motivací té následující.
+\end{nitbox}
+
+\blok{1}{Symbolický (deliberativní) pól}
+\tema{klasická UI: symbolická reprezentace $+$ syntaktická manipulace, specifikace $=$
+program
+\tb deduktivní agent: $\mathit{DB} \vdash_\rho \mathit{Do}(a)$, dvoufázový výběr akce
+(dokazatelná $\to$ konzistentní $\to$ nic)
+\tb problém transdukce
+\tb problém vypočitatelné racionality --- odvozená akce platí pro svět, který už není}
+\most{Dokazování je moc pomalé; praktické uvažování ho nahradí strukturou.}
+
+\blok{2}{BDI a~plánování}
+\tema{praktické uvažování: deliberace $+$ uvažování o~prostředcích
+\tb beliefs (subjektivní a~omylné), desires (mohou být nekonzistentní), intentions (závazky)
+\tb proč záměry přetrvávají a~\emph{omezují další deliberaci}
+\tb funkce $\mathit{brf}$, $\mathit{options}$, $\mathit{filter}$
+\tb \textbf{STRIPS}: deskriptor akce $\langle P_a,D_a,A_a\rangle$, plánovací problém,
+plán přípustný vs.\ korektní, obcházení frame problému
+\tb BDI smyčka a~role $\mathit{reconsider}$
+\tb odhodlání: blind / single-minded / open-minded; bold vs.\ cautious podle rychlosti
+prostředí
+\tb \textbf{PRS}: knihovna plánů místo syntézy, zásobník záměrů; potomci AgentSpeak/Jason}
+\most{Celá tahle větev stojí na modelu světa --- reaktivní přístup ho odmítne.}
+
+\blok{3}{Symbolické reaktivní plánování}
+\tema{východiska: situatedness, embodiment, emergence; \uv{inteligence bez reprezentace}
+\tb \textbf{subsumpční architektura} (Brooks): chování \emph{situace $\to$ akce}, běží
+paralelně, pevná hierarchie priorit s~inhibicí
+\tb Steelsův průzkumník Marsu a~role stigmergie
+\tb pozor na směr inhibice v~zápisu $b_1 \prec b_2$}
+\most{Priority jsou tu pevné --- druhá varianta je nechá vyplynout z~dynamiky sítě.}
+
+\blok{4}{Konekcionistické reaktivní plánování}
+\tema{\textbf{agent network architecture} (Maes): kompetenční moduly s~předpoklady, add
+a~delete listem
+\tb šíření aktivace: následnické, předchůdcovské a~konfliktní spoje
+\tb tři zdroje aktivace: stav světa, cíle, inhibice od chráněných cílů
+\tb výběr proveditelného modulu s~nejvyšší aktivací nad prahem; snižování prahu, aby síť
+nezamrzla
+\tb parametry $\gamma/\phi$ ladí proaktivitu vs.\ reaktivitu}
+\most{Oba reaktivní přístupy narazí na stejnou zeď.}
+
+\blok{5}{Omezení reaktivních architektur}
+\tema{jen lokální informace, žádný model světa ani výhled
+\tb neinženýrský návrh: emergentní chování se špatně navrhuje i~ověřuje
+\tb neškáluje s~počtem vrstev \tb neschopnost učení}
+\most{Odtud přímo plyne motivace hybridních architektur.}
+
+\blok{6}{Hybridní architektury}
+\tema{horizontální vrstvení: paralelní vrstvy $+$ \emph{mediační funkce}, až $m^n$
+kombinací, úzké hrdlo i~kritický bod selhání
+\tb vertikální: one-pass vs.\ two-pass, $n-1$ rozhraní, křehkost
+\tb obecné pravidlo: reaktivní vrstva má přednost (bezpečnost před optimalitou)
+\tb TouringMachines (horizontální, tři vrstvy $+$ řídicí pravidla) a~InteRRaP (vertikální
+two-pass)
+\tb IDA a~global workspace: koalice procesů soutěží o~vstup do \uv{vědomí}
+\tb sjednocující osa: čtyři typy arbitráže --- pevná priorita, úroveň aktivace, mediační
+funkce, soutěž koalic}
+
+\lbl{Rezerva:} Stanley jako reálné nasazení vrstvené architektury \tb vysavačový svět
+u~deduktivního agenta \tb proč se BDI implementuje knihovnou plánů místo plánovače.
+
+%---------------------------------------------------------------------
+\section{Problém hledání cesty}
+\zneni{Problém hledání cesty.}
+
+\begin{nitbox}[Červená nit]
+Jednovětné znění, osnovu si tedy určuješ sám. Nejlepší stavba je \textbf{stupňující se řada
+předpokladů, které se postupně ruší}: statické známé prostředí (A*) $\to$ neznámé a~měnící
+se (D*~Lite) $\to$ víc agentů najednou (MAPF). Každý stupeň $=$ jeden předpoklad, který
+realita poruší, a~jeden algoritmus, který na to odpovídá. MAPF je navíc téma bakalářské
+práce --- přirozené místo, kam odpověď natáhnout do libovolné hloubky.
+\end{nitbox}
+
+\blok{1}{Formulace a~zařazení}
+\tema{úloha jako prohledávání stavového prostoru: graf, ceny hran, přípustné akce
+\tb co je \uv{mapa}: mřížka, navigační graf, navmesh; diskretizace spojitého prostoru
+\tb vztah k~plánování (STRIPS): hledání cesty je speciální případ s~jednoduchými akcemi
+\tb neinformované prohledávání jako pozadí (BFS, Dijkstra) a~proč nestačí}
+\most{Klíčem k~efektivitě je heuristika --- tedy odhad zbytku cesty.}
+
+\blok{2}{A* a~jeho vlastnosti}
+\tema{$f = g + h$; open a~closed list
+\tb \textbf{přípustnost} $h \le h^*$ $\Rightarrow$ optimalita
+\tb \textbf{konzistence} (trojúhelníková nerovnost) $\Rightarrow$ každý vrchol expandován
+nejvýš jednou (nutné s~closed listem)
+\tb speciální případy: $h\equiv 0$ dá Dijkstru, weighted A* je $\varepsilon$-suboptimální
+\tb heuristiky na mřížce (Manhattan, oktilní, euklidovská) a~dominance heuristik
+\tb paměť a~čas: proč se v~praxi sahá po IDA*, hierarchickém plánování, jump point search}
+\most{A* předpokládá, že mapu znám a~nemění se --- v~robotice ani ve hře to neplatí.}
+
+\blok{3}{Dynamické a~neznámé prostředí}
+\tema{freespace assumption: co neznám, považuji za volné
+\tb inkrementální přeplánování místo počítání od nuly
+\tb \textbf{LPA*}: hodnoty $g$ a~$\mathit{rhs}$, lokální konzistence $g=\mathit{rhs}$
+\tb \textbf{D*~Lite}: prohledávání od cíle, oprava jen zasažené části
+\tb kdy se vyplatí opravovat a~kdy přepočítat od začátku}
+\most{Druhý předpoklad, který v~multiagentním systému padne, je \uv{jsem tu sám}.}
+
+\blok{4}{Hledání cest pro více agentů (MAPF)}
+\tema{formulace: graf, agenti, startovní a~cílové vrcholy, diskrétní čas, čekání jako akce
+\tb typy konfliktů: vrcholový, hranový (swap), následný, cyklický
+\tb cílové funkce: sum-of-costs vs.\ makespan
+\tb optimální MAPF je NP-těžký
+\tb prioritizované plánování / Cooperative A* s~rezervační tabulkou --- rychlé, ale neúplné
+\tb \textbf{CBS}: nízká úroveň A* s~omezeními, vysoká úroveň strom omezení větvený podle
+nalezeného konfliktu; optimální a~úplný
+\tb suboptimální varianty a~velké instance (sklady, roboti)}
+\most{Zbývá říct, proč je celá tahle otázka v~okruhu o~agentech.}
+
+\blok{5}{Praxe a~vazba na MAS}
+\tema{pohyb je nejčastější akce agenta; plánování cesty je subúloha uvažování o~prostředcích
+\tb hry a~robotika: hierarchie, vyhlazování cesty, any-angle (Theta*)
+\tb centralizované plánování (MAPF) vs.\ decentralizované vyhýbání (ORCA) --- a~co to říká
+o~koordinaci obecně}
+
+\lbl{Rezerva:} důkaz optimality A* při přípustné heuristice \tb proč konzistence implikuje
+přípustnost \tb jak se z~konfliktu stane omezení v~CBS.
+
+%---------------------------------------------------------------------
+\section{Komunikace a~znalosti v~MAS}
+\zneni{Komunikace a~znalosti v~multiagentních systémech, ontologie, řečové akty, FIPA-ACL,
+protokoly.}
+
+\begin{nitbox}[Červená nit]
+Čtyři jmenované věci na sebe navazují jako \textbf{vrstvy jednoho zásobníku}: čím se mluví
+o~světě (ontologie) $\to$ co promluva znamená (řečové akty) $\to$ jak vypadá zpráva (ACL)
+$\to$ jak se zprávy skládají do konverzací (protokoly). Odpověď $=$ průchod zásobníkem
+zdola nahoru, uvozený tím, proč je komunikace agentů vůbec zvláštní téma.
+\end{nitbox}
+
+\blok{1}{Proč je komunikace agentů jiná}
+\tema{agent je autonomní: zpráva je \emph{akce}, ne volání metody --- příjemce není povinen
+vyhovět
+\tb z~toho plyne, co musí zpráva nést: záměr, jazyk obsahu, ontologii, kontext konverzace}
+\most{Nejnižší vrstva je sdílený slovník --- bez něj nelze obsah zprávy interpretovat.}
+
+\blok{2}{Ontologie a~znalosti}
+\tema{ontologie $=$ explicitní formalizovaný popis části reality (Gruber)
+\tb třídy, instance, vlastnosti, relace (zejména tranzitivní \emph{is-a}), fakta; ontologie
+$+$ fakta $=$ znalostní báze
+\tb škála formalizace od slovníku po libovolná logická omezení; aplikační, doménové a~horní
+ontologie
+\tb RDF (trojice subjekt--predikát--objekt), RDFS (třídy, subClassOf, domain, range)
+\tb \textbf{OWL}: deskripční logika, rozhodnutelný reasoning, T-Box vs.\ A-Box, open world
+assumption, profily
+\tb KIF jako jazyk obsahu
+\tb epistemická logika: $K_i\varphi$ a~možné světy; znalost S5 (axiom~T) vs.\ přesvědčení
+KD45; společná znalost a~koordinovaný útok}
+\most{Slovník mám; teď co vlastně promluva \emph{dělá}.}
+
+\blok{3}{Teorie řečových aktů}
+\tema{Austin: lokuce / ilokuce / perlokuce
+\tb Searle: podmínky zdařilosti a~pět kategorií (asertiva, direktiva, komisiva, expresiva,
+deklarace)
+\tb performativní sloveso $+$ propoziční obsah
+\tb Cohen \& Perrault: sémantika ve stylu STRIPS (předpoklady a~efekty s~modálními
+operátory); $\mathit{Request}$ a~$\mathit{Inform}$ --- efektem Informu je, že
+\emph{příjemce věří, že odesílatel věří} $\varphi$}
+\most{To je teorie; standard z~ní udělá konkrétní formát zprávy.}
+
+\blok{4}{KQML a~FIPA-ACL}
+\tema{KQML $=$ obálka, KIF $=$ obsah; kritika (chybí komisiva, nejasná sémantika)
+\tb \textbf{FIPA-ACL}: 13 polí, povinné je jen \texttt{performative}
+\tb sender/receiver (AID), content, language, encoding, ontology, protocol,
+conversation-id, reply-with, in-reply-to, reply-by
+\tb 22 performativ; sémantika přes feasibility precondition a~rational effect v~jazyce SL
+\tb problém neverifikovatelnosti --- vnitřní stav odesílatele nelze ověřit}
+\most{Jedna zpráva nestačí; dialog má předepsaný tvar.}
+
+\blok{5}{Interakční protokoly}
+\tema{protokol jako předepsaná posloupnost performativ; role zahajovatele a~účastníka
+\tb FIPA-Request: \texttt{request} $\to$ \texttt{refuse} $|$ \texttt{agree} $\to$
+\texttt{failure} $|$ \texttt{inform-done} $|$ \texttt{inform-result}, kdykoli
+\texttt{not-understood}
+\tb FIPA-Query a~Subscribe jako tentýž skelet
+\tb Contract Net a~jeho iterovaná varianta \tb brokering \tb aukční protokoly
+\tb kde protokol \emph{nestačí}: nebrání lhaní --- to už je návrh mechanismů (ot.~5)}
+
+\lbl{Rezerva:} proč má ACL zpráva pole \texttt{ontology} \tb axiomy T, D, 4, 5 a~co který
+znamená \tb proč společná znalost nevznikne nespolehlivou komunikací.
+
+%---------------------------------------------------------------------
+\section{Distribuované řešení problémů, kooperace, teorie her a~aukce}
+\zneni{Distribuované řešení problémů, kooperace, Nashova ekvilibria, Paretova efektivita,
+alokace zdrojů, aukce.}
+
+\begin{nitbox}[Červená nit]
+Otázka má dvě poloviny s~\textbf{opačným předpokladem}: benevolentní agenti se sdíleným
+cílem (distribuované řešení problémů) a~sobečtí agenti s~vlastními cíli (teorie her, aukce).
+Pointa, kterou má odpověď doručit: jakmile padne benevolence, přestává stačit protokol
+a~začíná \emph{návrh mechanismu}. Tuhle větu říct hned v~anonsu --- drží pak celou odpověď.
+\end{nitbox}
+
+\blok{1}{Koherence, koordinace a~CDPS}
+\tema{koherence $=$ kvalita chování celku (cíl) vs.\ koordinace $=$ správa vzájemných
+závislostí (prostředek)
+\tb CDPS: benevolence $+$ sdílený cíl; odlišit od paralelního řešení i~od MAS se sobeckými
+agenty
+\tb tři fáze: dekompozice $\to$ řešení podproblémů $\to$ syntéza
+\tb sdílení úloh vs.\ sdílení výsledků (proaktivní a~reaktivní) a~jeho čtyři přínosy}
+\most{Nejznámější protokol pro sdílení úloh je zároveň nejcitovanější v~celém okruhu.}
+
+\blok{2}{Mechanismy kooperace}
+\tema{\textbf{Contract Net}: recognition $\to$ announcement $\to$ bidding $\to$ awarding
+a~expediting; manažer a~dodavatel, hierarchické subkontrakty
+\tb co CNET \emph{negarantuje}: globální optimalitu ani příchod nabídky; předpokládá
+benevolenci, nebrání lhaní o~schopnostech
+\tb systémy s~tabulí: hierarchie abstrakce, experti, arbitr; volná vazba, úzké hrdlo
+\tb DisCSP a~DCOP: proměnné a~omezení rozdělené mezi agenty, nikdo nevidí celý problém;
+ABT (\texttt{ok?} / \texttt{nogood}), DCOP maximalizuje sociální blahobyt}
+\most{Všechno výše padá, jakmile agent sleduje vlastní zájem --- a~to je druhá polovina
+otázky.}
+
+\blok{3}{Sobecký agent, hry a~ekvilibria}
+\tema{sobecký agent maximalizuje \emph{svou} očekávanou utilitu za předpokladu, že ostatní
+dělají totéž
+\tb hra v~normální formě; ryzí vs.\ smíšené strategie; dominance a~iterované odstraňování
+dominovaných strategií
+\tb \textbf{Nashovo ekvilibrium} $=$ vzájemně nejlepší odpovědi; Nashova věta (existence ve
+smíšených strategiích); hledání je PPAD-úplné
+\tb \textbf{Paretova optimalita} vs.\ sociální blahobyt; vztahy: profil dominantních
+strategií je vždy NE, NE nemusí být Pareto-optimální
+\tb vězňovo dilema jako ilustrace všech tří pojmů; tragedy of the commons; iterovaná verze,
+stín budoucnosti, TFT
+\tb klasické hry: koordinační, anti-koordinační (chicken), s~nulovým součtem
+\tb umět dopočítat smíšené NE ve hře $2\times2$ (volím tak, aby byl \emph{protihráč}
+indiferentní)}
+\most{Když se agenti neshodnou, kdo co dostane, potřebují pravidla --- a~znění okruhu jmenuje
+ta tržní.}
+
+\blok{4}{Aukce jako alokace zdrojů}
+\tema{aukce $=$ mechanismus alokace vzácného zdroje; efektivní aukce dá zdroj tomu, kdo ho
+oceňuje nejvíc
+\tb dimenze: private vs.\ common value, open cry vs.\ sealed bid, first vs.\ second price,
+počet kol
+\tb čtyři základní typy a~jejich strategie; dominantní strategie má anglická a~Vickreyova,
+holandská a~FPSB ji nemají
+\tb důkaz pravdomluvnosti u~Vickreyho: nabídka rozhoduje jen o~tom, \emph{zda} vyhraješ,
+ne kolik zaplatíš
+\tb ekvivalence: anglická $\leftrightarrow$ Vickrey, holandská $\leftrightarrow$ FPSB
+\tb věta o~ekvivalenci výnosů a~kdy neplatí (averze k~riziku, common values, prokletí
+vítěze, koluze)
+\tb kombinatorické aukce a~NP-těžký problém určení vítěze}
+\most{Poslední krok obrací směr úvahy: nenavrhovat strategii, ale pravidla hry.}
+
+\blok{5}{Návrh mechanismů a~vyjednávání}
+\tema{mechanism design jako obrácená teorie her; princip odhalení
+\tb \textbf{VCG}: alokace maximalizující sociální blahobyt $+$ platba rovná
+\emph{externalitě}; pravdomluvnost jako dominantní strategie, efektivita, individuální
+racionalita --- ale není budget-balanced
+\tb vyjednávání: monotónní protokol ústupků $+$ Zeuthenova strategie (ustoupí ten s~nižším
+rizikem), vazba na Nashův bargaining product}
+
+%---------------------------------------------------------------------
+\section{Metody pro učení agentů a~zpětnovazební učení}
+\zneni{Metody pro učení agentů; zpětnovazební učení.}
+
+\begin{nitbox}[Červená nit]
+Znění jmenuje dvě věci a~druhá je podmnožinou první --- tak to i~postavit: nejdřív
+\textbf{mapa toho, co všechno \uv{učení agenta} znamená}, pak \textbf{jedna větev (RL) do
+hloubky}, protože je pro agenta nejpřirozenější (dostává odměnu, ne správnou odpověď).
+Konec patří tomu, co se rozbije, jakmile je agentů víc --- tím se otázka napojí na okruh
+teorie her.
+\end{nitbox}
+
+\blok{1}{Mapa učení agentů}
+\tema{proč se agent učí: prostředí není známé předem a~návrhář nezná optimální politiku
+\tb s~učitelem / bez učitele / zpětnovazební \tb imitační učení a~inverzní RL
+\tb evoluční metody (LCS, neuroevoluce) --- vazba na okruh~02
+\tb co se agent učí: model prostředí, model protivníka, politiku
+\tb individuální vs.\ sociální učení}
+\most{RL je pro agenta ta pravá větev: má jen skalární odměnu a~musí sám objevit, co ji
+přináší.}
+
+\blok{2}{Formalismus: MDP}
+\tema{$\langle S,A,T,R,\gamma\rangle$ a~markovská vlastnost
+\tb politika, hodnotové funkce $V^\pi$ a~$Q^\pi$, role diskontování
+\tb Bellmanova rovnice optimality
+\tb value iteration (kontrakce, asymptotická konvergence) vs.\ policy iteration (evaluace
+$+$ zlepšení, konečné ukončení)}
+\most{Obojí ale potřebuje model prostředí --- a~ten agent typicky nemá.}
+
+\blok{3}{Učení bez modelu}
+\tema{model-based vs.\ model-free
+\tb \textbf{Q-learning}: aktualizační pravidlo, off-policy, tabulkový; umět projít jeden
+krok s~čísly
+\tb \textbf{SARSA}: on-policy a~proč je opatrnější (cliff walking)
+\tb dilema průzkum/využití: $\varepsilon$-greedy vs.\ \textbf{UCB} (bonus za nejistotu,
+\uv{optimismus tváří v~tvář nejistotě}, bonus sám vyhasíná)}
+\most{Tabulka přestane stačit, jakmile je stavů příliš mnoho.}
+
+\blok{4}{Aproximace a~metody založené na politice}
+\tema{aproximace hodnotové funkce; DQN (replay buffer, cílová síť) a~proč jsou obě potřeba
+\tb REINFORCE: gradient logaritmu politiky krát výnos
+\tb actor--critic: herec $=$ politika, kritik $=$ hodnotová funkce, výhoda $A = Q - V$
+\tb kdy politika místo hodnoty: spojité akce, stochastické politiky}
+\most{Všechno dosud předpokládalo, že se prostředí nemění samo od sebe --- v~MAS se mění.}
+
+\blok{5}{Multiagentní zpětnovazební učení}
+\tema{markovská hra: sdružený akční prostor, individuální odměny
+\tb místo optima se hledá řešení: nejlepší odpověď, Nashovo ekvilibrium, Pareto (vazba na
+ot.~5)
+\tb Minimax-Q (nulový součet, LP v~každé aktualizaci), Nash-Q
+\tb čtyři problémy MARL: nestacionarita, exponenciální sdružený prostor, částečná
+pozorovatelnost, přiřazení zásluh
+\tb CTDE jako standardní odpověď \tb self-play a~AlphaZero}
+
+\lbl{Rezerva:} proč value iteration konverguje (kontrakce) \tb rozdíl mezi odměnou
+a~utilitou běhu (vazba na ot.~1) \tb v~čem přesně je Q-learning off-policy.
+
+%---------------------------------------------------------------------
+\section{Metodologie návrhu, jazyky a~prostředí MAS}
+\zneni{Metodologie návrhu, jazyky a~prostředí multiagentních systémů.}
+
+\begin{nitbox}[Červená nit]
+Tři slova ve znění $=$ tři vrstvy jedné otázky: \textbf{jak systém navrhnout} (metodologie)
+$\to$ \textbf{podle čeho ho postavit} (standard FIPA) $\to$ \textbf{v~čem ho napsat}
+(jazyky a~platformy). Je to nejfaktografičtější otázka okruhu --- nedá se v~ní improvizovat,
+zato se dá spolehlivě naučit. Začít tím, \emph{proč nestačí objektově orientovaný návrh}.
+\end{nitbox}
+
+\blok{1}{Proč nestačí objektově orientované metodologie}
+\tema{autonomie: agent může požadavek odmítnout, objekt ne
+\tb vlastní cíle a~organizační (nikoli strukturální) vztahy
+\tb důsledek: analýza pracuje s~rolemi a~interakcemi, ne s~třídami a~metodami}
+\most{Nejznámější metodologie staví přesně na pojmu role.}
+
+\blok{2}{Metodologie návrhu}
+\tema{\textbf{Gaia}: analýza $=$ model rolí (permissions, responsibilities s~liveness
+a~safety, activities, protocols) $+$ model interakcí; návrh $=$ model agentů, služeb
+a~známostí; předpoklady --- kooperativní agenti a~statická organizace
+\tb rozšíření ROADMAP a~Gaia v.2, která tyhle předpoklady uvolňují}
+\most{Návrh je hotový; aby spolu systémy mluvily, potřebují standard.}
+
+\blok{3}{FIPA a~architektura platformy}
+\tema{co FIPA standardizuje: ACL, protokoly, architekturu platformy
+\tb \textbf{AMS} --- bílé stránky, přiděluje AID, řídí životní cyklus (initiated, active,
+waiting, suspended, transit)
+\tb \textbf{DF} --- žluté stránky: registrace a~vyhledávání \emph{služeb}
+\tb \textbf{MTS/ACC} --- doručování ACL zpráv v~rámci platformy i~mezi platformami
+\tb rozdíl standard vs.\ implementace (FIPA vs.\ JADE) --- říct explicitně}
+\most{Standard popisuje rozhraní; kód se píše v~konkrétním prostředí.}
+
+\blok{4}{Jazyky a~prostředí}
+\tema{\textbf{JADE}: Java, plně FIPA; třída \texttt{Agent} se \texttt{setup()}
+a~\texttt{takeDown()}; chování jako objekty \texttt{Behaviour} (OneShot, Cyclic, Ticker,
+Sequential, FSM) s~\texttt{action()} a~\texttt{done()}
+\tb jedno vlákno na agenta a~v~něm \emph{kooperativní nepreemptivní scheduler}
+$\Rightarrow$ blokující chování zastaví celého agenta, odtud nutnost \texttt{block()}
+\tb \texttt{ACLMessage} a~\texttt{MessageTemplate}, hotové protokoly
+(\texttt{ContractNetInitiator}), containers
+a~mobilita, nástroje RMA a~Sniffer; registrace služby u~DF v~\texttt{setup()}
+\tb \textbf{Jason/AgentSpeak}: BDI jazyk, plán \texttt{spouštěč : kontext <- tělo};
+\texttt{!g} vs.\ \texttt{?g}, \texttt{tell}/\texttt{achieve} jako řečové akty, anotace
+\texttt{[source(...)]}, \texttt{not} vs.\ silná negace; prostředí v~Javě, projekt
+\texttt{.mas2j}
+\tb \textbf{NetLogo}: agentní simulace (turtles, patches, links) --- jiný účel než JADE
+\tb \textbf{SPADE}: Python $+$ XMPP
+\tb jak vybrat: JADE pro interoperabilitu, Jason pro BDI abstrakci, NetLogo pro simulaci}
+
+\lbl{Rezerva:} co konkrétně se píše do \texttt{setup()} \tb selekční funkce cyklu
+a~\texttt{AgArch} v~Jasonu \tb proč Gaia nepočítá se sobeckými agenty.
+
+%=====================================================================
+\okruh{02}{Přírodou inspirované počítání}{Šest velkých otázek podle oficiálního znění
+  okruhu --- kostry odpovědí}
+
+\section*{Přehled: kostry odpovědí}
+\addcontentsline{toc}{section}{Přehled: kostry odpovědí (okruh 02)}
+
+\begin{center}
+\small
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{3.0cm}>{\raggedright\arraybackslash}p{13.4cm}@{}}
+\toprule
+\textbf{Otázka} & \textbf{Kostra (bloky za sebou)} \\
+\midrule
+1 GA, GP, EP & společné schéma EA $\to$ genetický algoritmus $\to$ reprezentace a~operátory
+  $\to$ genetické programování $\to$ evoluční programování \\
+2 Teorie schémat & schéma a~jeho míry $\to$ věta o~schématech $\to$ stavební bloky $\to$
+  kritika $\to$ Voseho model $\to$ konečné populace \\
+3 ES, DE, koevoluce & evoluční strategie $\to$ diferenciální evoluce $\to$ koevoluce $\to$
+  otevřená evoluce \\
+4 Rojové algoritmy & princip rojové inteligence $\to$ PSO $\to$ ACO $\to$ další roje $\to$
+  srovnání s~EA \\
+5 Lokální a~memetické & hill climbing $\to$ simulované žíhání $\to$ tabu a~scatter search
+  $\to$ memetické algoritmy $\to$ parametry \\
+6 Aplikace & pravidlové systémy a~LCS $\to$ neuroevoluce $\to$ kombinatorické úlohy
+  a~omezení $\to$ vícekriteriální optimalizace \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+%---------------------------------------------------------------------
+\section{Genetické algoritmy, genetické a~evoluční programování}
+\zneni{Genetické algoritmy, genetické a~evoluční programování.}
+
+\begin{nitbox}[Červená nit]
+Tři jmenované věci jsou \textbf{tři body na jedné ose: co se vlastně evolvuje} --- řetězec
+(GA), program jako strom (GP), automat či chování (EP). Postavit odpověď na \emph{společném
+schématu evolučního algoritmu} a~pak ukázat, že se větve liší jen volbou reprezentace
+a~operátorů. Šetří to čas a~drží odpověď pohromadě; jinak se otázka rozpadne na tři
+nesouvisející výčty.
+\end{nitbox}
+
+\blok{1}{Společné schéma evolučního algoritmu}
+\tema{EA $=$ populační stochastické prohledávání
+\tb cyklus: inicializace $\to$ ohodnocení $\to$ rodičovská selekce $\to$ křížení $\to$
+mutace $\to$ ohodnocení $\to$ environmentální selekce
+\tb variace tvoří diverzitu, selekce ji odebírá $\Rightarrow$ explorace vs.\ exploatace jako
+hlavní návrhová osa
+\tb No Free Lunch $\Rightarrow$ doménová specializace reprezentace a~operátorů
+\tb historické větve GA / ES / EP / GP a~jejich charakteristické volby}
+\most{Nejjednodušší instancí schématu je jednoduchý genetický algoritmus.}
+
+\blok{2}{Genetický algoritmus}
+\tema{SGA: binární řetězce $+$ ruleta $+$ jednobodové křížení $+$ bit-flip mutace $+$
+generační náhrada; typické hodnoty $p_C$ a~$p_M$
+\tb selekce: ruleta (vysoký rozptyl, citlivá na škálování), SUS, turnaj (tlak přes $k$,
+invariantní k~transformacím fitness), pořadová, Boltzmannova
+\tb elitismus a~monotonie nejlepší fitness; generační vs.\ steady-state model
+\tb škálování fitness (lineární, sigma truncation, mocninné, Boltzmannovo) --- lék na
+dominanci \uv{supermanů} na začátku a~ztrátu tlaku na konci}
+\most{Všechno tohle je nezávislé na tom, co je v~genomu --- a~právě genom rozhoduje
+o~úspěchu.}
+
+\blok{3}{Reprezentace a~genetické operátory}
+\tema{reprezentace $+$ operátory $=$ fitness krajina
+\tb binární kódování reálných čísel, Hammingovy útesy, Grayův kód
+\tb křížení: jednobodové (rozbití schématu), dvoubodové (bez okrajového biasu), uniformní
+(nejvíc disruptivní, bez pozičního biasu)
+\tb mutace je v~GA sekundární: brání nevratné ztrátě alel
+\tb reálná reprezentace: gaussovská mutace, aritmetické křížení a~jeho smršťování rozptylu
+$\Rightarrow$ BLX-$\alpha$ a~SBX
+\tb permutace: PMX, OX, CX, ER --- co který zachovává; mutace swap, insert, inverze (2-opt),
+scramble
+\tb nominální vs.\ ordinální atributy (nezaujatá mutace vs.\ creep)}
+\most{Když se místo hodnot evolvuje program, mění se všechno kromě samotného schématu.}
+
+\blok{4}{Genetické programování}
+\tema{stromová reprezentace: terminály a~neterminály, uzavřenost a~dostatečnost
+\tb inicializace grow / full / ramped half-and-half
+\tb křížení výměnou podstromů, typy mutací (včetně mutace konstant); fitness $=$ spuštění
+programu na sadě případů
+\tb \textbf{bloat}: definice, tři vysvětlení (replication accuracy, removal bias, crossover
+bias), obrana (limity velikosti, parsimony pressure, anti-bloat operátory, vícekriteriální
+přístup)
+\tb modularita: ADF; typované a~gramatické GP
+\tb varianty: lineární GP, grafové a~Cartesian GP, vývojové GP
+\tb gramatická evoluce: celočíselný genom, výběr pravidla modulem, derivační strom;
+robustní kódování, ale nelokální mapování}
+\most{Poslední větev nechává jako genotyp automat a~křížení zahazuje úplně.}
+
+\blok{5}{Evoluční programování}
+\tema{konečné automaty, genotyp $=$ fenotyp, \emph{jen mutace}
+\tb turnajová selekce z~rodičů i~potomků
+\tb příklad predikce a~degenerace fitness
+\tb moderní EP $=$ reálné vektory se samoadaptací (blízko evolučním strategiím)
+\tb headless chicken experiment: kombinuje křížení stavební bloky, nebo je to jen
+makromutace?}
+
+%---------------------------------------------------------------------
+\section{Teorie schémat a~pravděpodobnostní modely SGA}
+\zneni{Teorie schémat, pravděpodobnostní modely jednoduchého genetického algoritmu.}
+
+\begin{nitbox}[Červená nit]
+Znění jmenuje \textbf{dvě odpovědi na jednu otázku: proč GA funguje}. První (schémata) je
+intuitivní, ale je to jen nerovnost pro jeden krok a~má silnou kritiku; druhá (Voseho model
+a~Markovovy řetězce) je exaktní, ale prakticky nepoužitelná. Tuhle dvojici postavit proti
+sobě --- ten protiklad \emph{je} celá odpověď a~zároveň nejlepší závěrečná věta.
+\end{nitbox}
+
+\blok{1}{Schéma a~jeho míry}
+\tema{schéma $=$ slovo nad $\{0,1,*\}$
+\tb řád $o(S)$ $=$ počet pevných pozic; definiční délka $d(S)$; fitness $F(S)$ jako průměr
+reprezentantů \emph{v~dané populaci}
+\tb celkem $3^m$ schémat, jeden jedinec je reprezentantem $2^m$ z~nich}
+\most{Otázka zní, jak se počet reprezentantů schématu vyvíjí mezi generacemi.}
+
+\blok{2}{Věta o~schématech}
+\tema{odvození ve třech krocích: selekce (exponenciální růst nadprůměrných schémat)
+$\to$ křížení (rozbití s~pravděpodobností $d(S)/(m-1)$) $\to$ mutace ($(1-p_M)^{o(S)}$)
+\tb výsledná nerovnost a~jak ji číst
+\tb co věta říká --- a~co neříká: jen dolní odhad na jeden krok}
+\most{Z~věty se ale udělal mnohem silnější závěr o~tom, jak GA hledá.}
+
+\blok{3}{Hypotéza stavebních bloků a~implicitní paralelismus}
+\tema{BBH: GA skládá krátká nadprůměrná schémata nízkého řádu
+\tb důsledky pro praxi: záleží na kódování (geny, které patří k~sobě, mají být blízko), na
+velikosti populace; škodí předčasná konvergence
+\tb implicitní paralelismus ($\sim n^3$ užitečně zpracovaných schémat)
+\tb analogie s~$k$-rukým banditou: exponenciální alokace pokusů vítězi}
+\most{A~právě tady začíná kritika, kterou je potřeba umět vyjmenovat.}
+
+\blok{4}{Kritika teorie schémat}
+\tema{nerovnost platí jen pro jeden krok \tb konečné populace
+\tb deceptivní úlohy (royal road, trap funkce)
+\tb kolaterální konvergence a~velký rozptyl fitness
+\tb ignoruje konstruktivní efekty operátorů \tb schémata nejsou nezávislá}
+\most{Odtud snaha nahradit nerovnost exaktním modelem.}
+
+\blok{5}{Voseho model (nekonečné populace)}
+\tema{řetězce ztotožněné s~čísly; populace $=$ vektor relativních četností v~simplexu
+\tb hledá se $\mathcal{G} = \mathcal{M} \circ \mathcal{F}$
+\tb selekce $\mathcal{F}$: diagonální matice fitness
+\tb míchání $\mathcal{M}$ (křížení $+$ mutace): kvadratický operátor; díky symetrii stačí
+\emph{jediná} míchací matice
+\tb pevné body: selekce $\to$ populace kopií nejlepšího, míchání $\to$ rovnoměrné rozdělení;
+jejich kombinace vede k~přerušovaným rovnováhám}
+\most{Model je deterministický, protože předpokládá nekonečnou populaci --- realita je
+konečná.}
+
+\blok{6}{Konečné populace a~Markovův řetězec}
+\tema{stavy $=$ populace; počet stavů je kombinační číslo, tedy astronomický
+\tb matice přechodu je exaktní, ale nepoužitelná
+\tb ireducibilita při $p_M>0$; elitistický GA konverguje k~optimu s~pravděpodobností 1
+\tb závěrečný protiklad: nekonečné populace $=$ exaktní a~nepraktické, konečné $=$
+realistické a~nezvládnutelné; limitní přechod obojí spojuje}
+
+\lbl{Rezerva:} spočítat $o(S)$ a~$d(S)$ na konkrétním schématu \tb proč elitismus zaručuje
+konvergenci \tb deceptivní funkce jako protipříklad k~BBH.
+
+%---------------------------------------------------------------------
+\section{Evoluční strategie, diferenciální evoluce, koevoluce, otevřená evoluce}
+\zneni{Evoluční strategie, diferenciální evoluce, koevoluce, otevřená evoluce.}
+
+\begin{nitbox}[Červená nit]
+Čtyři jmenované věci nejsou variace téhož a~vyplatí se to říct hned: první dvě jsou
+\textbf{algoritmy pro reálnou optimalizaci} a~liší se tím, \emph{odkud berou měřítko kroku}
+(strategické parametry vs.\ rozptyl populace); druhé dvě mění \textbf{samotný pojem fitness}
+--- u~koevoluce je kontextová, u~otevřené evoluce žádná. Ta dělicí čára vysvětlí, proč jsou
+v~jedné otázce.
+\end{nitbox}
+
+\blok{1}{Evoluční strategie}
+\tema{reálné vektory; mutace je hlavní operátor, rodičovská selekce náhodná,
+environmentální deterministická; jedinec $= [\vec x, \vec\sigma]$
+\tb $(\mu,\lambda)$ vs.\ $(\mu+\lambda)$: elitismus, konvergence, únik z~lokálních optim,
+samoadaptace
+\tb $(1+1)$-ES a~pravidlo $1/5$ --- adaptivní, nikoli samoadaptivní řízení
+\tb samoadaptace: \textbf{nejdřív mutovat $\sigma$, pak $x$}; počty strategických parametrů
+(izotropní, nekorelované, korelované)
+\tb rekombinace: lokální vs.\ globální, diskrétní vs.\ intermediární
+\tb \textbf{CMA-ES}: kovarianční matice, evoluční cesty, rank-1 a~rank-$\mu$ update, řízení
+délky kroku; invariance vůči monotónním transformacím fitness}
+\most{ES si měřítko kroku pamatuje v~parametrech; DE ho čte přímo z~populace.}
+
+\blok{2}{Diferenciální evoluce}
+\tema{DE/rand/1/bin: dárce $\vec v = \vec x_a + F(\vec x_b - \vec x_c)$, binomické křížení
+s~prahem $C$ a~pojistkou, souboj potomka \emph{s~vlastním rodičem}
+\tb geometrická podstata: měřítko i~orientace kroků se přebírají z~rozptylu populace
+$\Rightarrow$ adaptace bez strategických parametrů
+\tb parametry $F$, $C$, velikost populace
+\tb varianty rand/1, best/1, current-to-best; \texttt{bin} vs.\ \texttt{exp} křížení
+\tb umět předvést jeden krok s~čísly (mutace $\to$ křížení $\to$ selekce)}
+\most{Obě metody předpokládají pevnou fitness funkci --- koevoluce ji nechá záviset na
+populaci.}
+
+\blok{3}{Koevoluce}
+\tema{kontextová fitness $\Rightarrow$ dynamická krajina
+\tb \emph{kompetitivní}: predátor--kořist, host--parazit, Hillisovy řadicí sítě
+\tb \emph{kooperativní}: dekompozice na komponenty, CCGA, moduly $+$ blueprinty
+\tb patologie: cyklení (intranzitivita), odpojení, efekt Červené královny, průměrné stabilní
+stavy, přespecializace, zapomínání
+\tb léky: archivy (hall of fame), sdílená fitness, měření proti pevné sadě
+\tb iterované vězňovo dilema jako klasická úloha (TFT a~vlastnosti úspěšné strategie)
+\tb udržování diverzity: fitness sharing, crowding, speciace, ostrovní model}
+\most{Poslední krok zahodí cíl úplně.}
+
+\blok{4}{Otevřená evoluce}
+\tema{evoluce bez pevného cíle; čtyři znaky --- trvalá novost, neomezený růst složitosti,
+nové třídy entit, evoluce evolvability
+\tb systémy Tierra, Avida, Polyworld, ECHO a~jejich společný osud (dříve či později se
+zaseknou)
+\tb generativní (nepřímé) reprezentace: L-systémy, celulární automaty, buněčné kódování,
+CPPN
+\tb \textbf{novelty search}: řídkost v~prostoru chování vůči populaci \emph{a} archivu;
+účelová funkce se nepoužívá vůbec
+\tb navazující quality-diversity a~MAP-Elites
+\tb interaktivní evoluce (fitness $=$ člověk) a~její limity}
+
+\lbl{Rezerva:} proč se u~samoadaptace mutuje nejdřív $\sigma$ \tb dynamická fitness
+(diploidie, hypermutace, migrace) \tb proč $(\mu,\lambda)$ lépe uniká z~lokálních optim.
+
+%---------------------------------------------------------------------
+\section{Rojové optimalizační algoritmy}
+\zneni{Rojové optimalizační algoritmy.}
+
+\begin{nitbox}[Červená nit]
+Znění je jedna věta, osnovu si tedy určuješ sám. Nejsilnější stavba: nejdřív \textbf{princip
+společný celé rodině} (decentralizace, stigmergie, kladná zpětná vazba s~tlumením,
+emergence), pak \textbf{PSO a~ACO jako dvě různá provedení téhož principu} --- jedno ve
+spojitém prostoru, druhé na grafu --- a~nakonec \textbf{srovnání s~evolučními algoritmy},
+protože ta otázka přijde tak jako tak. Sama látka je krátká, tenhle rámec ji roztáhne na
+patnáct minut, aniž by se plácalo prázdno.
+\end{nitbox}
+
+\blok{1}{Princip rojové inteligence}
+\tema{inspirace: hejno, mravenčí kolonie, včelstvo; jednoduchý jedinec, žádné centrální
+řízení
+\tb klíčové pojmy: decentralizace, \textbf{stigmergie} (komunikace přes prostředí), kladná
+zpětná vazba $+$ tlumení, emergence
+\tb proč to funguje: kladná zpětná vazba zesiluje dobré řešení, odpařování a~setrvačnost
+brání předčasné konvergenci
+\tb kde je to výhoda: dynamická prostředí, žádná potřeba gradientu, snadná paralelizace}
+\most{První provedení principu pracuje ve spojitém prostoru a~pamatuje si trajektorii.}
+
+\blok{2}{Optimalizace rojem částic (PSO)}
+\tema{částice $=$ pozice $+$ rychlost $+$ paměť nejlepší navštívené pozice
+\tb rovnice rychlosti: setrvačnost $+$ kognitivní složka $+$ sociální složka; aktualizace
+pozice
+\tb parametry: klesající $w$, $c_1$ a~$c_2$; omezení $v_{\max}$ nebo constriction faktor
+\tb topologie gbest vs.\ lbest (kruh, mřížka) a~její vliv na exploraci
+\tb rozdíl proti GA: žádné operátory, částice mají paměť, informace teče jednosměrně od
+lepších}
+\most{Druhé provedení pracuje na grafu a~jako paměť používá samo prostředí.}
+
+\blok{3}{Optimalizace mravenčí kolonií (ACO)}
+\tema{řešení se \emph{konstruuje} po krocích; pravděpodobnost přechodu
+$p_{ij} \propto \tau_{ij}^\alpha \eta_{ij}^\beta$ (feromon $\times$ heuristika)
+\tb aktualizace feromonu: odpařování $+$ uložení úměrné kvalitě
+\tb \textbf{AS} (aktualizují všichni) vs.\ \textbf{ACS} (globální update jen nejlepší,
+lokální update při průchodu, pseudonáhodné pravidlo) vs.\ \textbf{MAX--MIN} (meze feromonu)
+\tb akce démona $=$ lokální prohledávání nad zkonstruovaným řešením
+\tb typické úlohy: TSP, směrování, rozvrhování; přirozená vhodnost pro měnící se graf}
+\most{Ostatní rojové algoritmy jsou variace na stejné téma s~jinou metaforou.}
+
+\blok{4}{Další rojové algoritmy}
+\tema{ABC: dělnice, pozorovatelky, průzkumnice; limit jako restart vyčerpaného zdroje
+\tb firefly: přitažlivost klesající se vzdáleností
+\tb poznámka ke~kritice \uv{metaforických} algoritmů --- řada novějších je přeznačkovaná
+varianta téhož}
+\most{Poslední blok je to, na co se komise doptá skoro jistě.}
+
+\blok{5}{Srovnání s~evolučními algoritmy a~kdy co použít}
+\tema{co mají společné: populace, stochastika, žádný gradient, snadná paralelizace
+\tb v~čem se liší: dědičnost a~operátory (EA) vs.\ pohyb a~paměť částice (PSO) vs.\ postupná
+konstrukce a~sdílená paměť v~prostředí (ACO)
+\tb volba podle úlohy: spojitá optimalizace $\to$ PSO, DE, CMA-ES; konstrukce na grafu
+$\to$ ACO; strukturované genotypy $\to$ GA a~GP
+\tb hybridizace s~lokálním prohledáváním je téměř vždy výhodná (vazba na ot.~5)}
+
+%---------------------------------------------------------------------
+\section{Lokální prohledávání a~memetické algoritmy}
+\zneni{Memetické algoritmy, hill climbing, simulované žíhání.}
+
+\begin{nitbox}[Červená nit]
+Znění jmenuje dvě jednoduché lokální metody a~jednu hybridní --- postavit to jako
+\textbf{stupňování}: čisté lokální prohledávání a~jeho jediná slabina (uvázne v~lokálním
+optimu) $\to$ dva různé způsoby, jak ji obejít (řízená náhoda, paměť) $\to$ memetický
+algoritmus jako spojení lokálního prohledávání s~populací. Každá metoda je odpovědí na
+konkrétní selhání té předchozí.
+\end{nitbox}
+
+\blok{1}{Lokální prohledávání a~horolezecký algoritmus}
+\tema{okolí, soused, krajina; co je lokální optimum
+\tb varianty: steepest ascent, first improvement, stochastický, s~náhodnými restarty
+\tb typické patologie: lokální optima, plošiny, hřebeny}
+\most{První lék je dovolit zhoršující krok --- ale řízeně a~stále méně často.}
+
+\blok{2}{Simulované žíhání}
+\tema{fyzikální analogie; Metropolisovo kritérium $P = \min(1, e^{-\Delta/T})$
+\tb rozvrh chlazení: geometrický v~praxi, logaritmický pro důkaz konvergence
+\tb pro pevné $T$ konverguje k~Boltzmannovu rozdělení
+\tb krajní případy: $T \to 0$ dá hill climbing, $T \to \infty$ náhodnou procházku}
+\most{Druhý lék je opačný: nedovolit vrátit se tam, odkud jsem přišel.}
+
+\blok{3}{Tabu prohledávání a~scatter search}
+\tema{tabu list \emph{tahů}, tenure, aspirační kritérium
+\tb střednědobá a~dlouhodobá (frekvenční) paměť: intenzifikace vs.\ diverzifikace
+\tb vždy se jde do nejlepšího nezakázaného souseda, i~když je horší
+\tb scatter search: referenční množina kombinující kvalitu a~diverzitu, aritmetické
+kombinace $+$ vylepšení}
+\most{Všechny tyhle metody pracují s~jedním řešením --- populace přinese to, co jim chybí.}
+
+\blok{4}{Memetické algoritmy}
+\tema{EA $+$ lokální prohledávání nad jedinci: globální explorace $+$ lokální doladění
+\tb \textbf{lamarckismus} (vylepšení se zapíše do genotypu, rychlejší konvergence) vs.\
+\textbf{baldwinismus} (mění jen fitness, zachovává diverzitu)
+\tb návrhová rozhodnutí: na koho, jak často a~jak hluboko lokální prohledávání pouštět
+\tb memetic computing: memy v~genomu nebo v~koevolvující populaci}
+\most{Poslední věc je společná všem metodám v~téhle otázce: jak nastavit parametry.}
+
+\blok{5}{Ladění a~řízení parametrů}
+\tema{ladění (před během) vs.\ řízení (za běhu)
+\tb pevné, adaptivní a~samoadaptivní strategie
+\tb vazba na pravidlo $1/5$ a~samoadaptaci u~ES (ot.~3)}
+
+%---------------------------------------------------------------------
+\section{Aplikace evolučních algoritmů}
+\zneni{Aplikace evolučních algoritmů (evoluce expertních systémů, neuroevoluce, řešení
+kombinatorických úloh, vícekriteriální optimalizace).}
+
+\begin{nitbox}[Červená nit]
+Znění vyjmenovává čtyři aplikace, takže osnova je hotová --- pointa je ve \emph{způsobu}
+výkladu. U~každé aplikace odpovědět na \textbf{stejné tři otázky: co je jedinec, co je
+fitness, co je na té úloze těžké}. Ta trojice drží celou odpověď a~zároveň ukazuje, že
+aplikace nejsou výčet, ale čtyři různé odpovědi na otázku \uv{jak úlohu zakódovat}.
+\end{nitbox}
+
+\blok{1}{Evoluce pravidlových a~expertních systémů}
+\tema{\textbf{michiganský} přístup (jedinec $=$ jedno pravidlo, řešením je celá populace,
+nutné rozdělení odměny) vs.\ \textbf{pittsburghský} (jedinec $=$ celá sada pravidel, fitness
+přímočará, operátory složité)
+\tb Hollandův LCS: podmínky nad $\{0,1,*\}$, vnitřní zprávy, bucket brigade
+\tb ZCS: match set $\to$ výběr akce $\to$ action set; posílení, daň, cover operátor
+\tb \textbf{XCS}: klasifikátor (podmínka, akce, predikce, chyba, fitness), \textbf{fitness
+podle přesnosti predikce}, aktualizace Q-learningem, nikový GA v~action setu $\Rightarrow$
+úplná a~minimální mapa vstup--výstup
+\tb umět vysvětlit, proč přesnost jako fitness řeší nedostatky \uv{strength-based} systémů
+\tb varianty UCS a~XCSF}
+\most{Druhá aplikace nahradí pravidla neuronovou sítí --- a~s~ní se změní, co je genotyp.}
+
+\blok{2}{Neuroevoluce}
+\tema{co se evolvuje: váhy / topologie / obojí / hyperparametry učení
+\tb proč EA místo gradientu: bez derivací, rekurentní sítě, RL bez rozlišitelné odměny,
+paralelizace
+\tb \textbf{problém konkurujících konvencí} (permutační problém) $\Rightarrow$ křížení sítí
+je bez opatření destruktivní
+\tb kódování architektury: přímé (matice), gramatické (Kitano), buněčné (Gruau); GNARL
+\tb \textbf{NEAT}: inovační čísla (křížení jen shodných genů), speciace se sdílenou fitness
+(ochrana nových topologií), complexification od minimální sítě
+\tb \textbf{HyperNEAT}: CPPN generuje váhy ze souřadnic neuronů, zachycuje symetrie
+a~regularity
+\tb NAS: prostor, strategie, odhad výkonu (sdílení vah); DeepNEAT a~CoDeepNEAT; ES pro deep
+RL}
+\most{Třetí skupina úloh má diskrétní strukturu a~tvrdá omezení --- tam rozhoduje kódování.}
+
+\blok{3}{Kombinatorické úlohy a~práce s~omezeními}
+\tema{batoh: bitová mapa a~čtyři strategie pro omezení --- \emph{penalizace} (volba váhy),
+\emph{oprava} (lamarckovsky nebo baldwinovsky), \emph{dekodér} (každý genotyp je přípustný),
+\emph{vícekriteriální} formulace
+\tb TSP: fitness triviální, problém je kódování; permutační reprezentace $+$ PMX/OX/CX/ER,
+inicializace heuristikou, mutace inverzí (2-opt); které reprezentace nepoužívat
+\tb SAT: fitness $=$ počet splněných klauzulí (samotné $f$ nestačí), vážení klauzulí,
+zjemňující funkce; WalkSAT jako hybridizace
+\tb rozvrhování: tvrdá omezení řešit v~operátorech, měkká ve fitness; job shop --- permutace
+s~dekodérem vs.\ přímé kódování
+\tb obecné pravidlo: rozhoduje kódování a~operátory respektující strukturu úlohy}
+\most{Poslední aplikace mění samotný pojem \uv{nejlepší řešení}.}
+
+\blok{4}{Vícekriteriální optimalizace}
+\tema{dominance, Pareto množina a~Pareto fronta; dvojí cíl $=$ konvergence $+$ diverzita
+\tb skalarizace: lineární (nenajde nekonvexní části fronty), $\varepsilon$-constraint,
+Čebyševova
+\tb \textbf{NSGA-II}: nedominované třídění do front, crowding distance, crowded comparison,
+elitismus spojením rodičů a~potomků
+\tb SPEA2 (archiv, síla dominujících, hustota), MOEA/D (skalarizace $+$ váhové vektory
+a~sousedství), SMS-EMOA (hypervolume), NSGA-III (referenční body)
+\tb metriky: hypervolume (monotónní vůči dominanci, nepotřebuje skutečnou frontu), GD, IGD,
+spread
+\tb kde se to hodí i~jinde: bloat u~GP jako druhé kritérium (vazba na ot.~1)}
+
+%=====================================================================
+\okruh{03}{Dobývání znalostí}{Sedm velkých otázek podle oficiálního znění okruhu
+  --- kostry odpovědí}
+
+\section*{Přehled: kostry odpovědí}
+\addcontentsline{toc}{section}{Přehled: kostry odpovědí}
+
+\begin{center}
+\small
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{3.0cm}>{\raggedright\arraybackslash}p{13.4cm}@{}}
+\toprule
+\textbf{Otázka} & \textbf{Kostra (bloky za sebou)} \\
+\midrule
+1 Paradigmata & vymezení a~kořeny $\to$ proces KDD $\to$ typy úloh $\to$ data a~škály
+  $\to$ metodologie \\
+2 Příprava dat & proč 60--80~\% $\to$ čištění $\to$ integrace a~transformace $\to$
+  diskretizace $\to$ redukce $\to$ relevance atributů \\
+3 Metody & mapa tří rodin $\to$ asociační pravidla $\to$ učení s~učitelem $\to$ klastrová
+  analýza \\
+4 Pravidla & proč pravidla $\to$ charakteristická vs.\ diskriminační $\to$ jak je získat
+  $\to$ objektivní zajímavost $\to$ subjektivní zajímavost $\to$ aplikace \\
+5 Reprezentace & formy reprezentace $\to$ kritéria kvality $\to$ odhad chyby $\to$ míry
+  a~ROC $\to$ tři roviny vyhodnocování $\to$ vizualizace \\
+6 Sociální sítě & vymezení $\to$ modely sítí $\to$ centralita $\to$ detekce komunit \\
+7 Praxe & metody dobývání znalostí (metoda $\to$ oblast) $\to$ metody analýzy sítí
+  (metoda $\to$ oblast) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+%---------------------------------------------------------------------
+\section{Základní paradigmata dobývání znalostí}
+\zneni{Základní paradigmata dobývání znalostí.}
+
+\begin{nitbox}[Červená nit]
+Dobývání znalostí není algoritmus, ale \textbf{proces}: paradigma určuje typ úlohy, typ
+úlohy určuje metodu \emph{i}~kritérium, podle kterého se výsledek hodnotí. Celá odpověď je
+jedna kauzální linka \emph{proces $\to$ typ úlohy $\to$ data $\to$ metodologie}.
+\end{nitbox}
+
+\blok{1}{Vymezení oboru}
+\tema{definice KDD (netriviální, implicitní, dosud neznámé, potenciálně užitečné)
+\tb data --- informace --- znalost
+\tb proč obor vznikl: objem dat vs.\ potřeba podpory rozhodování
+\tb tři kořeny: strojové učení, databáze, statistika
+\tb dotazování a~OLAP vs.\ KDD}
+\most{OLAP odpovídá na otázku, kterou umím položit --- na vzor, o~kterém nevím, potřebuju
+proces.}
+
+\blok{2}{Proces KDD}
+\tema{pět fází: výběr $\to$ předzpracování $\to$ transformace $\to$ dobývání $\to$
+interpretace
+\tb dobývání jako \emph{jediný} krok procesu
+\tb interaktivnost a~iterativnost
+\tb 60--80~\% času na přípravu dat}
+\most{Proces je rámec; obsah mu dává to, co vlastně chci najít.}
+
+\blok{3}{Typy úloh --- vlastní paradigmata}
+\tema{klasifikace a~predikce \tb popis \tb hledání nugetů
+\tb deskriptivní vs.\ prediktivní úlohy
+\tb s~učitelem / bez učitele / poloučené
+\tb jak typ úlohy mění kritérium úspěchu: přesnost vs.\ srozumitelnost a~pokrytí vs.\
+překvapivost}
+\most{Volbu úlohy i~metody přitom předem omezuje to, jaká data mám k~dispozici.}
+
+\blok{4}{Data jako vstup}
+\tema{tabulka objekty $\times$ atributy jako cílový formát
+\tb škály měření: nominální, ordinální, intervalová, poměrová
+\tb co která škála dovoluje počítat
+\tb strukturovaná vs.\ nestrukturovaná data (text, sekvence, graf, prostor a~čas)}
+\most{Aby to byl inženýrský obor a~ne řemeslo, potřebuje proces standardizovanou podobu.}
+
+\blok{5}{Metodologie}
+\tema{SEMMA \tb CRISP-DM: šest fází, cyklické, porozumění problému na začátku i~na konci
+\tb ASUM-DM (CRISP-DM $+$ projektové řízení)
+\tb proč pořadí fází není striktní}
+
+%---------------------------------------------------------------------
+\section{Příprava dat, výběr atributů a~analýza jejich relevance}
+\zneni{Příprava dat; výběr atributů a~metody pro analýzu jejich relevance.}
+
+\begin{nitbox}[Červená nit]
+Cílem přípravy je \textbf{jedna tabulka objekty $\times$ atributy, na které zvolená metoda
+funguje}. Každý krok je rozhodnutí, které se dá obhájit i~pokazit --- a~správnost volby se
+vždy poměřuje tím, jakou metodu chci použít potom.
+\end{nitbox}
+
+\blok{1}{Proč je příprava klíčová}
+\tema{60--80~\% času \tb jak reálná data vypadají: chybějící hodnoty, šum, nekonzistence,
+více zdrojů, různé škály
+\tb příprava je závislá na metodě (rozhodovací strom vs.\ metoda pracující se vzdáleností)}
+\most{Nejdřív odstranit vady dat, teprve pak je tvarovat pro metodu.}
+
+\blok{2}{Čištění dat}
+\tema{chybějící hodnoty: ignorovat objekt / nová hodnota \uv{nevím} / existující hodnota
+(modus, poměrně, náhodně) / doplnit modelem
+\tb kdy je absence sama informací
+\tb šum a~odlehlé hodnoty \tb kvartily, IQR a~pravidlo $1{,}5\,\mathrm{IQR}$, box plot
+\tb odlehlá hodnota vs.\ chyba měření}
+\most{Vyčištěná data ještě nejsou srovnatelná --- atributy mají různé jednotky a~rozsahy.}
+
+\blok{3}{Integrace a~transformace}
+\tema{spojení zdrojů, duplicity a~redundance
+\tb standardizace: desítkové škálování, min--max, z-skóre a~jeho robustní varianta
+\tb motivace: bez ní vzdálenost ovládne atribut s~největším rozsahem
+\tb derivované a~agregované atributy \tb kódování nominálních atributů}
+\most{Některé metody navíc neumí pracovat se spojitými hodnotami vůbec.}
+
+\blok{4}{Diskretizace}
+\tema{ekvidistantní \tb ekvifrekvenční
+\tb s~využitím třídy: entropie shora dělením, $\chi^2$ zdola slučováním
+\tb fuzzy diskretizace: rozostřené hranice, součet příslušností 1, váha objektu
+\tb seskupování hodnot kategoriálního atributu (KEX: Assign a~Group)}
+\most{Vedle typu hodnot je druhým problémem množství --- objektů i~atributů.}
+
+\blok{5}{Redukce dat}
+\tema{příliš mnoho objektů: vzorkování a~reprezentativnost, více modelů nad podmnožinami
+\tb nevyvážené třídy: váhy chyb nebo různé pravděpodobnosti výběru
+\tb příliš mnoho atributů: \emph{transformace} (PCA --- ztráta interpretace, nutnost znát
+všechny původní) vs.\ \emph{selekce} (podmnožina, interpretace zůstává)
+\tb prokletí dimenzionality}
+\most{Selekce ale předpokládá, že umím říct, který atribut je relevantní --- a~to je
+samostatná úloha.}
+
+\blok{6}{Analýza relevance atributů}
+\tema{filtry vs.\ wrappery: nezávislost na modelu a~rychlost vs.\ zachycení interakcí a~cena
+\tb prohledávání bottom-up (přidávání) a~top-down (odebírání)
+\tb kritéria na kontingenční tabulce: $\chi^2$, stupně volnosti, podmínka očekávaných
+četností, Fisherův exaktní test pro malé četnosti
+\tb entropická kritéria: $H(A)$, vzájemná informace, informační závislost a~proč se
+normalizuje
+\tb vztahy mezi atributy: korelace a~regrese}
+
+%---------------------------------------------------------------------
+\section{Metody pro dobývání znalostí}
+\zneni{Metody pro dobývání znalostí; asociační pravidla, přístupy založené na principu
+učení s~učitelem a~klastrová analýza.}
+
+\begin{nitbox}[Červená nit]
+Tři rodiny, které okruh jmenuje, odpovídají třem otázkám nad daty: \emph{co jde s~čím},
+\emph{kam to patří}, \emph{co je si podobné}. U~každé rodiny stačí \textbf{jeden algoritmus
+do hloubky} a~ostatní jmenovat jako varianty, které řeší jeho konkrétní slabinu. Je to
+nejobsáhlejší otázka okruhu --- osnovu ohlásit dopředu a~nechat komisi vybrat hloubku.
+\end{nitbox}
+
+\blok{1}{Mapa (anons)}
+\tema{asociační pravidla $=$ deskriptivní, bez učitele
+\tb klasifikace $=$ prediktivní, s~učitelem
+\tb klastrování $=$ deskriptivní, bez učitele
+\tb u~každé rodiny stejný skelet: formulace úlohy $\to$ základní algoritmus $\to$ co ho
+tlačí dál}
+\most{Začnu od úlohy, která nepotřebuje žádné značky ani cílovou proměnnou.}
+
+\blok{2}{Asociační pravidla a~frekventované vzory}
+\tema{analýza nákupního košíku jako motivace
+\tb support, confidence, lift (a~co znamená lift $<1$)
+\tb velikost prostoru pravidel $O(2^m)$
+\tb \textbf{Apriori}: uzavřenost dolů, generování kandidátů a~prořezávání, prohledávání do
+šířky
+\tb slabiny $\Rightarrow$ \textbf{FP-Growth} (dva průchody, sdílení prefixů, rozděl a~panuj)
+\tb problém vzácných položek $\Rightarrow$ \textbf{MS-Apriori} (vlastní MIS, ztráta
+uzavřenosti dolů)
+\tb varianty úlohy: taxonomie a~virtuální položky, třídní pravidla (CAR), sekvenční vzory
+(GSP)
+\tb nadměrné množství pravidel jako hlavní praktický problém}
+\most{Nadměrné množství pravidel vede na měření zajímavosti (ot.~4); tady pokračuju
+k~úlohám, kde cílovou třídu naopak znám.}
+
+\blok{3}{Přístupy založené na principu učení s~učitelem}
+\tema{formulace: trénovací množina, generalizace, chyba na nových datech, přeučení
+\tb \textbf{rozhodovací stromy} jako reprezentant: TDIDT, volba atributu podle entropie
+a~informačního zisku, převod na pravidla, prořezávání
+\tb linie ID3 $\to$ C4.5 (poměrný zisk, spojité a~chybějící hodnoty) $\to$ CART (binární
+stromy, Gini)
+\tb \textbf{bayesovská klasifikace}: MAP, naivní předpoklad podmíněné nezávislosti, nulové
+pravděpodobnosti
+\tb \textbf{SVM}: maximální okraj, podpůrné vektory, přechod k~duálu, kernelový trik
+\tb \textbf{logistická regrese} a~\textbf{diskriminační analýza} (LDA vs.\ QDA) jako
+statistický pól
+\tb \textbf{neuronové sítě} a~ELM
+\tb \textbf{ensembly}: bagging snižuje rozptyl, náhodné lesy odstraňují korelaci komponent,
+boosting snižuje zkreslení
+\tb srovnávací osy: přesnost, srozumitelnost, cena učení, typ dat, počet tříd}
+\most{Když značky nemám vůbec, mizí i~kritérium správnosti --- a~to mění celou úlohu.}
+
+\blok{4}{Klastrová analýza}
+\tema{formulace úlohy a~subjektivita pojmu \uv{dobrý klastr}
+\tb míry vzdálenosti: $L_1$, $L_2$, $L_\infty$, Minkowského, Mahalanobisova
+\tb nutnost normalizace před shlukováním
+\tb \textbf{$k$-means}: iterace, monotonie ceny, závislost na inicializaci $\Rightarrow$
+$k$-means++
+\tb reprezentanti z~dat: $k$-medians, $k$-medoids, PAM $\Rightarrow$ CLARA a~CLARANS
+(škálovatelnost)
+\tb \textbf{hierarchické shlukování}: dendrogram, typy linkage, volba počtu klastrů řezem;
+CURE
+\tb \textbf{hustotní a~mřížkové metody}: DBSCAN (libovolný tvar klastru, šum), MAFIA
+\tb LVQ jako shlukování s~učitelem
+\tb jak se volí $k$}
+
+\lbl{Rezerva:} FP-strom na malém příkladu \tb srovnání náhodných lesů a~boostingu při stejném
+počtu stromů \tb složitost indukce a~klasifikace u~stromů \tb spektrální shlukování
+(a~upozornit, že se vrátí v~ot.~6).
+
+%---------------------------------------------------------------------
+\section{Charakteristická a~diskriminační pravidla a~jejich zajímavost}
+\zneni{Metody pro extrakci charakteristických diskriminačních pravidel a~měření jejich
+zajímavosti.}
+
+\begin{nitbox}[Červená nit]
+Pravidlo je \textbf{nejsrozumitelnější forma znalosti}, proto mu okruh věnuje samostatnou
+otázku. Osnova má dvě poloviny: nejprve \emph{dvě zrcadlové role} pravidla (popsat třídu
+vs.\ odlišit ji) a~způsoby, jak pravidla získat; pak otázka, \emph{které z~tisíců
+vygenerovaných pravidel jsou zajímavá} --- a~že na ni existuje objektivní i~subjektivní
+odpověď.
+\end{nitbox}
+
+\blok{1}{Proč vůbec pravidla}
+\tema{klasifikátor jako matematická funkce vs.\ pravidlo jako výrok
+\tb srozumitelnost jako samostatné kritérium kvality
+\tb pravidlo v~logice: implikace a~ekvivalence, kdy je booleovská implikace pravdivá
+\tb fuzzy implikace jako reziduum t-normy --- \textbf{stupeň pravdivosti, ne
+pravděpodobnost}}
+\most{Jedno a~totéž pravidlo přitom může sloužit dvěma opačným účelům.}
+
+\blok{2}{Dvě role: charakterizace a~diskriminace}
+\tema{charakteristické pravidlo: popisuje cílovou třídu, nutná podmínka, \textbf{t-weight}
+\tb diskriminační pravidlo: odlišuje cílovou třídu od kontrastních, postačující podmínka,
+\textbf{d-weight}
+\tb výpočet obou z~tabulky
+\tb d-weight vždy srovnat s~apriorním podílem třídy}
+\most{Zbývá, odkud pravidla vzít --- a~cest je několik, každá z~jiné tradice.}
+
+\blok{3}{Jak pravidla získat}
+\tema{extrakce z~klasifikačního stromu: cesta $=$ konjunkce, listy téže třídy $=$ disjunkce,
+prořezávání pravidel, šikmá dělení a~cena za ně
+\tb třídní asociační pravidla (CAR) jako druhá cesta
+\tb \textbf{evoluční konstrukce}: fitness $=$ míra kvality pravidla; michiganský přístup
+(jedinec $=$ pravidlo) vs.\ pittsburghský (jedinec $=$ soubor pravidel)
+\tb \textbf{observační pravidla} a~GUHA: čtyřpolní tabulka, zobecněný kvantifikátor, dvě
+rodiny --- odhady pravděpodobností (podpora, konfidence) a~testy hypotéz (Fisherův test)
+\tb statistický pohled: regresní analýza jako charakteristický popis vztahu, diskriminační
+analýza jako klasifikace prokládáním rozdělení (LDA vs.\ QDA)}
+\most{Všechny cesty mají stejný výstup: příliš mnoho pravidel. Odtud druhá polovina otázky.}
+
+\blok{4}{Zajímavost objektivně}
+\tema{pravidlo jako binární klasifikátor $\Rightarrow$ přesnost, precision ($=$ konfidence),
+recall, TNr, F-míra, AUC
+\tb prahování podporou a~konfidencí jako zobecněný kvantifikátor
+\tb různé ceny chyb a~střední hodnota ceny
+\tb filtrace redundantních a~triviálních pravidel}
+\most{Míra ale neřekne, jestli je pravidlo užitečné pro toho, kdo se podle něj rozhoduje.}
+
+\blok{5}{Zajímavost subjektivně}
+\tema{srozumitelnost \tb jednoduchost \tb neočekávanost \tb akceschopnost
+\tb čtyři role měr v~praxi: fitness, řazení, filtr, práh}
+\most{Že to celé funguje, je nejlépe vidět na doménách, kde jsou pravidla nasazená.}
+
+\blok{6}{Aplikace}
+\tema{spam (metainformace, karanténa jako třetí třída, ochrana proti falešně pozitivním)
+\tb malware (dvouvrstvá hierarchie pravidel)
+\tb signatury síťových hrozeb \tb doporučování z~clickstreamu}
+
+\lbl{Rezerva:} Łukasiewiczova disjunkce u~spamu \tb konkrétní čtyřpolní tabulka $(a,b,c,d)$
+\tb počty parametrů LDA vs.\ QDA.
+
+%---------------------------------------------------------------------
+\section{Reprezentace, vyhodnocování a~vizualizace znalostí}
+\zneni{Reprezentace, vyhodnocování a~vizualizace získaných znalostí.}
+
+\begin{nitbox}[Červená nit]
+Tři otázky za sebou: \emph{v~čem znalost zapsat}, \emph{jak poznat, že je dobrá}, \emph{jak
+ji ukázat člověku}. Napříč všemi třemi jde jedna osa --- \textbf{směna mezi přesností
+a~srozumitelností} --- a~pointa je, že vyhodnocení uzavírá cyklus KDD zpět k~datům.
+\end{nitbox}
+
+\blok{1}{Formy reprezentace znalostí}
+\tema{IF-THEN pravidla (nejsrozumitelnější, lokální) \tb rozhodovací strom (globální,
+čitelný do malé hloubky) \tb rozhodovací tabulka \tb matematická funkce (kompaktní,
+neinterpretovatelná) \tb prototypy a~centroidy \tb pravděpodobnostní model \tb grafy a~sítě
+\tb instance ($k$-NN, CBR)
+\tb ke~každé formě: z~jaké metody vzniká a~čím se za srozumitelnost platí}
+\most{Formu mám --- ale \uv{dobrý model} zatím není definovaný.}
+
+\blok{2}{Kritéria hodnocení metod}
+\tema{prediktivní přesnost \tb efektivita učení i~použití \tb robustnost \tb škálovatelnost
+\tb interpretovatelnost \tb kompaktnost modelu
+\tb že \uv{lepší} neznamená automaticky \uv{přesnější}}
+\most{Přesnost je jediné z~kritérií, které se dá měřit číslem --- a~i~to jen nepřímo.}
+
+\blok{3}{Odhad chyby}
+\tema{trénovací vs.\ testovací chyba, přeučení
+\tb holdout a~zákaz míchání množin
+\tb $k$-násobná křížová validace (obvykle 5 a~10; průměr a~interval spolehlivosti)
+\tb leave-one-out pro velmi malá data
+\tb validační množina na ladění parametrů algoritmu
+\tb stratifikace a~opakování}
+\most{Číslo z~validace ale samo neříká, jaké chyby model dělá.}
+
+\blok{4}{Míry a~křivky}
+\tema{matice záměn: TP, FN, FP, TN
+\tb accuracy a~proč nestačí u~nevyvážených dat (uvést příkladem)
+\tb precision, recall, $F_1$ jako harmonický průměr
+\tb \textbf{ROC}: TPR proti FPR, konstrukce ze seřazeného žebříčku, diagonála $=$ náhoda
+\tb \textbf{AUC} a~důvod její existence: křivky dvou klasifikátorů se mohou křížit
+\tb skórování, řazení do přihrádek a~\textbf{lift} $+$ ekonomická úvaha
+\tb nákladově citlivé a~vícetřídní vyhodnocení}
+\most{Statistická kvalita je jen jedna ze tří rovin, ve kterých se slovo
+\uv{vyhodnocování} používá.}
+
+\blok{5}{Tři roviny vyhodnocování}
+\tema{statistická kvalita modelu \tb zajímavost vzorů (vazba na ot.~4) \tb hodnocení
+uživatelem
+\tb čtyři kritéria zajímavosti znalosti: srozumitelnost, platnost, užitečnost, novost
+\tb první dvě roviny objektivní, třetí subjektivní}
+\most{Uživatelská rovina je právě ta, kde rozhoduje způsob prezentace.}
+
+\blok{6}{Vizualizace}
+\tema{tři role v~KDD: explorace (Anscombeho kvartet), vizualizace modelu, prezentace
+výsledku
+\tb technika podle úlohy: histogram, box plot, scatter a~SPLOM, paralelní souřadnice,
+heatmapa, dendrogram, projekce, ROC a~lift
+\tb zásady a~zkreslení: osy, barva podle typu dat, datová vs.\ dekorativní složka
+\tb omezení projekcí: t-SNE a~UMAP zkreslují globální vzdálenosti}
+
+\lbl{Rezerva:} interval spolehlivosti u~křížové validace \tb odhad přesnosti dolní mezí
+u~C4.5 \tb konkrétní výpočet liftu (kolik zásilek se vyplatí poslat).
+
+%---------------------------------------------------------------------
+\section{Modely pro analýzu sociálních sítí, centralita a~detekce komunit}
+\zneni{Modely pro analýzu sociálních sítí; míry centrality, detekce komunit.}
+
+\begin{nitbox}[Červená nit]
+Znění okruhu jmenuje \textbf{tři věci: modely, míry centrality, detekci komunit} --- a~jen
+na nich odpověď stavět. Rámec (co je síť a~jak se reprezentuje) zabere pár vět, modely
+připraví půdu a~\textbf{dvě jmenované úlohy dostanou hloubku}. Zbytek látky SNA se do
+patnácti minut nevejde: zmínit jednou větou, že tam je, a~nechat na doplňující dotaz.
+\end{nitbox}
+
+\blok{1}{Vymezení a~reprezentace (krátce)}
+\tema{SNA studuje \textbf{vztahy, ne entity a~jejich atributy}
+\tb reprezentace: seznam hran, matice sousednosti (u~orientovaných nesymetrická)
+\tb typy sítí: orientované, vážené, bipartitní, znaménkové
+\tb ego síť vs.\ \uv{celá} síť a~problém specifikace hranic}
+\most{Než začnu měřit, musím vědět, jak reálné sítě vypadají --- to jsou ty
+\uv{modely} ze znění okruhu.}
+
+\blok{2}{Modely sítí}
+\tema{lokální struktura: silné a~slabé vazby, triadický uzávěr, homofilie, most a~zkratkový
+most
+\tb koheze: hustota, klastrovací koeficient, průměr sítě a~průměrná vzdálenost
+\tb malý svět $=$ vysoké klastrování $+$ krátké cesty
+\tb šest vlastností reálných komplexních sítí
+\tb \textbf{bezškálové sítě}: růst $+$ preferenční připojování, mocninné rozdělení stupňů
+\tb důsledek: odolnost proti náhodné poruše vs.\ zranitelnost cíleným útokem na huby;
+jádro--periferie}
+\most{V~takové síti nejsou uzly rovnocenné --- a~otázka \uv{kdo je důležitý} má víc
+odpovědí.}
+
+\blok{3}{Míry centrality}
+\tema{stupňová (kolik lidí dosáhnu přímo) \tb mezilehlá (kde se síť rozpadne) \tb blízkostní
+(rychlost šíření) \tb vlastní (jak dobře jsem spojen s~dobře spojenými)
+\tb na jakou otázku každá odpovídá $\Rightarrow$ proč nestačí jedna míra
+\tb vlastní centralita $\to$ PageRank a~HITS jednou větou jako její pokračování
+\tb strukturní ekvivalence a~pozice v~síti}
+\most{Centralita hledá jednotlivce; druhá jmenovaná úloha hledá skupiny.}
+
+\blok{4}{Detekce komunit (hlavní blok)}
+\tema{definice komunity je subjektivní; explicitní vs.\ implicitní skupiny
+\tb řezy: minimální a~jeho nevyváženost, poměrový a~normalizovaný řez, NP-těžkost
+\tb \textbf{Girvanové--Newman} (divizivní, mezilehlost hran) $+$ \textbf{modularita proti
+null modelu}
+\tb \textbf{Louvain} (dvě fáze, nevýhody) $\to$ \textbf{Leiden}
+\tb taxonomie čtyř kategorií: uzlově, skupinově, síťově a~hierarchicky orientované
+\tb překrývající se komunity (CPM), $k$-klika / $k$-jádro / $k$-plex
+\tb výzvy: neznámý počet komunit, heterogenní velikosti, vyhodnocení bez pravdy}
+
+\lbl{Mimo znění okruhu --- jen jmenovat, rezerva na doplňující dotaz:} modelování vlivu
+(LTM vs.\ ICM, maximalizace vlivu) \tb vliv vs.\ korelace a~shuffle test \tb výběr vs.\
+sociální vliv, afiliační sítě a~tři uzávěry \tb Schellingův model \tb strukturní balance
+a~věta o~balanci \tb HITS a~PageRank podrobně (tlumicí faktor, markovský řetězec) \tb
+predikce vazeb (společní sousedé, Jaccard, Adamic--Adar, Katz) \tb spektrální shlukování
+a~maticová faktorizace \tb tematické komunity a~bipartitní jádra.
+
+%---------------------------------------------------------------------
+\section{Praktické využití technik}
+\zneni{Praktické využití technik pro dobývání znalostí a~analýzu sociálních sítí.}
+
+\begin{nitbox}[Červená nit]
+Odpověď je \textbf{procházka metodami z~obou přednášek, kde ke~každé patří konkrétní oblast
+využití a~jedna dvě věty o~tom, proč se tam hodí právě ona}. Držet pořadí podle metod
+(ne podle domén) --- tím se ukáže, že látka drží pohromadě, a~zároveň se pokryje celý okruh.
+\end{nitbox}
+
+\blok{1}{Dobývání znalostí}
+
+\apl{Asociační pravidla (Apriori, FP-Growth)}{analýza nákupního košíku}
+Najdou položky kupované společně; výstup se používá na rozmístění zboží, cross-selling
+a~doporučování \uv{zákazníci koupili také}. Hodnotí se hlavně liftem --- podpora
+a~konfidence samy vyrobí spoustu triviálních pravidel o~častých položkách.
+
+\apl{Sekvenční vzory (GSP)}{web usage mining a~clickstream}
+Zajímá pořadí, ne jen souvýskyt: typické cesty webem, posloupnosti nákupů, sledy událostí
+v~logu. Slouží k~reorganizaci webu a~k~načasování nabídky.
+
+\apl{Rozhodovací stromy}{kreditní skórování}
+Volí se ne kvůli přesnosti, ale kvůli srozumitelnosti --- banka musí zamítnutí zdůvodnit
+a~cesta stromem \emph{je} to zdůvodnění. Stejný důvod je za jejich užitím v~medicínské
+diagnostice.
+
+\apl{Naivní Bayes}{filtrace spamu}
+Zvládne tisíce příznaků (slov) a~levné inkrementální doučování z~pošty označené uživatelem.
+Předpoklad podmíněné nezávislosti je nereálný, ale klasifikace na něm překvapivě dobře
+funguje.
+
+\apl{SVM}{kategorizace textu}
+Řídké vysoce dimenzionální dokumentové vektory jsou přesně to, na co je maximalizace okraje
+dobrá. Cena: model není interpretovatelný a~z~principu klasifikuje do dvou tříd.
+
+\apl{Logistická regrese}{skórování rizik (úvěrových, medicínských)}
+Dává pravděpodobnost, ne jen třídu, a~koeficienty se čtou jako poměry šancí --- proto je
+standardem všude, kde se rozhodnutí musí obhájit před regulátorem.
+
+\apl{Diskriminační analýza (LDA, QDA)}{klasifikace na malých datech}
+Když se dá předpokládat normální rozdělení tříd, stačí odhadnout střední hodnoty
+a~kovarianční matici. LDA se navíc používá jako redukce dimenze pro zobrazení tříd.
+
+\apl{Neuronové sítě a~ELM}{predikce a~rozpoznávání}
+Nasazují se tam, kde je vztah silně nelineární a~interpretace se nevyžaduje. ELM je volba
+pro situace, kdy se model musí přetrénovávat rychle a~často.
+
+\apl{Ensembly (náhodné lesy, boosting)}{detekce podvodů}
+Na tabulkových datech nejsilnější volba, protože kombinují nízké zkreslení stromů
+s~potlačením rozptylu. Pojišťovna s~nimi netvrdí \uv{podvod}, ale \emph{zaostřuje pozornost}
+vyšetřovatele na nejrizikovější případy.
+
+\apl{$k$-means}{segmentace zákazníků}
+Centroid se čte jako \uv{typický zákazník segmentu} a~je podkladem pro odlišnou nabídku.
+Nutná normalizace atributů a~volba $k$ --- obojí je rozhodnutí analytika, ne dat.
+
+\apl{Hierarchické shlukování}{taxonomie, bioinformatika}
+Nevyžaduje předem zadaný počet skupin --- ten se volí až řezem dendrogramu, což se hodí
+při explorativní analýze (genová exprese, členění trhu).
+
+\apl{DBSCAN}{prostorová data a~detekce anomálií}
+Najde shluky libovolného tvaru a~co nikam nepatří, označí za šum. Proto se používá na GPS
+stopy, mapy incidentů a~hledání odlehlých pozorování.
+
+\apl{LVQ}{rozpoznávání vzorů a~klasifikace signálů}
+Reprezentanti tříd se uloží jako pár vektorů a~klasifikace je pak levná --- výhoda
+v~zařízeních s~omezenými prostředky.
+
+\apl{Regrese a~posuvné okno}{predikce poptávky a~časové řady}
+Predikce se převede na učení s~učitelem tím, že vstupem je okno minulých hodnot. Používá se
+na plánování zásob, spotřeby energie a~zatížení systémů.
+
+\apl{PCA a~selekce atributů}{předzpracování a~vizualizace}
+Sníží dimenzi před shlukováním nebo klasifikací a~umožní data zobrazit. PCA za to platí
+ztrátou interpretace, selekce atributů ji zachová.
+
+\apl{Charakteristická a~diskriminační pravidla}{malware a~signatury síťových hrozeb}
+Detekce musí být rychlá a~auditovatelná, proto se znalost udržuje v~podobě pravidel, ne
+černé skříňky. Pravidla se dají ručně opravit a~verzovat.
+
+\apl{Skórování, lift a~ROC}{cílený marketing a~churn}
+Nejde o~třídu, ale o~pořadí: model seřadí zákazníky podle rizika odchodu a~lift křivka
+odpoví na ekonomickou otázku, kolik jich má smysl oslovit. Data jsou nevyvážená, takže
+accuracy je bezcenná.
+
+\apl{Detekce odlehlých hodnot}{kontrola kvality a~fraud v~provozu}
+Odlehlá hodnota je jednou chyba měření a~podruhé právě to hledané --- rozlišení je věcná
+otázka domény, ne statistiky.
+
+\blok{2}{Analýza sociálních sítí}
+
+\apl{Stupňová centralita}{hledání nejviditelnějších aktérů}
+Nejlevnější míra: kdo má nejvíc přímých kontaktů; v~online sítích slouží k~výběru
+influencerů. Sama o~sobě klame --- vysoký stupeň neznamená strategickou pozici.
+
+\apl{Mezilehlá centralita}{brokeři a~kritická místa infrastruktury}
+Uzel na mnoha nejkratších cestách drží síť pohromadě: v~kriminální síti je to spojka mezi
+buňkami, v~přenosové soustavě místo, jehož výpadek síť rozpojí.
+
+\apl{Blízkostní centralita}{rychlost šíření a~umístění zdroje}
+Kdo je v~průměru všem nejblíž, rozšíří zprávu nejrychleji. Používá se při volbě umístění
+skladu, serveru nebo osoby, přes kterou se informace pouští do organizace.
+
+\apl{Vlastní centralita}{prestiž v~citačních a~vlastnických sítích}
+Důležitost se dědí od důležitých sousedů, ne z~počtu vazeb --- odtud i~míra vlivu firem
+propojených vlastnickými podíly.
+
+\apl{PageRank}{řazení výsledků vyhledávání}
+Dotazově nezávislá globální míra počítaná offline, proto je v~době dotazu zadarmo a~odolná
+proti spamu (vstupní odkazy se nedají snadno vyrobit). Používá se i~mimo web ---
+na doporučování a~hodnocení publikací.
+
+\apl{HITS}{tematické vyhledávání --- huby a~autority}
+Rozliší rozcestníky od zdrojů, což čistý PageRank nedělá. Počítá se až nad výsledkem
+dotazu, a~to je zároveň jeho hlavní provozní slabina.
+
+\apl{Detekce komunit (Louvain)}{segmentace zákazníků a~doporučování}
+Na sítích s~miliony uzlů najde skupiny, které se v~atributech zákazníků vůbec neprojeví
+(např. jazykové komunity u~operátora). Komunita pak nahradí ručně definovaný segment.
+
+\apl{Modularita a~Girvanové--Newman}{objevování skupin v~menších sítích}
+Modularita zároveň odpovídá na otázku, kolik komunit vlastně brát --- proto slouží
+i~jako kritérium při vyhodnocování jiných metod.
+
+\apl{Překrývající se komunity (CPM)}{role jednoho člověka ve~více skupinách}
+Člověk patří do rodiny, práce i~zájmové skupiny současně; tvrdé dělení tuhle informaci
+zahodí, což vadí právě u~doporučování obsahu.
+
+\apl{Predikce vazeb (společní sousedé, Adamic--Adar, Katz)}{\uv{lidé, které možná znáte}}
+Stejná úloha řeší i~doporučování zboží (bipartitní síť zákazník--produkt) a~predikci budoucí
+spolupráce ve vědeckých sítích. V~řídkých sítích se místo sousedských měr sahá po Katzovi.
+
+\apl{Modelování vlivu (LTM, ICM) a~maximalizace vlivu}{virální marketing}
+Otázka zní, kterým $k$~lidem dát produkt zdarma, aby se rozšířil co nejdál. Úloha je
+NP-těžká, ale hladový výběr má garantovanou kvalitu, takže je prakticky použitelný.
+
+\apl{Bezškálovost a~odolnost sítě}{cílená vakcinace a~ochrana infrastruktury}
+Náhodné výpadky síť snese, cílený zásah do hubů ji rozloží. Odtud plyne očkování podle počtu
+kontaktů místo plošného i~to, proč se internetové viry nedají vymýtit.
+
+\apl{Malý svět a~modely šíření}{epidemiologie}
+Krátké cesty vysvětlují, proč se nákaza --- a~stejně tak informace nebo panika --- šíří
+mnohem rychleji, než by odpovídalo geografické vzdálenosti.
+
+\apl{Znaménkové sítě a~strukturní balance}{polarizace a~predikce znaménka vztahu}
+V~hodnotících komunitách se predikuje důvěra a~nedůvěra, historicky se stejným aparátem
+analyzovaly evropské aliance před první světovou válkou.
+
+\apl{Homofilie a~rozlišení výběru od vlivu}{vyhodnocování kampaní a~intervencí}
+Bez rozlišení, jestli si podobní lidé jen našli jeden druhého, nebo se navzájem ovlivnili,
+se dopad kampaně systematicky nadhodnocuje. Nástroj: shuffle test a~longitudinální data.
+
+\apl{Síla slabých vazeb a~mosty}{difuze informací a~pracovní trh}
+Nové informace přicházejí přes slabé vazby, ne z~blízkého okruhu, kde všichni vědí totéž.
+Z~toho se odvozuje jak strategie oslovování, tak návrh doporučovacích systémů.
+
+\apl{Kombinace centralit}{klíčoví hráči v~kriminálních a~teroristických sítích}
+Vůdce nemusí mít nejvyšší stupeň --- bývá skrytý a~chráněný, zato má vysokou mezilehlost.
+Proto se pracuje s~více mírami najednou.
+
+\end{document}

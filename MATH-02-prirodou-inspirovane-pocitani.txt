@@ -1,0 +1,1178 @@
+###### FILE: 02-prirodou-inspirovane-pocitani.tex   (48 display blocks)
+
+
+============================================================
+SEC: 
+SUB: 
+SUBSUB: 
+============================================================
+
+--- ctx ---
+\floatname{algorithm}{Algoritmus}
+\renewcommand{\algorithmicrequire}{\textbf{Vstup:}}
+\renewcommand{\algorithmicensure}{\textbf{Výstup:}}
+
+% Značka pro látku, která není ve slidech EVA I / EVA II.
+\newcommand{\mimo}{\textcolor{markcol}{\textsf{\footnotesize[$\blacklozenge$~nad rámec slidů]}}}
+\newcommand{\mimoq}[1]{\textcolor{markcol}{\textsf{\footnotesize[$\blacklozenge$~nad rámec slidů: #1]}}}
+--- MATH ---
+\title{\textbf{Přírodou inspirované počítání}\\[2mm]
+\large Učební text k~okruhu státní závěrečné zkoušky}
+\author{SZZ Umělá inteligence, MFF UK}
+\date{srpen 2026}
+
+\begin{document}
+\maketitle
+
+\begin{center}
+\begin{minipage}{0.92\textwidth}
+\small
+Text pokrývá okruh \emph{Přírodou inspirované počítání} magisterské SZZ oboru Umělá
+inteligence. Kapitoly odpovídají \textbf{jedna ku jedné} větám oficiálního znění okruhu
+(viz mapovací tabulka níže). Vychází ze slidů přednášek NAIL025 (Evoluční algoritmy~I)
+a~NAIL086 (Evoluční algoritmy~II) a~je doplněn o~standardní látku z~učebnic
+Eiben \& Smith: \emph{Introduction to Evolutionary Computing}, Mitchell:
+\emph{An Introduction to Genetic Algorithms}, Michalewicz: \emph{Genetic Algorithms $+$
+Data Structures $=$ Evolution Programs} a~Poli, Langdon \& McPhee: \emph{A Field Guide to
+Genetic Programming}. Obsahuje definice, pseudokódy, odvození, číselné příklady
+a~srovnávací tabulky; každá kapitola končí shrnutím pro ústní zkoušku.
+\end{minipage}
+\end{center}
+
+\begin{center}
+\begin{minipage}{0.92\textwidth}
+\begin{poznbox}[Rozsah textu a~značení]
+\small
+Rozsah kapitol odpovídá váze látky: nejvíce prostoru dostávají genetické algoritmy
+s~genetickým programováním, teorie schémat a~aplikace --- tedy to, čemu se přednášky
+věnují nejpodrobněji.
+
+Značkou \mimo{} je označena látka, která \textbf{není v~žádných dostupných slidech} ---
+tj.\ ani v~EVA~I, ani v~EVA~II, ani ve volitelné \emph{Evoluční robotice} (Mráz) --- ale je
+v~textu ponechána, buď proto, že ji \emph{jmenuje oficiální znění okruhu}, nebo proto, že
+bez ní nedává okolní výklad smysl. Slouží jako nabídka ke~škrtnutí: co označeno není, je ve
+slidech doloženo. U~látky, která je jen letmo zmíněna, značka uvádí i~rozsah zmínky.
+
+Nejnápadnější případ je \textbf{otevřená evoluce}: okruh ji výslovně jmenuje, slidy o~ní
+mají jedinou větu. Podobně mravenčí algoritmy (ACO) --- okruh mluví o~rojových algoritmech
+v~množném čísle, slidy probírají jen PSO (rojová robotika v~Evoluční robotice je něco
+jiného než rojová optimalizace). Naopak \emph{gramatická evoluce} a~\emph{interaktivní
+evoluce} označeny nejsou: v~EVA sice nejsou, ale Evoluční robotika je probírá.
+\end{poznbox}
+\end{minipage}
+\end{center}
+
+\vspace{2mm}
+
+\section*{Mapování okruhu na kapitoly}
+\addcontentsline{toc}{section}{Mapování okruhu na kapitoly}
+
+\begin{center}
+\small
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{8.6cm}>{\raggedright\arraybackslash}p{7.4cm}@{}}
+\toprule
+\textbf{Věta oficiálního znění okruhu} & \textbf{Kapitola v~tomto textu} \\
+\midrule
+Genetické algoritmy, genetické a~evoluční programování.
+  & \ref{sec:ga}~Genetické algoritmy, genetické a~evoluční programování \\
+Teorie schémat, pravděpodobnostní modely jednoduchého genetického algoritmu.
+  & \ref{sec:schemata}~Teorie schémat a~pravděpodobnostní modely SGA \\
+--- after ---
+& \ref{sec:es}~Evoluční strategie, diferenciální evoluce, koevoluce, otevřená evoluce \\
+Rojové optimalizační algoritmy.
+
+
+============================================================
+SEC: \section{Genetické algoritmy, genetické a~evoluční programování}
+SUB: \subsection{Obecné schéma evolučního algoritmu}
+SUBSUB: \subsubsection{Selekční mechanismy}\label{ssec:selekce}
+============================================================
+
+--- ctx ---
+fitness, dosažení cílové kvality, stagnace nejlepší fitness po $k$ generací,
+ztráta diverzity populace.
+
+\subsubsection{Selekční mechanismy}\label{ssec:selekce}
+
+\paragraph{Ruletová (fitness-proporcionální) selekce}
+
+\begin{defbox}[Ruletová selekce (\emph{roulette wheel selection})]
+Jedinec $x_i$ je vybrán s~pravděpodobností
+--- MATH ---
+\[
+p_i \;=\; \frac{f(x_i)}{\sum_{j=1}^{n} f(x_j)} \;=\; \frac{f(x_i)}{n\,\bar{f}},
+\]
+--- after ---
+kde $\bar f$ je průměrná fitness populace. Očekávaný počet výběrů jedince při
+$n$ tazích je $n p_i = f(x_i)/\bar f$. Jde o~výběr \emph{s~vracením} --- jeden
+
+--- ctx ---
+kde fitness není explicitně dána a~porovnání se získává \emph{souhrou}
+(hraná partie, simulace, koevoluce).
+
+\paragraph{Pořadová selekce}
+
+\emph{Rank-based selection} nahradí fitness pořadím jedince. Lineární pořadová
+selekce přiřadí jedinci s~pořadím $i$ (\emph{pozor, zde opačně než u~turnaje:}
+nejhorší $i=1$, nejlepší $i=n$)
+pravděpodobnost
+--- MATH ---
+\[
+p_i \;=\; \frac{1}{n}\Big(s^{-} + (s^{+}-s^{-})\,\frac{i-1}{n-1}\Big),
+\qquad 1 \le s^{+} \le 2,\quad s^{-} = 2 - s^{+},
+\]
+--- after ---
+kde $s^{+}$ je očekávaný počet kopií nejlepšího jedince. Exponenciální varianta
+používá $p_i \propto (1-c)c^{\,n-i}$. Pořadová selekce udržuje konstantní
+
+
+============================================================
+SEC: \section{Genetické algoritmy, genetické a~evoluční programování}
+SUB: \subsection{Obecné schéma evolučního algoritmu}
+SUBSUB: \subsubsection{Historické větve evolučních algoritmů}
+============================================================
+
+--- ctx ---
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{2.3cm}
+                  >{\raggedright\arraybackslash}p{3.1cm}
+                  >{\raggedright\arraybackslash}p{3.1cm}
+                  >{\raggedright\arraybackslash}p{3.1cm}
+                  >{\raggedright\arraybackslash}p{3.1cm}@{}}
+\toprule
+ & \textbf{GA} & \textbf{ES} & \textbf{EP} & \textbf{GP} \\
+\midrule
+autor, rok & Holland, 1975 & Rechenberg, Schwefel, 1964 &
+--- MATH ---
+  L.~Fogel, Owens, Walsh, 1965 & Koza, 1989--92 \\[2pt]
+reprezentace & binární řetězec & vektor $\mathbb{R}^n$ + strategické parametry &
+  konečný automat (genotyp = fenotyp) & syntaktický strom (LISP) \\[2pt]
+hlavní operátor & křížení & mutace & mutace & křížení podstromů \\[2pt]
+křížení & 1-bodové & rekombinace více rodičů (lokální/globální) &
+  \emph{není} & výměna podstromů \\[2pt]
+mutace & bit-flip $p_M$ & gaussovská, samoadaptivní $\sigma$ &
+  \uv{chytré} mutace automatu & více typů \\[2pt]
+rodičovská selekce & ruleta & náhodná & každý jednou & turnaj \\[2pt]
+env.\ selekce & generační náhrada &
+  deterministická $(\mu,\lambda)$, $(\mu+\lambda)$ &
+  turnaj (rodiče $+$ potomci) & generační \\[2pt]
+teorie & schémata & konvergence, 1/5 pravidlo & --- & bloat, schémata \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Dnes se hranice mezi větvemi stírají (např.\ EP a~ES prakticky splynuly)
+a~mluvíme jednotně o~evolučních algoritmech.
+
+\subsection{Genetické algoritmy}
+\label{ssec:sga}
+
+\subsubsection{Jednoduchý genetický algoritmus (SGA)}
+
+Původní Hollandův návrh z~roku 1975 se dnes označuje jako \emph{simple genetic
+algorithm} (SGA). Používá minimální sadu operátorů, nejjednodušší kódování
+a~byl navržen tak, aby umožňoval teoretickou analýzu (teorie schémat,
+kap.~\ref{sec:schemata}).
+
+\begin{defbox}[SGA]
+Populace $n$ binárních řetězců délky $m$; fitness-proporcionální (ruletová)
+selekce; jednobodové křížení s~pravděpodobností $p_C$; bitová mutace
+s~pravděpodobností $p_M$ na každý bit; generační náhrada populace
+($P(t+1)$ zcela nahradí $P(t)$).
+\end{defbox}
+
+\begin{algorithm}[!ht]
+\caption{Jednoduchý genetický algoritmus (SGA)}
+\begin{algorithmic}[1]
+\State $t \gets 0$; vygeneruj náhodně $P(0)$ = $n$ řetězců délky $m$
+\While{není splněna ukončovací podmínka}
+  \State spočítej $f(x)$ pro každé $x \in P(t)$
+  \State $P(t+1) \gets \emptyset$
+  \For{$n/2$ krát}
+    \State vyber ruletou dvojici rodičů $x, y$ z~$P(t)$
+    \State s~pravděpodobností $p_C$ zkřiž $x, y$ jednobodovým křížením
+    \State každý bit $x$ i~$y$ převrať s~pravděpodobností $p_M$
+    \State vlož $x, y$ do $P(t+1)$
+  \EndFor
+  \State $t \gets t+1$
+\EndWhile
+\end{algorithmic}
+\end{algorithm}
+
+Typické hodnoty parametrů: $n \in [50, 500]$, $p_C \in [0{,}6; 0{,}9]$,
+$p_M \approx 1/m$ (tj.\ v~průměru se změní jeden bit na jedince).
+
+\subsubsection{Binární reprezentace}
+
+\paragraph{Kódování celých a~reálných čísel.} Reálné číslo $x \in [a,b]$
+--- after ---
+\[
+x \;=\; a \;+\; z \cdot \frac{b-a}{2^k - 1}.
+
+--- ctx ---
+\end{algorithm}
+
+Typické hodnoty parametrů: $n \in [50, 500]$, $p_C \in [0{,}6; 0{,}9]$,
+$p_M \approx 1/m$ (tj.\ v~průměru se změní jeden bit na jedince).
+
+\subsubsection{Binární reprezentace}
+
+\paragraph{Kódování celých a~reálných čísel.} Reálné číslo $x \in [a,b]$
+kódované na $k$ bitů jako celé číslo $z \in \{0,\dots,2^k-1\}$ dekódujeme
+--- MATH ---
+\[
+x \;=\; a \;+\; z \cdot \frac{b-a}{2^k - 1}.
+\]
+--- after ---
+Přesnost je $(b-a)/(2^k-1)$. Výhoda: explicitní kontrola nad přesností
+a~komprese prohledávaného prostoru. Nevýhoda: \emph{Hammingovy útesy}
+
+
+============================================================
+SEC: \section{Genetické algoritmy, genetické a~evoluční programování}
+SUB: \subsection{Obecné schéma evolučního algoritmu}
+SUBSUB: \subsubsection{Operátory křížení}
+============================================================
+
+--- ctx ---
+genetického materiálu. V~GA je hlavním operátorem; vyjadřuje naději, že
+rekombinací dobrých částí (\emph{stavebních bloků}) vzniknou ještě lepší
+jedinci. Aplikuje se s~pravděpodobností $p_C$, jinak potomci = kopie rodičů.
+\end{defbox}
+
+\paragraph{Jednobodové křížení.} Zvol náhodně bod řezu $k \in \{1,\dots,m-1\}$
+a~vyměň koncové části.
+
+\textbf{Příklad.} Rodiče $P_1 = 1011|0110$, $P_2 = 0010|1101$, bod řezu $k=4$:
+--- MATH ---
+\[
+O_1 = \mathbf{1011}\,1101, \qquad O_2 = \mathbf{0010}\,0110.
+\]
+--- after ---
+\paragraph{Dvoubodové křížení.} Zvol dva body $k_1 < k_2$ a~vyměň prostřední
+
+
+============================================================
+SEC: \section{Genetické algoritmy, genetické a~evoluční programování}
+SUB: \subsection{Reprezentace jedince a~genetické operátory}
+SUBSUB: \subsubsection{Reálná reprezentace}
+============================================================
+
+--- ctx ---
+\paragraph{Křížení.} Rozlišujeme dva typy:
+\begin{itemize}
+\item \textbf{Strukturální (diskrétní):} 1-bodové, uniformní --- hodnoty se jen
+  přeskupují mezi rodiči; potomek je vrcholem hyperkvádru daného rodiči.
+\item \textbf{Aritmetické:} hodnoty se kombinují.
+\end{itemize}
+
+\begin{defbox}[Aritmetické křížení (\emph{arithmetic crossover})]
+Pro rodiče $\vec x, \vec y$ a~$\alpha \in (0,1)$:
+--- MATH ---
+\[
+\vec z \;=\; \alpha \vec x + (1-\alpha)\vec y \qquad\text{(konvexní kombinace)}.
+\]
+--- after ---
+Varianty: \emph{jednoduché} (kříží se všechny složky --- nejběžnější),
+\emph{jednoduché aritmetické} (jen jedna náhodně vybraná složka),
+
+--- ctx ---
+\]
+Varianty: \emph{jednoduché} (kříží se všechny složky --- nejběžnější),
+\emph{jednoduché aritmetické} (jen jedna náhodně vybraná složka),
+\emph{celé/single} (kombinace s~jednobodovým křížením: za bodem řezu se
+aritmeticky kombinuje). Pro $\alpha = 1/2$ jde o~prostý průměr rodičů.
+\end{defbox}
+
+\textbf{Příklad.} $\vec x = (2{,}0;\, -1{,}0;\, 4{,}0)$,
+$\vec y = (0{,}0;\, 3{,}0;\, 1{,}0)$, $\alpha = 0{,}25$:
+--- MATH ---
+\[
+\vec z = 0{,}25\,\vec x + 0{,}75\,\vec y = (0{,}5;\; 2{,}0;\; 1{,}75).
+\]
+--- after ---
+Nevýhoda čistě aritmetického křížení: potomci leží uvnitř konvexního obalu
+
+--- ctx ---
+rozšířené varianty:
+\begin{itemize}
+\item \textbf{BLX-$\alpha$} (\emph{blend crossover}): $z_i$ se losuje uniformně
+  z~intervalu $[\min - \alpha I,\; \max + \alpha I]$, kde
+  $I = |x_i - y_i|$; typicky $\alpha = 0{,}5$. Umožňuje potomkům ležet
+  i~vně rodičů.
+\item \textbf{SBX} (\emph{simulated binary crossover}): napodobuje chování
+  jednobodového binárního křížení v~reálném prostoru. Potomci vzniknou
+  \uv{roztažením} dvojice rodičů kolem jejich středu faktorem $\beta$:
+--- MATH ---
+  \[
+  z_{1,i} = \tfrac12\big[(1+\beta)x_i + (1-\beta)y_i\big],\qquad
+  z_{2,i} = \tfrac12\big[(1-\beta)x_i + (1+\beta)y_i\big],
+  \]
+--- after ---
+takže střed rodičů zůstává zachován a~$|z_1 - z_2| = \beta\,|x - y|$.
+  Faktor se losuje z~$u \sim U(0,1)$: $\beta = (2u)^{1/(\eta+1)}$ pro
+
+
+============================================================
+SEC: \section{Genetické algoritmy, genetické a~evoluční programování}
+SUB: \subsection{Genetické a~evoluční programování}
+SUBSUB: \subsubsection{Gramatická evoluce}
+============================================================
+
+--- ctx ---
+Gruau --- \emph{cellular encoding} pro neuronové sítě, AutoML --- evoluce
+modelů scikit-learn.
+
+\subsubsection{Gramatická evoluce}
+
+\begin{defbox}[Gramatická evoluce (\emph{grammatical evolution}, GE)]
+Genotyp je \textbf{lineární seznam celých čísel} (proměnné délky), fenotyp je program
+odvozený z~bezkontextové gramatiky. Číslo z~genomu určuje, které pravidlo se použije pro
+expanzi nejlevějšího neterminálu:
+--- MATH ---
+\[
+\text{pravidlo} \;=\; (\text{gen} \bmod \text{počet pravidel pro tento neterminál}).
+\]
+--- after ---
+\end{defbox}
+
+
+============================================================
+SEC: \section{Genetické algoritmy, genetické a~evoluční programování}
+SUB: \subsection{Genetické a~evoluční programování}
+SUBSUB: \subsubsection{Evoluční programování}
+============================================================
+
+--- ctx ---
+Automat dostává symboly na vstup, jeho výstup se porovnává s~následujícím
+symbolem posloupnosti; fitness = úspěšnost predikce (absolutní chyba, střední
+kvadratická chyba), často s~penalizací za velikost automatu.
+Mutace: změna výstupního symbolu, změna cílového stavu přechodu, přidání
+stavu, odebrání stavu, změna počátečního stavu. Polovina populace se nahrazuje
+novými automaty.
+
+\paragraph{Slavný příklad --- predikce prvočísel.} Cílem je predikovat
+posloupnost
+--- MATH ---
+\[
+111010100010100010100010000010\ldots,
+\]
+--- after ---
+kde 1 znamená \uv{toto číslo je prvočíslo} (tj.\ naučit se Eratosthenovo
+síto). Postupuje se iterativně: nejprve se učí krátká posloupnost, pak se
+
+
+============================================================
+SEC: \section{Teorie schémat a~pravděpodobnostní modely SGA}
+SUB: \subsection{Teorie schémat}
+SUBSUB: \subsubsection{Hollandova věta o~schématech}
+============================================================
+
+--- ctx ---
+\end{itemize}
+
+\subsubsection{Hollandova věta o~schématech}
+
+\begin{veta}[Věta o~schématech (TST), Holland 1975]
+V~jednoduchém genetickém algoritmu s~fitness-proporcionální selekcí,
+jednobodovým křížením s~pravděpodobností $p_C$ a~bitovou mutací
+s~pravděpodobností $p_M$ platí pro očekávaný počet reprezentantů schématu $S$
+v~následující generaci:
+--- MATH ---
+\[
+\mathbb{E}\big[C(S,t+1)\big] \;\ge\; C(S,t)\,\frac{F(S,t)}{\bar f(t)}
+\left[\,1 - p_C \frac{d(S)}{m-1} - p_M\, o(S)\right].
+\]
+--- after ---
+Slovně: \textbf{krátká} (malá definující délka), \textbf{nízkého řádu}
+a~\textbf{nadprůměrná} schémata se v~po sobě jdoucích generacích množí
+
+--- ctx ---
+\paragraph{Odvození}
+
+Označme $C(S,t)$ počet jedinců v~$P(t)$ reprezentujících $S$, $n = |P(t)|$,
+$\bar f(t)$ průměrnou fitness populace. Postupujeme ve třech krocích podle
+operátorů.
+
+\paragraph{Krok 1 --- selekce.} Pravděpodobnost výběru jedince $v$ ruletou je
+$p_s(v) = f(v)/F(t)$, kde $F(t) = \sum_{u \in P(t)} f(u)$. Pravděpodobnost, že
+vybraný jedinec reprezentuje $S$, je
+--- MATH ---
+\[
+p_s(S) \;=\; \sum_{v \in S \cap P(t)} \frac{f(v)}{F(t)}
+\;=\; \frac{C(S,t)\,F(S,t)}{F(t)}.
+\]
+--- after ---
+Při $n$ nezávislých tazích tedy
+\[
+
+--- ctx ---
+\paragraph{Krok 1 --- selekce.} Pravděpodobnost výběru jedince $v$ ruletou je
+$p_s(v) = f(v)/F(t)$, kde $F(t) = \sum_{u \in P(t)} f(u)$. Pravděpodobnost, že
+vybraný jedinec reprezentuje $S$, je
+\[
+p_s(S) \;=\; \sum_{v \in S \cap P(t)} \frac{f(v)}{F(t)}
+\;=\; \frac{C(S,t)\,F(S,t)}{F(t)}.
+\]
+Při $n$ nezávislých tazích tedy
+--- MATH ---
+\[
+\mathbb{E}\big[C(S,t+1)\big] \;=\; n\, p_s(S) \;=\; C(S,t)\,\frac{F(S,t)}{\bar f(t)},
+\qquad \bar f(t) = F(t)/n .
+\]
+--- after ---
+Je-li schéma nadprůměrné o~$\varepsilon$, tj.\
+$F(S,t) = \bar f(t)\,(1+\varepsilon)$ a~tento poměr se udržuje v~čase, dostáváme
+
+--- ctx ---
+\;=\; \frac{C(S,t)\,F(S,t)}{F(t)}.
+\]
+Při $n$ nezávislých tazích tedy
+\[
+\mathbb{E}\big[C(S,t+1)\big] \;=\; n\, p_s(S) \;=\; C(S,t)\,\frac{F(S,t)}{\bar f(t)},
+\qquad \bar f(t) = F(t)/n .
+\]
+Je-li schéma nadprůměrné o~$\varepsilon$, tj.\
+$F(S,t) = \bar f(t)\,(1+\varepsilon)$ a~tento poměr se udržuje v~čase, dostáváme
+--- MATH ---
+\[
+C(S,t+1) = C(S,t)(1+\varepsilon)
+\qquad\Longrightarrow\qquad
+C(S,t) = C(S,0)\,(1+\varepsilon)^{t},
+\]
+--- after ---
+tedy \textbf{exponenciální růst} (resp.\ pokles pro $\varepsilon<0$).
+
+--- ctx ---
+\]
+tedy \textbf{exponenciální růst} (resp.\ pokles pro $\varepsilon<0$).
+
+\paragraph{Krok 2 --- křížení.} Jednobodové křížení volí bod řezu z~$m-1$
+možností. Schéma je \emph{jistě} rozbito, padne-li řez mezi jeho první
+a~poslední pevnou pozici, tj.\ s~pravděpodobností nejvýše $d(S)/(m-1)$
+(nejvýše proto, že i~při řezu uvnitř může být schéma obnoveno, pokud druhý
+rodič obsahuje tytéž hodnoty). Křížení se provádí s~pravděpodobností $p_C$,
+takže
+--- MATH ---
+\[
+p_{\mathrm{surv}}^{\mathrm{cross}}(S) \;\ge\; 1 - p_C\,\frac{d(S)}{m-1}.
+\]
+--- after ---
+\paragraph{Krok 3 --- mutace.} Schéma přežije, pokud se nezmění žádná z~jeho
+
+--- ctx ---
+(nejvýše proto, že i~při řezu uvnitř může být schéma obnoveno, pokud druhý
+rodič obsahuje tytéž hodnoty). Křížení se provádí s~pravděpodobností $p_C$,
+takže
+\[
+p_{\mathrm{surv}}^{\mathrm{cross}}(S) \;\ge\; 1 - p_C\,\frac{d(S)}{m-1}.
+\]
+
+\paragraph{Krok 3 --- mutace.} Schéma přežije, pokud se nezmění žádná z~jeho
+$o(S)$ pevných pozic:
+--- MATH ---
+\[
+p_{\mathrm{surv}}^{\mathrm{mut}}(S) = (1-p_M)^{o(S)} \;\approx\; 1 - p_M\,o(S)
+\quad \text{pro } p_M \ll 1 .
+\]
+--- after ---
+\paragraph{Složení.} Za předpokladu (přibližné) nezávislosti obou destruktivních
+
+--- ctx ---
+\paragraph{Krok 3 --- mutace.} Schéma přežije, pokud se nezmění žádná z~jeho
+$o(S)$ pevných pozic:
+\[
+p_{\mathrm{surv}}^{\mathrm{mut}}(S) = (1-p_M)^{o(S)} \;\approx\; 1 - p_M\,o(S)
+\quad \text{pro } p_M \ll 1 .
+\]
+
+\paragraph{Složení.} Za předpokladu (přibližné) nezávislosti obou destruktivních
+jevů a~zanedbáním jejich součinu:
+--- MATH ---
+\[
+\mathbb{E}\big[C(S,t+1)\big] \;\ge\; C(S,t)\,\frac{F(S,t)}{\bar f(t)}
+\left[1 - p_C \frac{d(S)}{m-1} - p_M o(S)\right]. \qquad\blacksquare
+\]
+--- after ---
+\paragraph{Číselný příklad}
+
+
+============================================================
+SEC: \section{Teorie schémat a~pravděpodobnostní modely SGA}
+SUB: \subsection{Teorie schémat}
+SUBSUB: \subsubsection{Kritika teorie schémat}
+============================================================
+
+--- ctx ---
+skutečnosti hraje mnoho her paralelně: schémata soutěží o~konkrétní pevné
+  pozice, a~schémata řádu $k$ hrají hru s~$2^k$ pákami.
+\end{itemize}
+
+\subsubsection{Kritika teorie schémat}
+
+\paragraph{Kdy GA selhává --- deceptivní úlohy}
+
+Uvažujme funkci, v~níž jsou nadprůměrná schémata
+--- MATH ---
+\[
+S_1 = (111{*}\ldots{*}), \qquad S_2 = ({*}\ldots{*}11),
+\]
+--- after ---
+ale zároveň
+\[
+
+--- ctx ---
+\subsubsection{Kritika teorie schémat}
+
+\paragraph{Kdy GA selhává --- deceptivní úlohy}
+
+Uvažujme funkci, v~níž jsou nadprůměrná schémata
+\[
+S_1 = (111{*}\ldots{*}), \qquad S_2 = ({*}\ldots{*}11),
+\]
+ale zároveň
+--- MATH ---
+\[
+f(111{*}{*}{*}{*}{*}11) \;\ll\; f(000{*}{*}{*}{*}{*}00).
+\]
+--- after ---
+GA je selekcí veden
+k~jedničkovým blokům, přestože optimum leží jinde. Takové úlohy se nazývají
+
+
+============================================================
+SEC: \section{Teorie schémat a~pravděpodobnostní modely SGA}
+SUB: \subsection{Pravděpodobnostní modely jednoduchého GA}
+SUBSUB: \subsubsection{Operátor $\mathcal{G}$}
+============================================================
+
+--- ctx ---
+že selekce vybere řetězec $i$.
+\end{itemize}
+Vektor $p$ popisuje \emph{složení} populace, vektor $s$ \emph{selekční
+pravděpodobnosti}.
+\end{defbox}
+
+\subsubsection{Operátor $\mathcal{G}$}
+
+Cílem je najít operátor $\mathcal{G}: \Lambda \to \Lambda$ takový, že
+--- MATH ---
+\[
+p(t+1) = \mathcal{G}\big(p(t)\big),
+\]
+--- after ---
+a~rozložit ho na dvě části: $\mathcal{G} = \mathcal{M} \circ \mathcal{F}$,
+kde $\mathcal{F}$ odpovídá selekci (fitness) a~$\mathcal{M}$ tzv.\ míchání
+
+--- ctx ---
+\]
+a~rozložit ho na dvě části: $\mathcal{G} = \mathcal{M} \circ \mathcal{F}$,
+kde $\mathcal{F}$ odpovídá selekci (fitness) a~$\mathcal{M}$ tzv.\ míchání
+(\emph{mixing}) --- křížení a~mutaci dohromady. Pak stačí operátor iterovat
+z~počáteční populace a~známe úplné chování SGA.
+
+\paragraph{Část $\mathcal{F}$ --- selekce.} Definujme diagonální matici
+$\mathbf{F}$ s~$\mathbf{F}_{ii} = f(i)$ a~$\mathbf{F}_{ij} = 0$ pro $i \ne j$.
+Fitness-proporcionální selekce je pak přesně
+--- MATH ---
+\[
+s(t) \;=\; \frac{\mathbf{F}\,p(t)}{\sum_j \mathbf{F}_{jj}\,p_j(t)} .
+\]
+--- after ---
+Čitatel $(\mathbf{F}p)_i = f(i)\,p_i$ je \uv{váha} řetězce $i$ v~populaci,
+jmenovatel je normalizační konstanta (průměrná fitness populace).
+
+--- ctx ---
+čím větší populace, tím menší odchylka. Nekonečné populace jsou exaktní, byť
+nepraktické.
+
+\textbf{Mini-příklad.} Pro $l = 2$ máme čtyři řetězce $00,01,10,11$, tedy
+indexy $0,1,2,3$. Nechť $f = (1, 2, 3, 4)$ a~populace osmi jedinců obsahuje
+$2\times 00$, $4\times 01$, $1\times 10$, $1\times 11$, tj.\
+$p = (0{,}25;\,0{,}5;\,0{,}125;\,0{,}125)$. Pak
+$\mathbf{F}p = (0{,}25;\,1{,}0;\,0{,}375;\,0{,}5)$, součet je $2{,}125$
+(= průměrná fitness populace) a
+--- MATH ---
+\[
+s \;=\; (0{,}118;\; 0{,}471;\; 0{,}176;\; 0{,}235).
+\]
+--- after ---
+Podíl nejlepšího řetězce $11$ vzrostl z~$12{,}5\,\%$ na $23{,}5\,\%$, podíl
+nejhoršího $00$ klesl z~$25\,\%$ na $11{,}8\,\%$ --- přesně o~faktor
+
+--- ctx ---
+(= průměrná fitness populace) a
+\[
+s \;=\; (0{,}118;\; 0{,}471;\; 0{,}176;\; 0{,}235).
+\]
+Podíl nejlepšího řetězce $11$ vzrostl z~$12{,}5\,\%$ na $23{,}5\,\%$, podíl
+nejhoršího $00$ klesl z~$25\,\%$ na $11{,}8\,\%$ --- přesně o~faktor
+$f(i)/\bar f$, jak víme z~věty o~schématech.
+
+\paragraph{Část $\mathcal{M}$ --- míchání.} Zavedeme funkci
+--- MATH ---
+\[
+r(i,j,k) \;=\; \Pr[\text{potomek } k \text{ vznikne z~rodičů } i, j],
+\]
+--- after ---
+která v~sobě zahrnuje jak křížení (přes všechny body řezu), tak mutaci.
+Pak
+
+--- ctx ---
+nejhoršího $00$ klesl z~$25\,\%$ na $11{,}8\,\%$ --- přesně o~faktor
+$f(i)/\bar f$, jak víme z~věty o~schématech.
+
+\paragraph{Část $\mathcal{M}$ --- míchání.} Zavedeme funkci
+\[
+r(i,j,k) \;=\; \Pr[\text{potomek } k \text{ vznikne z~rodičů } i, j],
+\]
+která v~sobě zahrnuje jak křížení (přes všechny body řezu), tak mutaci.
+Pak
+--- MATH ---
+\[
+\mathbb{E}\big[p_k(t+1)\big] \;=\; \sum_{i}\sum_{j} s_i(t)\, s_j(t)\, r(i,j,k).
+\]
+--- after ---
+Jde tedy o~\emph{kvadratický} operátor na simplexu. Odvození $r(i,j,k)$ je
+technicky náročné, ale možné. Klíčové zjednodušení plyne z~toho, že jak
+
+--- ctx ---
+která v~sobě zahrnuje jak křížení (přes všechny body řezu), tak mutaci.
+Pak
+\[
+\mathbb{E}\big[p_k(t+1)\big] \;=\; \sum_{i}\sum_{j} s_i(t)\, s_j(t)\, r(i,j,k).
+\]
+Jde tedy o~\emph{kvadratický} operátor na simplexu. Odvození $r(i,j,k)$ je
+technicky náročné, ale možné. Klíčové zjednodušení plyne z~toho, že jak
+jednobodové křížení, tak bitová mutace \uv{nevidí} absolutní hodnoty bitů,
+jen jejich shody a~neshody. Formálně: pro libovolné $k$ platí
+--- MATH ---
+\[
+r(i,j,k) \;=\; r(i \oplus k,\; j \oplus k,\; 0),
+\]
+--- after ---
+kde $\oplus$ je bitový XOR. Stačí tedy znát jedinou \emph{míchací matici}
+$\mathbf{M}$ s~prvky $\mathbf{M}_{ij} = r(i,j,0)$ (rozměru $2^l \times 2^l$)
+
+
+============================================================
+SEC: \section{Teorie schémat a~pravděpodobnostní modely SGA}
+SUB: \subsection{Pravděpodobnostní modely jednoduchého GA}
+SUBSUB: \subsubsection{Konečné populace: Markovův řetězec}
+============================================================
+
+--- ctx ---
+Stochastický proces v~diskrétním čase se stavy, kde pravděpodobnost přechodu
+do dalšího stavu závisí \emph{jen} na aktuálním stavu (nikoli na historii).
+Úplným popisem je matice přechodových pravděpodobností.
+\end{defbox}
+
+Modelujeme SGA s~populací velikosti $n$ nad řetězci délky $l$:
+\begin{itemize}
+\item \textbf{Stavy} = jednotlivé možné populace (multimnožiny $n$ řetězců).
+  Jejich počet je
+--- MATH ---
+  \[
+  N \;=\; \binom{n + 2^l - 1}{\,2^l - 1\,},
+  \]
+--- after ---
+což je počet multimnožin velikosti $n$ z~$2^l$ typů.
+\item \textbf{Matice $\mathbf{Z}$}: sloupce odpovídají populacím,
+
+--- ctx ---
+N \;=\; \binom{n + 2^l - 1}{\,2^l - 1\,},
+  \]
+  což je počet multimnožin velikosti $n$ z~$2^l$ typů.
+\item \textbf{Matice $\mathbf{Z}$}: sloupce odpovídají populacím,
+  $\mathbf{Z}(y,i)$ = počet výskytů jedince $y$ v~populaci $i$. Sloupce
+  matice $\mathbf{Z}$ jsou tedy stavy řetězce.
+\item \textbf{Matice přechodů $\mathbf{Q}$} rozměru $N \times N$; lze ji
+  explicitně odvodit z~$\mathcal{G}$ (přechod je multinomické losování
+  $n$ jedinců podle rozdělení $\mathcal{G}(p)$):
+--- MATH ---
+  \[
+  \mathbf{Q}_{i,j} \;=\; n! \prod_{y=0}^{2^l-1}
+  \frac{\big(\mathcal{G}(p_i)_y\big)^{\mathbf{Z}(y,j)}}{\mathbf{Z}(y,j)!}.
+  \]
+--- after ---
+\end{itemize}
+
+
+============================================================
+SEC: \section{Evoluční strategie, diferenciální evoluce, koevoluce, otevřená evoluce}
+SUB: \subsection{Evoluční strategie}
+SUBSUB: \subsubsection{Samoadaptace strategických parametrů}
+============================================================
+
+--- ctx ---
+úhlů natočení $\alpha_{ij}$), odpovídá plné kovarianční matici \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Kovarianční matice $\mathbf{C}$ je součinem rotační matice: $c_{ii} = \sigma_i^2$,
+$c_{ij} = \tfrac12(\sigma_i^2 - \sigma_j^2)\tan(2\alpha_{ij})$.
+
+\paragraph{Standardní pravidla mutace (Schwefel).}
+--- MATH ---
+\[
+\sigma_i' = \sigma_i \cdot \exp\big(\tau' N(0,1) + \tau N_i(0,1)\big),
+\qquad
+x_i' = x_i + \sigma_i' \cdot N_i(0,1),
+\]
+--- after ---
+kde $\tau' \propto 1/\sqrt{2n}$ (společná porucha pro celý jedinec)
+a~$\tau \propto 1/\sqrt{2\sqrt{n}}$ (individuální porucha složky).
+
+
+============================================================
+SEC: \section{Evoluční strategie, diferenciální evoluce, koevoluce, otevřená evoluce}
+SUB: \subsection{Diferenciální evoluce}
+SUBSUB: \subsubsection{Algoritmus DE/rand/1/bin}
+============================================================
+
+--- ctx ---
+Populace je $N$ vektorů $\vec x_{1},\dots,\vec x_{N} \in \mathbb{R}^D$.
+Pro \textbf{každého} jedince $\vec x_i$ (rodičovská selekce je tedy triviální ---
+rodičem je postupně každý) se provede:
+
+\begin{enumerate}
+\item \textbf{Mutace.} Vyber tři navzájem různé jedince
+  $\vec x_{a}, \vec x_{b}, \vec x_{c}$ různé od $\vec x_i$ a~vytvoř
+  \emph{dárce} (\emph{donor vector})
+--- MATH ---
+  \[
+  \vec v_i \;=\; \vec x_{a} \;+\; F\,(\vec x_{b} - \vec x_{c}),
+  \qquad F \in [0,2],\ \text{typicky } F \approx 0{,}8 .
+  \]
+--- after ---
+\item \textbf{Křížení (binomické, uniformní \uv{s~pojistkou}).}
+  Vytvoř \emph{zkušební vektor} (\emph{trial vector}) $\vec u_i$:
+
+--- ctx ---
+\item \textbf{Mutace.} Vyber tři navzájem různé jedince
+  $\vec x_{a}, \vec x_{b}, \vec x_{c}$ různé od $\vec x_i$ a~vytvoř
+  \emph{dárce} (\emph{donor vector})
+  \[
+  \vec v_i \;=\; \vec x_{a} \;+\; F\,(\vec x_{b} - \vec x_{c}),
+  \qquad F \in [0,2],\ \text{typicky } F \approx 0{,}8 .
+  \]
+\item \textbf{Křížení (binomické, uniformní \uv{s~pojistkou}).}
+  Vytvoř \emph{zkušební vektor} (\emph{trial vector}) $\vec u_i$:
+--- MATH ---
+  \[
+  u_{j,i} =
+  \begin{cases}
+  v_{j,i} & \text{pokud } \mathrm{rand}_j \le C \text{ nebo } j = I_{\mathrm{rand}},\\[2pt]
+  x_{j,i} & \text{jinak},
+  \end{cases}
+  \]
+--- after ---
+kde $\mathrm{rand}_j \sim U(0,1)$, $C \in [0,1]$ je práh křížení
+  a~$I_{\mathrm{rand}}$ je náhodný index z~$\{1,\dots,D\}$. Podmínka
+
+--- ctx ---
+v_{j,i} & \text{pokud } \mathrm{rand}_j \le C \text{ nebo } j = I_{\mathrm{rand}},\\[2pt]
+  x_{j,i} & \text{jinak},
+  \end{cases}
+  \]
+  kde $\mathrm{rand}_j \sim U(0,1)$, $C \in [0,1]$ je práh křížení
+  a~$I_{\mathrm{rand}}$ je náhodný index z~$\{1,\dots,D\}$. Podmínka
+  $j = I_{\mathrm{rand}}$ je \uv{pojistka}: zaručuje, že alespoň jedna složka
+  pochází od dárce, takže potomek není nikdy identickou kopií rodiče.
+\item \textbf{Environmentální selekce (souboj 1:1).}
+--- MATH ---
+  \[
+  \vec x_i(t+1) =
+  \begin{cases}
+  \vec u_i & \text{pokud } f(\vec u_i) \le f(\vec x_i(t)),\\
+  \vec x_i(t) & \text{jinak.}
+  \end{cases}
+  \]
+--- after ---
+Selekce je tedy elitistická na úrovni jednotlivce --- populace se nikdy
+  nezhoršuje.
+
+
+============================================================
+SEC: \section{Evoluční strategie, diferenciální evoluce, koevoluce, otevřená evoluce}
+SUB: \subsection{Diferenciální evoluce}
+SUBSUB: \subsubsection{Číselný příklad jednoho kroku}
+============================================================
+
+--- ctx ---
+\end{algorithmic}
+\end{algorithm}
+
+\subsubsection{Číselný příklad jednoho kroku}
+
+Nechť $D = 3$, minimalizujeme $f(\vec x) = \sum_j x_j^2$, parametry
+$F = 0{,}8$, $C = 0{,}9$. Aktuální jedinec
+$\vec x_i = (4;\, -3;\, 2)$, $f(\vec x_i) = 16+9+4 = 29$.
+Náhodně vybraní jedinci:
+--- MATH ---
+\[
+\vec x_a = (2;\, -1;\, 0{,}5), \quad
+\vec x_b = (1;\, 0;\, -1), \quad
+\vec x_c = (-1;\, 2;\, 1).
+\]
+--- after ---
+\textbf{Mutace:}
+
+--- ctx ---
+$\vec x_i = (4;\, -3;\, 2)$, $f(\vec x_i) = 16+9+4 = 29$.
+Náhodně vybraní jedinci:
+\[
+\vec x_a = (2;\, -1;\, 0{,}5), \quad
+\vec x_b = (1;\, 0;\, -1), \quad
+\vec x_c = (-1;\, 2;\, 1).
+\]
+
+\textbf{Mutace:}
+--- MATH ---
+\[
+\vec x_b - \vec x_c = (2;\, -2;\, -2), \qquad
+\vec v = (2;\,-1;\,0{,}5) + 0{,}8\,(2;\,-2;\,-2) = (3{,}6;\; -2{,}6;\; -1{,}1).
+\]
+--- after ---
+\textbf{Křížení:} nechť $I_{\mathrm{rand}} = 1$ a~náhodná čísla
+
+
+============================================================
+SEC: \section{Evoluční strategie, diferenciální evoluce, koevoluce, otevřená evoluce}
+SUB: \subsection{Koevoluce}
+SUBSUB: \subsubsection{Evoluce kooperace a~vězňovo dilema}
+============================================================
+
+--- ctx ---
+identických genů u~příbuzných; problém: altruismus vůči cizím a~jiným druhům.
+\item \textbf{Sobecký gen} (Dawkins) --- jednotkou evoluce je gen, ne jedinec.
+  (Wilson: \uv{organismus je jen způsob, jak DNA vyrábí další DNA}.)
+\item \textbf{Reciproční altruismus} (Trivers, 1971) --- vzájemný prospěch,
+  \emph{stín budoucnosti}; formální model = iterované vězňovo dilema.
+\end{itemize}
+
+\begin{defbox}[Vězňovo dilema (\emph{prisoner's dilemma})]
+Hra dvou hráčů s~akcemi $C$ (kooperace) a~$D$ (zrada) a~výplatami
+--- MATH ---
+\[
+\begin{array}{c|cc}
+ & C & D\\\hline
+C & R/R & S/T\\
+D & T/S & P/P
+\end{array}
+\qquad
+T > R > P > S \quad (\text{a pro iterovanou verzi } 2R > T+S).
+\]
+--- after ---
+Typicky $R=-1$, $T=0$, $P=-2$, $S=-3$. Protože $T > R$ a~$P > S$, je zrada
+\textbf{dominantní strategií} obou hráčů; $DD$ je \textbf{Nashovo
+
+
+============================================================
+SEC: \section{Evoluční strategie, diferenciální evoluce, koevoluce, otevřená evoluce}
+SUB: \subsection{Otevřená evoluce}
+SUBSUB: 
+============================================================
+
+--- ctx ---
+symetrií a~opakujících se motivů.
+
+\begin{defbox}[Novelty search a~řídkost]
+Radikální myšlenka (Lehman \& Stanley, 2011: \emph{Abandoning Objectives}): u~klamavých
+(deceptivních) úloh je cílová funkce zavádějící --- vede do lokálních optim. Proto
+\textbf{zahoďme cíl a~odměňujme pouze novost}.
+
+Definuje se \emph{prostor chování} (např.\ koncová pozice robota v~bludišti) a~novost
+jedince $x$ se měří řídkostí okolí
+--- MATH ---
+\[
+\rho(x) \;=\; \frac{1}{k}\sum_{i=1}^{k} \mathrm{dist}\big(x, \mu_i\big),
+\]
+--- after ---
+kde $\mu_i$ je $k$ nejbližších sousedů $x$ v~aktuální populaci \textbf{a~v~permanentním
+archivu}. Fitness $=\rho$; původní účelová funkce se \emph{nepoužívá vůbec}. Na úlohách
+
+
+============================================================
+SEC: \section{Rojové optimalizační algoritmy}
+SUB: \subsection{Optimalizace rojem částic (PSO)}
+SUBSUB: 
+============================================================
+
+--- ctx ---
+\textbf{paměť}:
+\begin{itemize}
+\item $\vec p_i$ (\emph{pBest}) --- nejlepší pozice, kterou částice $i$
+  kdy navštívila (kognitivní, individuální paměť),
+\item $\vec g$ (\emph{gBest}) --- nejlepší pozice nalezená celým rojem
+  (sociální, kolektivní paměť).
+\end{itemize}
+
+\begin{defbox}[Pohybové rovnice PSO]
+--- MATH ---
+\[
+\vec v_i \;\gets\; \underbrace{w\,\vec v_i}_{\text{setrvačnost}}
+\;+\; \underbrace{c_1 r_1 (\vec p_i - \vec x_i)}_{\text{kognitivní složka}}
+\;+\; \underbrace{c_2 r_2 (\vec g - \vec x_i)}_{\text{sociální složka}},
+\qquad
+\vec x_i \;\gets\; \vec x_i + \vec v_i ,
+\]
+--- after ---
+kde $r_1, r_2 \sim U(0,1)$ (losují se pro každou složku zvlášť),
+$c_1, c_2$ jsou koeficienty učení (v~původní verzi $c_1 = c_2 = 2$)
+
+--- ctx ---
+\EndFor
+\Until{je dosaženo maxima iterací nebo požadované přesnosti}
+\end{algorithmic}
+\end{algorithm}
+
+\paragraph{Číselný příklad.} Částice v~$\mathbb{R}^2$:
+$\vec x = (1;\,2)$, $\vec v = (0{,}5;\,-0{,}5)$, $\vec p = (0;\,3)$,
+$\vec g = (-1;\,1)$, $w = 0{,}7$, $c_1 = c_2 = 1{,}5$, $r_1 = 0{,}4$,
+$r_2 = 0{,}8$.
+--- MATH ---
+\begin{align*}
+\vec v' &= 0{,}7\,(0{,}5;\,-0{,}5) + 1{,}5\cdot 0{,}4\,\big((0;3)-(1;2)\big)
+  + 1{,}5\cdot 0{,}8\,\big((-1;1)-(1;2)\big)\\
+ &= (0{,}35;\,-0{,}35) + 0{,}6\,(-1;\,1) + 1{,}2\,(-2;\,-1)
+  = (-2{,}65;\; -0{,}95),\\
+\vec x' &= (1;\,2) + (-2{,}65;\,-0{,}95) = (-1{,}65;\; 1{,}05).
+\end{align*}
+--- after ---
+Částice tedy přeletěla přes $\vec g$ --- typické chování PSO, které je zdrojem
+explorace. Proto se rychlost omezuje ($|v_j| \le v_{\max}$) nebo se používá
+
+
+============================================================
+SEC: \section{Rojové optimalizační algoritmy}
+SUB: \subsection{Optimalizace mravenčí kolonií (ACO)}
+SUBSUB: 
+============================================================
+
+--- ctx ---
+\item Volitelně \emph{akce démona} (\emph{daemon actions}) --- centralizovaný
+  krok, typicky lokální prohledávání zlepšující nalezené cesty.
+\item Porovnají se kvality řešení.
+\item Aktualizují se feromony na hranách (odpaření + uložení).
+\end{enumerate}
+
+\begin{defbox}[Ant System (AS) --- pravidlo přechodu]
+Mravenec $k$ v~městě $i$ zvolí následující město $j$ z~množiny dosud
+nenavštívených $\mathcal{N}_i^k$ s~pravděpodobností
+--- MATH ---
+\[
+p_{ij}^{k} \;=\;
+\frac{\big[\tau_{ij}\big]^{\alpha}\,\big[\eta_{ij}\big]^{\beta}}
+     {\sum_{l \in \mathcal{N}_i^k}\big[\tau_{il}\big]^{\alpha}\,\big[\eta_{il}\big]^{\beta}},
+\qquad \eta_{ij} = \frac{1}{d_{ij}},
+\]
+--- after ---
+kde $\tau_{ij}$ je množství feromonu na hraně, $\eta_{ij}$ heuristická
+\uv{viditelnost} (převrácená vzdálenost) a~$\alpha, \beta$ váhy obou vlivů
+
+--- ctx ---
+{\sum_{l \in \mathcal{N}_i^k}\big[\tau_{il}\big]^{\alpha}\,\big[\eta_{il}\big]^{\beta}},
+\qquad \eta_{ij} = \frac{1}{d_{ij}},
+\]
+kde $\tau_{ij}$ je množství feromonu na hraně, $\eta_{ij}$ heuristická
+\uv{viditelnost} (převrácená vzdálenost) a~$\alpha, \beta$ váhy obou vlivů
+(typicky $\alpha = 1$, $\beta \in [2,5]$).
+\end{defbox}
+
+\begin{defbox}[Ant System --- aktualizace feromonu]
+--- MATH ---
+\[
+\tau_{ij} \;\gets\; (1-\rho)\,\tau_{ij} \;+\; \sum_{k=1}^{m} \Delta\tau_{ij}^{k},
+\qquad
+\Delta\tau_{ij}^{k} =
+\begin{cases}
+Q/L_k & \text{prošel-li mravenec } k \text{ hranou } (i,j),\\
+0 & \text{jinak,}
+\end{cases}
+\]
+--- after ---
+kde $\rho \in (0,1)$ je míra odpařování a~$L_k$ délka trasy mravence $k$.
+Kratší trasa $\Rightarrow$ více feromonu.
+
+--- ctx ---
+\]
+kde $\rho \in (0,1)$ je míra odpařování a~$L_k$ délka trasy mravence $k$.
+Kratší trasa $\Rightarrow$ více feromonu.
+\end{defbox}
+
+\paragraph{Číselný příklad (pravidlo přechodu).} Mravenec stojí ve městě $i$
+a~může jít do měst $A, B, C$ se vzdálenostmi $d = (5;\,10;\,2)$
+a~feromony $\tau = (2;\,4;\,1)$; $\alpha = 1$, $\beta = 2$.
+Viditelnosti: $\eta = (0{,}2;\,0{,}1;\,0{,}5)$. Váhy:
+--- MATH ---
+\[
+w_A = 2 \cdot 0{,}2^2 = 0{,}08,\quad
+w_B = 4 \cdot 0{,}1^2 = 0{,}04,\quad
+w_C = 1 \cdot 0{,}5^2 = 0{,}25,\quad \textstyle\sum = 0{,}37 .
+\]
+--- after ---
+Pravděpodobnosti: $p_A = 0{,}216$, $p_B = 0{,}108$, $p_C = 0{,}676$.
+Přestože hrana do $B$ má nejvíce feromonu, krátká vzdálenost do $C$ (umocněná
+
+--- ctx ---
+w_B = 4 \cdot 0{,}1^2 = 0{,}04,\quad
+w_C = 1 \cdot 0{,}5^2 = 0{,}25,\quad \textstyle\sum = 0{,}37 .
+\]
+Pravděpodobnosti: $p_A = 0{,}216$, $p_B = 0{,}108$, $p_C = 0{,}676$.
+Přestože hrana do $B$ má nejvíce feromonu, krátká vzdálenost do $C$ (umocněná
+$\beta = 2$) rozhoduje.
+
+\paragraph{Číselný příklad (aktualizace).} Nechť $\tau_{ij} = 2$, $\rho = 0{,}5$,
+$Q = 1$ a~hranou prošli dva mravenci s~délkami tras $L_1 = 20$, $L_2 = 25$:
+--- MATH ---
+\[
+\tau_{ij} \gets 0{,}5 \cdot 2 + \left(\tfrac{1}{20} + \tfrac{1}{25}\right)
+= 1 + 0{,}09 = 1{,}09 .
+\]
+--- after ---
+\paragraph{ACS (Ant Colony System).} Vylepšení konkurenceschopné se
+
+
+============================================================
+SEC: \section{Lokální prohledávání a~memetické algoritmy}
+SUB: \subsection{Simulované žíhání}
+SUBSUB: 
+============================================================
+
+--- ctx ---
+\begin{defbox}[Simulované žíhání (\emph{simulated annealing}, SA)]
+Kirkpatrick, Gelatt, Vecchi (1983); fyzikální analogie s~pomalým chladnutím
+kovu, při němž atomy zaujmou uspořádání s~minimální energií. Algoritmus je
+horolezec, který \textbf{připouští i~zhoršující kroky} s~pravděpodobností
+klesající s~velikostí zhoršení a~s~teplotou.
+\end{defbox}
+
+\begin{defbox}[Metropolisovo kritérium]
+Pro minimalizaci, kandidáta $y \in N(x)$ a~$\Delta = f(y) - f(x)$:
+--- MATH ---
+\[
+P(\text{přijmout } y) =
+\begin{cases}
+1, & \Delta \le 0 \quad (\text{zlepšení}),\\[2pt]
+e^{-\Delta / T}, & \Delta > 0 \quad (\text{zhoršení}),
+\end{cases}
+\]
+--- after ---
+kde $T > 0$ je teplota.
+\end{defbox}
+
+
+============================================================
+SEC: \section{Aplikace evolučních algoritmů}
+SUB: \subsection{Evoluce pravidlových a~expertních systémů}
+SUBSUB: \subsubsection{Pittsburghský přístup a~systém GIL}
+============================================================
+
+--- ctx ---
+složitější (priority pravidel, konflikty, falešně pozitivní a~negativní
+odpovědi) a~operátorů je celá řada, na několika úrovních. Důraz se klade na
+bohatou doménovou reprezentaci (množiny, výčty, intervaly).
+
+\textbf{GIL} je klasický představitel: pro binární klasifikaci, jedinec
+klasifikuje implicitně do jedné třídy (pravidla nemají pravou stranu).
+Jedinec je \emph{disjunkce komplexů}, komplex je \emph{konjunkce selektorů}
+(po jednom pro každou proměnnou) a~selektor je \emph{disjunkce hodnot}
+z~domény dané proměnné, zakódovaná bitovou maskou. Například
+--- MATH ---
+\[
+\big((X{=}A_1) \wedge (Z{=}C_3)\big) \vee \big((X{=}A_2) \wedge (Y{=}B_2)\big)
+\;\equiv\;
+[\,001|11|0011 \;\vee\; 010|10|1111\,].
+\]
+--- after ---
+Operátory na třech úrovních:
+\begin{itemize}
+
+
+============================================================
+SEC: \section{Aplikace evolučních algoritmů}
+SUB: \subsection{Neuroevoluce}
+SUBSUB: \subsubsection{NEAT}
+============================================================
+
+--- ctx ---
+Tři klíčové myšlenky:
+\begin{enumerate}
+\item \textbf{Inovační čísla řeší problém konkurujících konvencí.}
+  Kříží se pouze geny se \emph{shodným inovačním číslem} (mají tedy společný
+  evoluční původ); geny přebývající u~jednoho rodiče
+  (\emph{disjoint} a~\emph{excess}) se přebírají od zdatnějšího rodiče.
+  Křížení tak nerozbíjí strukturu --- žádné \uv{bezhlavé kuře}.
+\item \textbf{Speciace (niching) chrání inovace.} Na vektorech inovačních
+  čísel se definuje míra podobnosti
+--- MATH ---
+  \[
+  \delta \;=\; \frac{c_1 E}{N} + \frac{c_2 D}{N} + c_3 \overline{\Delta W},
+  \]
+--- after ---
+kde $E$ (\emph{excess}) je počet genů, jejichž inovační číslo leží
+  \emph{za} nejvyšším inovačním číslem druhého genomu, $D$ (\emph{disjoint})
+
+
+============================================================
+SEC: \section{Aplikace evolučních algoritmů}
+SUB: \subsection{Vícekriteriální optimalizace}
+SUBSUB: \subsubsection{NSGA-II}
+============================================================
+
+--- ctx ---
+\textbf{(2) crowding distance} místo parametru $d_{\mathrm{share}}$,
+\textbf{(3) elitismus} --- rodiče i~potomci se spojí, setřídí a~lepší polovina
+tvoří novou populaci.
+\end{defbox}
+
+\begin{defbox}[Crowding distance]
+Pro každou frontu zvlášť: pro každé kritérium $m$ seřaď jedince podle $f_m$,
+krajním jedincům přiřaď $\infty$ a~ostatním přičti normalizovanou vzdálenost
+sousedů:
+--- MATH ---
+\[
+d_i \;=\; \sum_{m=1}^{k}
+\frac{f_m(i+1) - f_m(i-1)}{f_m^{\max} - f_m^{\min}} .
+\]
+--- after ---
+Vyjadřuje \uv{obvod kvádru} tvořeného nejbližšími sousedy --- velká hodnota
+znamená řídce obsazenou oblast, kterou chceme zachovat.
+
+--- ctx ---
+\State seřaď $F_i$ sestupně podle crowding distance a~doplň $P_{t+1}$ na $N$ jedinců
+\State $Q_{t+1} \gets$ turnajová selekce (crowded comparison) $+$ křížení (SBX) $+$ mutace
+\end{algorithmic}
+\end{algorithm}
+
+\paragraph{Číselný příklad crowding distance.} Fronta
+$A(1,10)$, $B(2,7)$, $C(4,5)$, $D(8,2)$; rozsahy: $f_1 \in [1,8]$
+(rozpětí 7), $f_2 \in [2,10]$ (rozpětí 8). Krajní body $A$ a~$D$ dostanou
+$\infty$ (v~obou kritériích jsou krajní).
+--- MATH ---
+\[
+d_B = \frac{f_1(C)-f_1(A)}{7} + \frac{f_2(A)-f_2(C)}{8}
+    = \frac{4-1}{7} + \frac{10-5}{8} = 0{,}43 + 0{,}63 = 1{,}05,
+\]
+--- after ---
+\[
+d_C = \frac{f_1(D)-f_1(B)}{7} + \frac{f_2(B)-f_2(D)}{8}
+
+--- ctx ---
+\paragraph{Číselný příklad crowding distance.} Fronta
+$A(1,10)$, $B(2,7)$, $C(4,5)$, $D(8,2)$; rozsahy: $f_1 \in [1,8]$
+(rozpětí 7), $f_2 \in [2,10]$ (rozpětí 8). Krajní body $A$ a~$D$ dostanou
+$\infty$ (v~obou kritériích jsou krajní).
+\[
+d_B = \frac{f_1(C)-f_1(A)}{7} + \frac{f_2(A)-f_2(C)}{8}
+    = \frac{4-1}{7} + \frac{10-5}{8} = 0{,}43 + 0{,}63 = 1{,}05,
+\]
+--- MATH ---
+\[
+d_C = \frac{f_1(D)-f_1(B)}{7} + \frac{f_2(B)-f_2(D)}{8}
+    = \frac{8-2}{7} + \frac{7-2}{8} = 0{,}86 + 0{,}63 = 1{,}48 .
+\]
+--- after ---
+Při nutnosti vybrat jednoho z~$B$, $C$ zvítězí $C$ --- leží v~řidčeji
+obsazené části fronty.

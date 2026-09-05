@@ -1,0 +1,1958 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[czech]{babel}
+\usepackage[margin=2.0cm,top=2.0cm,bottom=2.2cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{parskip}
+\usepackage{enumitem}
+\setlist{nosep,leftmargin=1.4em}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{xcolor}
+\definecolor{linkblue}{RGB}{20,60,150}
+\definecolor{fmlcol}{RGB}{20,70,140}
+\definecolor{defbg}{RGB}{240,244,252}
+\definecolor{defframe}{RGB}{100,130,190}
+\definecolor{markcol}{RGB}{176,84,0}
+\definecolor{markbg}{RGB}{253,246,236}
+\usepackage[most]{tcolorbox}
+\newtcolorbox{poznbox}[1][]{breakable,colback=markbg,colframe=markcol,boxrule=0.6pt,arc=1.5mm,left=2mm,right=2mm,top=1mm,bottom=1mm,title={#1},fonttitle=\bfseries}
+\usepackage[colorlinks=true,linkcolor=linkblue,urlcolor=linkblue]{hyperref}
+
+% --- sazba vzorců: název (\fml) + display math + popis (\pop) ---
+\setlength{\abovedisplayskip}{4pt plus 2pt minus 1pt}
+\setlength{\belowdisplayskip}{4pt plus 2pt minus 1pt}
+\setlength{\abovedisplayshortskip}{1pt plus 1pt}
+\setlength{\belowdisplayshortskip}{4pt plus 1pt}
+\setlength{\parskip}{0.35em}
+
+\newcommand{\fml}[1]{\par\addvspace{2.6mm}\noindent
+  \textcolor{fmlcol}{$\blacktriangleright$}\ \textbf{#1}\par\nobreak}
+\newcommand{\pop}[1]{\par\nobreak\noindent{\small #1}\par}
+
+% oddělovač okruhů: #1 = číslo zdrojového PDF, #2 = název okruhu, #3 = podtitul
+\newcommand{\okruh}[3]{%
+  \clearpage
+  \phantomsection
+  \addcontentsline{toc}{part}{#1\quad #2}%
+  \begingroup\centering
+    {\Huge\bfseries #1\quad #2\par}\vspace{1.5mm}%
+    {\small\itshape #3\par}%
+  \endgroup
+  \vspace{4mm}}
+
+% Kapitoly a~podkapitoly nesou ČÍSLO ZE ZDROJOVÉHO DOKUMENTU (01/02/03), nikoli
+% průběžné. Mezery v~číslování znamenají, že daná kapitola žádný vzorec nemá.
+\newcommand{\kap}[2]{\setcounter{section}{#1}\addtocounter{section}{-1}\section{#2}}
+\newcommand{\podkap}[2]{\setcounter{subsection}{#1}\addtocounter{subsection}{-1}\subsection{#2}}
+\newcommand{\podpodkap}[2]{\setcounter{subsubsection}{#1}\addtocounter{subsubsection}{-1}\subsubsection{#2}}
+
+% Nadpisů je hodně (kopírují členění zdrojů), proto sevřenější vertikální mezery.
+\makeatletter
+\renewcommand\section{\@startsection{section}{1}{\z@}%
+  {-2.4ex \@plus -1ex \@minus -.2ex}{1.0ex \@plus.2ex}{\normalfont\Large\bfseries}}
+\renewcommand\subsection{\@startsection{subsection}{2}{\z@}%
+  {-2.0ex \@plus -1ex \@minus -.2ex}{0.6ex \@plus.2ex}{\normalfont\large\bfseries}}
+\renewcommand\subsubsection{\@startsection{subsubsection}{3}{\z@}%
+  {-1.7ex \@plus -1ex \@minus -.2ex}{0.4ex \@plus.2ex}{\normalfont\normalsize\bfseries}}
+\makeatother
+
+\setcounter{tocdepth}{2}
+\setcounter{secnumdepth}{3}
+
+\title{\textbf{Vzorce a~rovnice ke~SZZ}\\[2mm]
+\large Multiagentní systémy \textbullet{} Přírodou inspirované počítání \textbullet{} Dobývání znalostí}
+\author{SZZ Umělá inteligence, MFF UK}
+\date{srpen 2026}
+
+\begin{document}
+\maketitle
+
+\begin{center}
+\begin{minipage}{0.93\textwidth}
+\small
+Výcuc ze tří učebních textů (\texttt{01-multiagentni-systemy}, \texttt{02-prirodou-in\-spi\-ro\-va\-ne-pocitani},
+\texttt{03-dobyvani-znalosti}): \textbf{jen vzorce a~rovnice, které je potřeba umět}, každý
+s~krátkým popisem toho, co znamená a~kde se používá. Slouží k~poslednímu opakování
+a~k~ověření, že člověk formuli umí napsat bez nahlédnutí do textu --- \emph{proč} to tak
+je a~kdy se to používá je v~příslušné kapitole zdrojového textu.
+\end{minipage}
+\end{center}
+
+\begin{center}
+\begin{minipage}{0.93\textwidth}
+\begin{poznbox}[Jak text používat]
+\small
+\textbf{Názvy i~čísla kapitol a~podkapitol jsou převzaty ze zdrojových textů}
+\texttt{01}, \texttt{02} a~\texttt{03}, takže se dá listovat oběma směry: kapitola
+\emph{3.2.4 Support Vector Machines} je zde i~tam pod stejným číslem. \emph{Mezery
+v~číslování} znamenají, že daná kapitola zdroje žádný vzorec neobsahuje. Vzorec, který
+pokrývá dvě sousední podkapitoly zdroje, je zařazen pod tu první a~pojmenován podle obou.
+U~každého vzorce je uveden význam všech symbolů; kde je vzorců k~jednomu tématu více, jsou
+v~pořadí, v~jakém se odvozují nebo používají.
+
+\textbf{Značení sdílené napříč celým textem:} $f$ fitness / hustota,
+tříd/atributů, $P$ populace nebo pravděpodobnost, $\gamma$ diskontní faktor,
+$\alpha$ rychlost učení nebo hladina významnosti, $\eta$ rychlost učení.
+Význam se vždy upřesňuje na místě.
+\end{poznbox}
+\end{minipage}
+\end{center}
+
+\tableofcontents
+
+% ==========================================================================
+%% ========================================================================
+\okruh{01}{Multiagentní systémy}{Abstraktní architektury, plánování, hledání cesty, teorie her a~aukce, zpětnovazební učení.}
+%% ========================================================================
+
+\kap{1}{Architektura autonomního agenta a~mechanismus výběru akcí}
+
+\podkap{5}{Abstraktní architektura agenta}
+
+\fml{Běh agenta v~prostředí}
+\[
+r \;=\; e_0 \xrightarrow{a_0} e_1 \xrightarrow{a_1} e_2 \xrightarrow{a_2} \cdots
+\xrightarrow{a_{n-1}} e_n
+\]
+\pop{$E = \{e, e', \dots\}$ je konečná množina stavů prostředí, $A = \{a, a', \dots\}$
+konečná množina akcí agenta. \emph{Běh} je posloupnost střídajících se stavů a~akcí.
+$R$ je množina všech konečných běhů, $R^A \subseteq R$ ty končící akcí,
+$R^E \subseteq R$ ty končící stavem prostředí.}
+
+\fml{Přechodová funkce prostředí (\emph{state transformer function})}
+\[
+\tau : R^A \to 2^E, \qquad \mathit{Env} = \langle E, e_0, \tau\rangle
+\]
+\pop{Zobrazuje běh končící akcí na \emph{množinu} možných následujících stavů --- prostředí je
+tedy nedeterministické a~\emph{historicky závislé}. $\tau(r) = \emptyset$ znamená konec běhu.
+Prostředí je trojice: stavy, počáteční stav, přechodová funkce.}
+
+\fml{Agent jako funkce běhu}
+\[
+Ag : R^E \to A
+\]
+\pop{Agent rozhoduje deterministicky a~na základě \emph{celé historie} systému;
+$\mathcal{AG}$ značí množinu všech agentů.}
+
+\podkap{6}{Čistě reaktivní agent a~agent s~vnitřním stavem}
+
+\fml{Čistě reaktivní agent (\emph{tropistic agent})}
+\[
+Ag : E \to A
+\]
+\pop{Reaguje pouze na \emph{aktuální} stav prostředí, historii ignoruje. Ke~každému
+reaktivnímu agentovi existuje funkčně ekvivalentní standardní agent, \emph{obráceně to
+neplatí}. Termostat: $Ag(e) = \mathrm{off}$ pro \uv{teplota OK}, jinak $\mathrm{on}$.}
+
+\fml{Agent s~vnitřním stavem}
+\begin{align*}
+\mathit{see} &: E \to \mathit{Per} && \text{(vnímání)}\\
+\mathit{next} &: I \times \mathit{Per} \to I && \text{(aktualizace vnitřního stavu)}\\
+\mathit{action} &: I \to A && \text{(výběr akce)}
+\end{align*}
+\pop{$I$ je množina vnitřních stavů, $\mathit{Per}$ množina vjemů. Cyklus: agent startuje
+v~$i_0$, \emph{see} převede stav prostředí na vjem, \emph{next} aktualizuje vnitřní stav,
+\emph{action} zvolí akci. Vyjadřovací síla je \emph{stejná} jako u~standardního agenta.}
+
+\podkap{7}{Utilita: jak agentovi říct, co má dělat}
+
+\fml{Utilita stavu a~utilita běhu}
+\[
+u : E \to \mathbb{R}, \qquad\qquad u : R \to \mathbb{R}
+\]
+\pop{Cíl se agentovi zadává \emph{nepřímo}, mírou úspěšnosti. Hodnocení jednotlivých stavů je
+krátkozraké, proto se zavádí utilita celého běhu (např.\ utilita nejhoršího navštíveného stavu
+nebo průměr).}
+
+\fml{Optimální agent (maximalizace očekávané utility)}
+\[
+Ag_{\mathrm{opt}} \;=\; \arg\max_{Ag \in \mathcal{AG}} \sum_{r \in R(Ag,\mathit{Env})}
+u(r)\, P(r \mid Ag, \mathit{Env}),
+\qquad \sum_{r} P(r \mid Ag,\mathit{Env}) = 1
+\]
+\pop{$P(r \mid Ag, \mathit{Env})$ je pravděpodobnost běhu $r$. Definice je elegantní, ale
+\textbf{nekonstruktivní} --- neříká, jak takového agenta navrhnout, a~utilitní funkci bývá
+obtížné vůbec zadat.}
+
+\fml{Tileworld --- utilita běhu}
+\[
+u(r) = \frac{N_f}{N_a}
+\]
+\pop{$N_f$ = počet děr zaplněných agentem během běhu $r$, $N_a$ = počet všech děr, které se
+během $r$ objevily. Klasický příklad utility v~\emph{dynamickém} prostředí.}
+
+\kap{2}{Metody pro řízení agentů: symbolické a~konekcionistické reaktivní plánování, hybridní přístupy}
+
+\podkap{1}{Klasický přístup UI a~deduktivní agent}
+
+\fml{Deduktivní agent (agent jako dokazovač vět)}
+\[
+\mathit{DB} \vdash_\rho \varphi
+\]
+\pop{$L$ je množina formulí predikátové logiky 1.~řádu, $D = 2^L$ množina databází,
+vnitřní stav agenta je $\mathit{DB} \in D$. Zápis znamená \uv{formuli $\varphi$ lze odvodit
+z~$\mathit{DB}$ pomocí pravidel $\rho$}. Agent hledá akci, pro niž lze odvodit
+$\mathit{Do}(a)$; nejde-li to, akci alespoň \emph{konzistentní} s~databází.}
+
+\podkap{3}{Plánování: STRIPS}
+
+\fml{STRIPS --- posloupnost databází podle plánu}
+\[
+B_i = (B_{i-1} \setminus D_{a_i}) \cup A_{a_i}, \qquad i = 1,\dots,n
+\]
+\pop{Akce je popsána trojicí $\langle P_a, D_a, A_a\rangle$ (předpoklady, mazaná množina,
+přidávaná množina); plánovací problém je $\langle B_0, O, G\rangle$.
+Plán $\pi = (a_1,\dots,a_n)$ je \textbf{přípustný}, pokud $B_{i-1} \models P_{a_i}$ pro
+každé $i$, a~\textbf{korektní}, je-li přípustný a~navíc $B_n \models G$.}
+
+\kap{3}{Problém hledání cesty}
+
+\podkap{2}{A*}
+
+\fml{Ohodnocení vrcholu v~A*}
+\begin{align*}
+g(n) &= \text{cena nejlepší dosud nalezené cesty } s \to n, \\
+h(n) &= \text{heuristický odhad ceny } n \to g_{\mathrm{cil}}, \\
+f(n) &= g(n) + h(n)
+\end{align*}
+\pop{$f(n)$ je odhad ceny nejlepší cesty $s \to g_{\mathrm{cil}}$ \emph{vedoucí přes} $n$;
+A* expanduje vrchol s~nejmenším $f$. Pro $h \equiv 0$ degeneruje na Dijkstru.}
+
+\fml{Přípustnost a~konzistence heuristiky}
+\[
+h(n) \le h^*(n) \quad\text{(přípustná)}, \qquad
+h(n) \le w(n,m) + h(m),\ \ h(g_{\mathrm{cil}}) = 0 \quad\text{(konzistentní)}
+\]
+\pop{$h^*(n)$ je skutečná cena nejlevnější cesty z~$n$ do cíle; přípustná heuristika
+\emph{nikdy nenadhodnocuje}. Konzistence je trojúhelníková nerovnost na každé hraně $(n,m)$ s~cenou $w(n,m)$.
+Platí: \textbf{konzistence $\Rightarrow$ přípustnost}. Při přípustné $h$ je A* optimální,
+při konzistentní $h$ je navíc $f$ podél cesty neklesající (stačí uzavřený seznam bez
+reexpanzí).}
+
+\podkap{3}{Dynamické prostředí: D*~Lite}
+
+\fml{LPA* / D*~Lite --- lookahead hodnota}
+\[
+\mathit{rhs}(n) = \begin{cases}
+0 & n = s,\\
+\min_{p \in \mathit{pred}(n)} \big(g(p) + w(p,n)\big) & \text{jinak}
+\end{cases}
+\]
+\pop{$\mathit{pred}(n)$ jsou předchůdci $n$, $w(p,n)$ cena hrany $(p,n)$. Vrchol je \emph{lokálně konzistentní}, pokud $g(n) = \mathit{rhs}(n)$. Změní-li se cena
+hrany, stanou se některé vrcholy nekonzistentními, zařadí se do prioritní fronty a~změna se
+propaguje jen do zasažené části --- proto inkrementální přeplánování stojí méně než A*
+od~nuly.}
+
+\kap{4}{Komunikace a~znalosti v~MAS: ontologie, řečové akty, FIPA-ACL, protokoly}
+
+\podkap{7}{KQML a~FIPA-ACL}
+
+\fml{Semantika performativu \emph{inform} (FP / RE)}
+\[
+\text{FP: } B_i\varphi \wedge \neg B_i\big(\mathit{Bif}_j\varphi \vee \mathit{Uif}_j\varphi\big),
+\qquad
+\text{RE: } B_j\varphi
+\]
+\pop{Sémantika ACL se zapisuje v~modální logice s~operátory $B_i\varphi$ (agent $i$ věří
+$\varphi$), $U_i\varphi$ (je nejistý), $I_i\varphi$ (má záměr).
+\textbf{FP} (\emph{feasibility precondition}) --- co musí platit, aby odesílatel mohl akt
+provést; \textbf{RE} (\emph{rational effect}) --- efekt, kvůli němuž akt provádí.
+Příjemce \emph{není povinen} RE naplnit (autonomie!).}
+
+\kap{5}{Distribuované řešení problémů, kooperace, teorie her a~aukce}
+
+\podkap{8}{Hra v~normální formě}
+
+\fml{Hra v~normální formě}
+\[
+\langle N, (A_i)_{i \in N}, (u_i)_{i \in N}\rangle
+\]
+\pop{$N$ množina hráčů, $A_i$ množina akcí hráče $i$, $u_i$ jeho utilitní funkce.
+Pro dva hráče se zapisuje \emph{výplatní maticí} (řádky = strategie $i$, sloupce = strategie
+$j$, buňka $u_i / u_j$). Strategie je \emph{ryzí} (jedna akce) nebo \emph{smíšená}
+(rozdělení pravděpodobnosti nad ryzími).}
+
+\fml{Nashovo ekvilibrium}
+\[
+u_i(s_i^*, s_{-i}^*) \;\ge\; u_i(s_i, s_{-i}^*) \qquad \text{pro každého } i
+\text{ a~každou jeho strategii } s_i
+\]
+\pop{$s_{-i}$ značí strategie všech ostatních hráčů. Profil $s^*$ je NE, pokud
+\textbf{žádný hráč nemá jednostranný důvod se odchýlit} --- strategie jsou vzájemně nejlepší
+odpovědi. V~ryzích strategiích nemusí existovat, ve smíšených existuje vždy (Nash).}
+
+\podkap{9}{Klasické hry}
+
+\fml{Vězňovo dilema --- podmínky na výplaty}
+\[
+T > R > P > S \qquad\text{a často navíc}\qquad 2R > T + S
+\]
+\pop{$R$ (\emph{reward}) za oboustrannou spolupráci, $P$ (\emph{punishment}) za oboustrannou
+zradu, $T$ (\emph{temptation}) za zradu spolupracujícího, $S$ (\emph{sucker's payoff})
+za~zrazení. $T>R$ a~$P>S$ činí zradu \emph{dominantní strategií}, takže $DD$ je jediné NE
+--- ale $CC$ je Pareto-lepší. Druhá podmínka ($2R > T+S$) je nutná pro iterovanou verzi:
+střídavé vykořisťování se nesmí vyplatit více než trvalá spolupráce.}
+
+\fml{Výpočet smíšeného NE ve hře $2\times2$ (podmínka indiference)}
+\[
+u_i(\text{akce}_1) = u_i(\text{akce}_2)
+\qquad\text{např.}\qquad
+1\cdot q + 0\cdot(1-q) \;=\; 0\cdot q + 2\cdot(1-q)
+\]
+\pop{Protihráč $j$ volí pravděpodobnost $q$ tak, aby byl hráč $i$ \emph{indiferentní} mezi
+svými akcemi (jinak by $i$ hrál ryzí strategii). Z~uvedené rovnosti $q = 2-2q$, tedy
+$q = 2/3$. V~\uv{Bitvě pohlaví} tak každý hraje svou preferovanou možnost s~$2/3$
+a~očekávaná utilita $2/3$ je \emph{nižší} než v~kterémkoli ryzím ekvilibriu.}
+
+\podkap{15}{Návrh mechanismů, VCG a~vyjednávání}
+
+\fml{VCG --- Vickrey--Clarke--Groves}
+\[
+p_i \;=\; \max_{x} \sum_{j \ne i} \hat v_j(x) \;-\; \sum_{j \ne i} \hat v_j(x^*)
+\]
+\pop{$\hat v_i$ je ohlášená valuace, $x^*$ alokace maximalizující $\sum_i \hat v_i(x)$.
+Agent $i$ platí \textbf{externalitu, kterou způsobuje ostatním} --- rozdíl mezi tím, co by
+ostatní získali bez něj, a~tím, co získají s~ním. Mechanismus je pravdomluvný, efektivní
+a~individuálně racionální; pro jeden předmět se redukuje na Vickreyovu aukci
+(2.~cena). Nevýhody: WDP se řeší $n{+}1$-krát, výnos prodávajícího může být i~nulový.}
+
+\fml{Zeuthenova strategie --- ochota riskovat konflikt}
+\[
+\mathrm{Risk}_i \;=\; \frac{u_i(\text{vlastní návrh}) - u_i(\text{návrh protějšku})}
+{u_i(\text{vlastní návrh})}
+\]
+\pop{V~monotónním protokolu ústupků ustupuje agent s~\emph{nižším} $\mathrm{Risk}$, a~to
+právě tak málo, aby se poměry obrátily. Čitatel je \uv{co ztratím přijetím cizího návrhu},
+jmenovatel \uv{co mám v~sázce}. Dvojice Zeuthenových strategií je v~Nashově ekvilibriu
+a~dohoda maximalizuje součin utilit (Nashovo řešení).}
+
+\kap{6}{Metody pro učení agentů a~zpětnovazební učení}
+
+\podkap{2}{Markovský rozhodovací proces}
+
+\fml{Cíl v~MDP --- očekávaný diskontovaný výnos}
+\[
+\mathbb{E}\Big[ \sum_{t=0}^{\infty} \gamma^t R(s_t, a_t, s_{t+1}) \Big]
+\]
+\pop{MDP je $\langle S, A, T, R\rangle$ s~přechodovými pravděpodobnostmi $T(s,a,s')$
+a~odměnou $R$; platí \emph{markovská vlastnost} (další stav a~odměna závisí jen na aktuálním
+stavu a~akci). $\gamma \in [0,1)$ diskontuje budoucnost a~zaručuje konečnost součtu.
+Politika je $\pi : S \to A$ (nebo stochasticky $\pi(a|s)$); hledáme $\pi^*$ maximalizující
+tento výnos.}
+
+\fml{Bellmanova rovnice pro evaluaci politiky}
+\[
+V^\pi(s) = \sum_{s'} T(s,\pi(s),s') \big[ R(s,\pi(s),s') + \gamma V^\pi(s') \big]
+\]
+\pop{$V^\pi(s)$ je očekávaná utilita stavu $s$, sleduje-li agent politiku $\pi$;
+$Q^\pi(s,a)$ totéž pro dvojici stav--akce. Rovnice je rekurzivní rozklad
+\uv{okamžitá odměna $+$ diskontovaná hodnota následníka}.}
+
+\fml{Bellmanovy rovnice optimality}
+\begin{align*}
+V^*(s) &= \max_{a \in A} \sum_{s'} T(s,a,s') \big[ R(s,a,s') + \gamma V^*(s')\big], \\
+Q^*(s,a) &= \sum_{s'} T(s,a,s')\big[R(s,a,s') + \gamma \max_{a'} Q^*(s',a')\big]
+\end{align*}
+\pop{Optimální politika se získá jako $\pi^*(s) = \arg\max_a Q^*(s,a)$ --- z~$Q^*$ tedy
+\emph{bez} znalosti modelu, z~$V^*$ jen se znalostí $T$ a~$R$. Iterováním těchto rovnic
+pracují \emph{value iteration} a~\emph{policy iteration} (model-based).}
+
+\podkap{3}{Q-learning a~SARSA}
+
+\fml{Q-learning (Watkins, 1989)}
+\[
+Q(s,a) \;\leftarrow\; Q(s,a) + \alpha\Big[\, \underbrace{r + \gamma \max_{a'} Q(s',a')}
+_{\text{TD cíl}} - Q(s,a) \Big],
+\qquad 0 \le \alpha \le 1
+\]
+\pop{Agent provedl ve stavu $s$ akci $a$, dostal \textbf{okamžitou odměnu} $r$
+(jedno pozorování, nikoli funkce $R$ jako u~Bellmana) a~přešel do $s'$; $a'$ probíhá akce
+dostupné v~$s'$, $\alpha$ je rychlost učení a~$\gamma$ diskontní faktor. Ekvivalentně $Q(s,a) \leftarrow (1-\alpha)Q(s,a) + \alpha\big(r + \gamma\max_{a'}Q(s',a')\big)$;
+hranatá závorka je \emph{TD chyba}.
+\textbf{Off-policy}: cíl používá $\max_{a'}$, učí se tedy hodnotu \emph{optimální} politiky
+bez ohledu na to, jak agent skutečně jedná. Konverguje $Q \to Q^*$, je-li každá dvojice
+$(s,a)$ navštívena nekonečněkrát a~$\alpha$ vhodně klesá.}
+
+\fml{SARSA}
+\[
+Q(s,a) \leftarrow Q(s,a) + \alpha\big[r + \gamma\, Q(s',a') - Q(s,a)\big]
+\]
+\pop{Aktualizace používá \emph{skutečně zvolenou} následující akci $a'$ (podle stejné
+politiky, kterou agent jedná) --- \textbf{on-policy}. Učí se hodnotu politiky včetně
+náhodného průzkumu, a~je proto \emph{opatrnější}: v~úloze \uv{chůze po útesu} se drží dál
+od~propasti než Q-learning.}
+
+\fml{$\varepsilon$-greedy a~softmax (dilema průzkumu a~využití)}
+\[
+\pi(s) = \begin{cases}
+\text{náhodná akce z } A & \text{s pravděpodobností } \varepsilon,\\[2pt]
+\arg\max_a Q(s,a) & \text{s pravděpodobností } 1-\varepsilon,
+\end{cases}
+\qquad
+\pi(a|s) \propto e^{Q(s,a)/\tau}
+\]
+\pop{$\varepsilon$ se v~čase snižuje (\emph{annealing}). Softmax/Boltzmann s~teplotou $\tau$
+váží akce podle jejich hodnoty (ne uniformně jako $\varepsilon$-greedy).
+Další alternativy: optimistická inicializace $Q$, UCB.}
+
+\podkap{4}{Metody založené na politice}
+
+\fml{REINFORCE (policy gradient)}
+\[
+z_{t+1} = z_t + \alpha\, G_t\, \nabla_z \ln \pi(A_t \mid S_t, z_t)
+\]
+\pop{Politika je parametrizovaná vektorem $z$, tedy $\pi(a \mid s, z)$; $G_t$ je výnos od času
+$t$ (Monte Carlo z~celé epizody). Intuice: \emph{zvyš pravděpodobnost akcí, po nichž
+následoval vysoký výnos}. Zvládá \emph{spojité} akční prostory a~stochastické politiky, ale
+má velký rozptyl (řeší se odečtením baseline --- \emph{actor--critic}).}
+
+%% ========================================================================
+\okruh{02}{Přírodou inspirované počítání}{Selekce a~operátory, teorie schémat, evoluční strategie, diferenciální evoluce, rojové algoritmy, lokální prohledávání, aplikace.}
+%% ========================================================================
+
+\kap{1}{Genetické algoritmy, genetické a~evoluční programování}
+
+\podkap{1}{Obecné schéma evolučního algoritmu}
+
+\podpodkap{5}{Selekční mechanismy}
+
+\fml{Ruletová (fitness-proporcionální) selekce}
+\[
+p_i \;=\; \frac{f(x_i)}{\sum_{j=1}^{n} f(x_j)} \;=\; \frac{f(x_i)}{n\,\bar{f}},
+\qquad
+\mathbb{E}[\text{počet výběrů } x_i] = n\,p_i = \frac{f(x_i)}{\bar f}
+\]
+\pop{$x_i$ je $i$-tý jedinec, $\bar f$ průměrná fitness populace, $n$ její velikost; výběr je \emph{s~vracením},
+takže jeden jedinec může být vybrán vícekrát. Nevýhody: předčasná dominance
+\uv{supermana} (jedinec s~extrémní fitness ovládne populaci a~diverzita zmizí), ztráta
+selekčního tlaku na konci běhu (podobné fitness $\Rightarrow$ téměř náhodný výběr),
+citlivost na afinní transformace fitness ($f$ a~$f+c$ dají jiné $p_i$) a~vysoký rozptyl
+skutečných počtů výběrů.}
+
+\fml{Turnajová selekce velikosti $k$}
+\[
+p_i \;=\; \frac{(n-i+1)^k - (n-i)^k}{n^k}
+\qquad (i = 1 \text{ značí \textbf{nejlepšího}})
+\]
+\pop{Vyber náhodně (uniformně, s~vracením) $k$ jedinců a~vrať nejlepšího; $k$ (typicky 2,~3,~5)
+přímo řídí selekční tlak. Odvození: pravděpodobnost, že všech $k$ padne mezi $i$-tého
+a~horší, mínus pravděpodobnost, že všech $k$ padne ostře pod $i$-tého.
+Výhody: nepotřebuje globální informaci, je invariantní vůči monotónním transformacím fitness,
+paralelizovatelná, funguje i~tam, kde fitness není dána a~porovnání se získává souhrou.}
+
+\fml{Lineární pořadová selekce}
+\[
+p_i \;=\; \frac{1}{n}\Big(s^{-} + (s^{+}-s^{-})\,\frac{i-1}{n-1}\Big),
+\qquad 1 \le s^{+} \le 2,\quad s^{-} = 2 - s^{+}
+\]
+\pop{\emph{Pozor na konvenci:} zde $i=1$ značí \textbf{nejhoršího}, $i=n$ nejlepšího.
+$s^{+}$ je očekávaný počet kopií nejlepšího jedince. Exponenciální varianta:
+$p_i \propto (1-c)\,c^{\,n-i}$. Pořadová selekce udržuje \emph{konstantní} selekční tlak
+během celého běhu a~je odolná vůči \uv{supermanům} i~vůči změně měřítka fitness.}
+
+\fml{Boltzmannova selekce}
+\[
+p_i \;\propto\; e^{f(x_i)/T}
+\]
+\pop{Teplota $T$ klesá v~čase: vysoké $T$ $\Rightarrow$ téměř uniformní selekce (explorace),
+nízké $T$ $\Rightarrow$ téměř deterministická (exploatace). Přímá souvislost se simulovaným
+žíháním.}
+
+\fml{Doba převzetí (\emph{takeover time})}
+\[
+\tau^* \;\approx\; \frac{\ln n}{\ln k} \qquad\text{(turnaj velikosti } k)
+\]
+\pop{$\tau^*$ = počet generací, za který jediná kopie nejlepšího jedince (bez variace) zaplní
+celou populaci --- kvantifikace \emph{selekčního tlaku}. Pro fitness-proporcionální selekci je
+doba převzetí delší a~závisí na rozložení fitness.}
+
+\fml{Generation gap a~modely populace}
+\[
+G = \frac{\lambda}{n}
+\]
+\pop{Podíl nahrazované populace: generační model $G=1$ (celá populace nahrazena potomky),
+steady-state $\lambda \in \{1,2\}$. \emph{Elitismus}: $k$ nejlepších se bezpodmínečně kopíruje
+dál (zaručuje monotonii nejlepší fitness, je nutnou podmínkou řady konvergenčních vět).
+Deterministická selekce ES: $(\mu+\lambda)$ vybírá $\mu$ nejlepších z~rodičů \emph{i}~potomků,
+$(\mu,\lambda)$ jen z~potomků.}
+
+\podkap{2}{Genetické algoritmy}
+
+\podpodkap{2}{Binární reprezentace}
+
+\fml{Binární kódování reálného čísla}
+\[
+x \;=\; a \;+\; z \cdot \frac{b-a}{2^k - 1},
+\qquad \text{přesnost} = \frac{b-a}{2^k-1}
+\]
+\pop{$x \in [a,b]$ kódované na $k$ bitů jako celé číslo $z \in \{0,\dots,2^k-1\}$.
+Výhoda: explicitní kontrola nad přesností. Nevýhoda: \emph{Hammingovy útesy} (sousední čísla
+se liší v~mnoha bitech, např.\ $0111 \to 1000$) --- řeší se \emph{Grayovým kódem}.}
+
+\podpodkap{4}{Mutace a~inverze}
+
+\fml{Bitová mutace}
+\[
+p_M \;\approx\; \frac{1}{m}
+\]
+\pop{$m$ je délka řetězce; každý bit se převrací nezávisle s~pravděpodobností $p_M$; doporučená hodnota znamená
+\uv{v~průměru se změní jeden bit na jedince}. Typické další parametry SGA:
+$n \in [50,500]$, $p_C \in [0{,}6;\,0{,}9]$.}
+
+\podpodkap{5}{Škálování fitness}
+
+\fml{Lineární škálování}
+\[
+f' = a f + b, \qquad \bar{f'} = \bar{f}, \qquad
+f'_{\max} = C_{\mathrm{mult}} \cdot \bar{f}, \quad C_{\mathrm{mult}} \in [1{,}2;\,2]
+\]
+\pop{Dvě podmínky určují $a$ a~$b$. Zachovává průměr a~omezuje náskok nejlepšího jedince na
+$C_{\mathrm{mult}}$-násobek průměru. Nutná pojistka proti záporným hodnotám u~nejhorších.}
+
+\fml{Sigma truncation, mocninné a~Boltzmannovo škálování}
+\[
+f' = \max\big(0,\; f - (\bar f - c\,\sigma_f)\big), \qquad
+f' = f^{\,k}, \qquad
+f' = e^{f/T}
+\]
+\pop{$\sigma_f$ je směrodatná odchylka fitness, $c \in [1;3]$, $T$ teplota. Sigma truncation odstraní
+odlehlé nízké hodnoty a~automaticky se přizpůsobuje rozptylu; u~mocninného škálování $k$
+v~průběhu běhu roste (tlak roste). Nejrobustnější a~dnes nejobvyklejší je ale
+\emph{pořadové} škálování (nahrazení fitness pořadím).}
+
+\podkap{3}{Reprezentace jedince a~genetické operátory}
+
+\podpodkap{2}{Reálná reprezentace}
+
+\fml{Aritmetické křížení}
+\[
+\vec z \;=\; \alpha \vec x + (1-\alpha)\vec y, \qquad \alpha \in (0,1)
+\]
+\pop{$\vec x, \vec y$ jsou rodiče a~$\vec z$ potomek --- konvexní kombinace rodičů; pro $\alpha = 1/2$ prostý průměr. Varianty:
+\emph{jednoduché} (všechny složky), \emph{jednoduché aritmetické} (jedna náhodná složka),
+\emph{celé/single} (kombinace s~jednobodovým křížením). Nevýhoda: potomci leží vždy
+\emph{uvnitř} konvexního obalu rodičů $\Rightarrow$ populace se stahuje.}
+
+\fml{BLX-$\alpha$ (\emph{blend crossover})}
+\[
+z_i \sim U\big[\min(x_i,y_i) - \alpha I,\ \max(x_i,y_i) + \alpha I\big],
+\qquad I = |x_i - y_i|,\ \ \alpha \approx 0{,}5
+\]
+\pop{Rozšiřuje interval o~$\alpha I$ na obě strany, takže potomci mohou ležet \emph{i~vně}
+rodičů --- odstraňuje stahování populace, které trápí čistě aritmetické křížení.}
+
+\fml{SBX (\emph{simulated binary crossover})}
+\[
+z_{1,i} = \tfrac12\big[(1+\beta)x_i + (1-\beta)y_i\big],\qquad
+z_{2,i} = \tfrac12\big[(1-\beta)x_i + (1+\beta)y_i\big]
+\]
+\[
+\beta = (2u)^{1/(\eta+1)} \ \text{ pro } u \le \tfrac12, \qquad
+\beta = \big(\tfrac{1}{2(1-u)}\big)^{1/(\eta+1)} \ \text{ pro } u > \tfrac12,
+\qquad u \sim U(0,1)
+\]
+\pop{Napodobuje chování jednobodového binárního křížení v~reálném prostoru: potomci vzniknou
+\uv{roztažením} dvojice rodičů kolem jejich \emph{středu} faktorem $\beta$. Platí
+$|z_1 - z_2| = \beta\,|x-y|$ a~střed rodičů zůstává zachován. Parametr $\eta$ (distribuční
+index) řídí, jak blízko rodičům potomci padnou --- velké $\eta$ $\Rightarrow$ blízko; $u \sim U(0,1)$ se losuje pro každou složku.
+Standardní operátor v~NSGA-II.}
+
+\fml{Gaussovská mutace reálného vektoru}
+\[
+x_i' = x_i + \sigma \cdot N_i(0,1)
+\]
+\pop{$\sigma$ je velikost kroku (\emph{step size}); její řízení je hlavní téma evolučních
+strategií.}
+
+\podkap{4}{Genetické a~evoluční programování}
+
+\podpodkap{3}{Bloat}
+
+\fml{Parsimony pressure (boj s~bloatem v~GP)}
+\[
+f' = f - \alpha \cdot \text{velikost}
+\]
+\pop{\emph{Bloat} = tendence programů růst bez odpovídajícího zlepšení fitness (hromadění
+\emph{intronů} typu \texttt{(+ x 0)}). Alternativy: tvrdé limity na hloubku/počet uzlů,
+lexikografické porovnání (při shodné fitness vyhrává menší jedinec), anti-bloat operátory
+(\emph{hoist}, \emph{shrink}), nebo velikost jako druhé kritérium ve~vícekriteriální
+optimalizaci.}
+
+\kap{2}{Teorie schémat a~pravděpodobnostní modely SGA}
+
+\podkap{1}{Teorie schémat}
+
+\podpodkap{1}{Schéma, jeho řád a~definující délka}
+
+\fml{Schéma, řád, definující délka}
+\[
+S \in \{0,1,*\}^m, \qquad o(S) = \text{počet pevných pozic}, \qquad
+d(S) = \text{poslední pevná} - \text{první pevná pozice}
+\]
+\pop{Schéma s~$r$ hvězdičkami reprezentuje $2^r$ jedinců. Příklad: $S = 1{*}{*}0{*}1$ má
+$m=6$, $o(S)=3$, $d(S) = 6-1 = 5$. $F(S,t)$ = průměrná fitness reprezentantů $S$
+v~populaci $P(t)$ --- pozor, závisí na \emph{aktuální} populaci, nejen na $S$ a~$f$.}
+
+\fml{Kombinatorika schémat}
+\[
+\#\{\text{schémat délky } m\} = 3^m, \qquad
+\#\{\text{schémat, jejichž reprezentantem je jeden jedinec}\} = 2^m
+\]
+\pop{Populace $n$ jedinců reprezentuje mezi $2^m$ a~$n\cdot 2^m$ schématy (podle míry jejich
+podobnosti). Odtud \emph{implicitní paralelismus}: GA pracuje explicitně s~$n$ jedinci, ale
+implicitně zpracovává mnohem víc schémat --- užitečně zpracovávaných je podle Hollanda
+řádu $n^3$.}
+
+\podpodkap{2}{Hollandova věta o~schématech}
+
+\fml{Věta o~schématech (Holland, 1975)}
+\[
+\mathbb{E}\big[C(S,t+1)\big] \;\ge\; C(S,t)\,\frac{F(S,t)}{\bar f(t)}
+\left[\,1 - p_C \frac{d(S)}{m-1} - p_M\, o(S)\right]
+\]
+\pop{$C(S,t)$ = počet reprezentantů $S$ v~$P(t)$. Slovně: \textbf{krátká} (malé $d(S)$),
+\textbf{nízkého řádu} (malé $o(S)$) a~\textbf{nadprůměrná} ($F(S,t) > \bar f(t)$) schémata se
+v~po sobě jdoucích generacích množí exponenciálně. To je \emph{hypotéza stavebních bloků}:
+GA skládá řešení z~krátkých, dobrých stavebních bloků.}
+
+\fml{Odvození, krok 1 --- selekce}
+\[
+p_s(S) = \sum_{v \in S \cap P(t)} \frac{f(v)}{F(t)} = \frac{C(S,t)\,F(S,t)}{F(t)},
+\qquad
+\mathbb{E}\big[C(S,t+1)\big] = n\,p_s(S) = C(S,t)\,\frac{F(S,t)}{\bar f(t)}
+\]
+\pop{$F(t) = \sum_{u \in P(t)} f(u)$, $\bar f(t) = F(t)/n$. Je-li schéma trvale nadprůměrné
+o~$\varepsilon$, tj.\ $F(S,t) = \bar f(t)(1+\varepsilon)$, dostáváme
+$C(S,t) = C(S,0)\,(1+\varepsilon)^t$ --- \textbf{exponenciální růst} (pokles pro
+$\varepsilon<0$).}
+
+\fml{Odvození, kroky 2 a~3 --- křížení a~mutace}
+\[
+p_{\mathrm{surv}}^{\mathrm{cross}}(S) \;\ge\; 1 - p_C\,\frac{d(S)}{m-1},
+\qquad
+p_{\mathrm{surv}}^{\mathrm{mut}}(S) = (1-p_M)^{o(S)} \;\approx\; 1 - p_M\,o(S)
+\]
+\pop{Jednobodové křížení volí bod řezu z~$m-1$ možností; schéma je jistě rozbito, padne-li řez
+mezi první a~poslední pevnou pozici. Nerovnost \uv{$\ge$} platí proto, že i~při řezu uvnitř
+může být schéma obnoveno druhým rodičem. Mutace: schéma přežije, nezmění-li se \emph{žádná}
+z~$o(S)$ pevných pozic; aproximace platí pro $p_M \ll 1$. Složením obou (a~zanedbáním
+součinu) vzniká věta o~schématech.}
+
+\podpodkap{5}{Kritika teorie schémat}
+
+\fml{Deceptivní úloha (kdy GA selhává)}
+\[
+S_1 = (111{*}\ldots{*}), \quad S_2 = ({*}\ldots{*}11)
+\quad\text{nadprůměrná, ale}\quad
+f(111{*}{*}{*}{*}{*}11) \;\ll\; f(000{*}{*}{*}{*}{*}00)
+\]
+\pop{Selekce vede GA k~jedničkovým blokům, přestože optimum leží jinde --- stavební bloky
+\uv{lžou}. Hlavní protipříklad k~hypotéze stavebních bloků.}
+
+\podkap{2}{Pravděpodobnostní modely jednoduchého GA}
+
+\podpodkap{3}{Operátor $\mathcal{G}$}
+
+\fml{Operátor $\mathcal{G}$ a~jeho rozklad}
+\[
+p(t+1) = \mathcal{G}\big(p(t)\big), \qquad \mathcal{G} = \mathcal{M} \circ \mathcal{F}
+\]
+\pop{$p \in \Lambda$ (simplex) je vektor podílů jednotlivých řetězců v~populaci,
+$s$ vektor selekčních pravděpodobností. $\mathcal{F}$ odpovídá selekci, $\mathcal{M}$
+\emph{míchání} (křížení $+$ mutace dohromady). Iterováním $\mathcal{G}$ z~počáteční populace
+známe úplné chování SGA nad \emph{nekonečnou} populací.}
+
+\fml{Část $\mathcal{F}$ --- fitness-proporcionální selekce maticově}
+\[
+s(t) \;=\; \frac{\mathbf{F}\,p(t)}{\sum_j \mathbf{F}_{jj}\,p_j(t)}
+\]
+\pop{$\mathbf F$ je diagonální matice s~$\mathbf F_{ii} = f(i)$. Čitatel $(\mathbf Fp)_i =
+f(i)p_i$ je \uv{váha} řetězce $i$, jmenovatel je průměrná fitness populace. Podíl řetězce se
+tedy mění přesně o~faktor $f(i)/\bar f$ --- v~souladu s~větou o~schématech.}
+
+\fml{Část $\mathcal{M}$ --- míchání}
+\[
+r(i,j,k) = \Pr[\text{potomek } k \text{ vznikne z~rodičů } i,j],
+\qquad
+\mathbb{E}\big[p_k(t+1)\big] = \sum_{i}\sum_{j} s_i(t)\, s_j(t)\, r(i,j,k)
+\]
+\pop{Jde o~\emph{kvadratický} operátor na simplexu. Klíčové zjednodušení: jednobodové křížení
+i~bitová mutace \uv{nevidí} absolutní hodnoty bitů, jen shody a~neshody, takže
+$r(i,j,k) = r(i \oplus k,\ j \oplus k,\ 0)$ ($\oplus$ = XOR). Stačí tedy jediná
+\emph{míchací matice} $\mathbf M_{ij} = r(i,j,0)$ rozměru $2^l \times 2^l$.}
+
+\podpodkap{5}{Konečné populace: Markovův řetězec}
+
+\fml{Konečné populace jako Markovův řetězec}
+\[
+N \;=\; \binom{n + 2^l - 1}{\,2^l - 1\,},
+\qquad
+\mathbf{Q}_{i,j} \;=\; n! \prod_{y=0}^{2^l-1}
+\frac{\big(\mathcal{G}(p_i)_y\big)^{\mathbf{Z}(y,j)}}{\mathbf{Z}(y,j)!}
+\]
+\pop{Stavy řetězce = jednotlivé možné populace (multimnožiny $n$ řetězců délky $l$), jejich
+počet je $N$. $\mathbf Z(y,i)$ = počet výskytů jedince $y$ v~populaci $i$. Přechod je
+\emph{multinomické} losování $n$ jedinců podle rozdělení $\mathcal G(p)$. Model je exaktní,
+ale $N$ roste tak rychle, že je prakticky nepoužitelný.}
+
+\kap{3}{Evoluční strategie, diferenciální evoluce, koevoluce, otevřená evoluce}
+
+\podkap{1}{Evoluční strategie}
+
+\podpodkap{2}{$(1+1)$-ES a~pravidlo 1/5}
+
+\fml{Pravidlo 1/5 úspěchu (Rechenberg)}
+\[
+p > 1/5 \Rightarrow \sigma \gets \sigma / c, \qquad
+p < 1/5 \Rightarrow \sigma \gets \sigma \cdot c, \qquad
+0{,}8 \le c \le 1
+\]
+\pop{$p$ = podíl úspěšných mutací za posledních $k$ iterací, $c$ = multiplikativní konstanta. \emph{Optimální poměr úspěšných
+mutací je přibližně $1/5$}: je-li úspěchů víc, je krok příliš malý (zvětši $\sigma$),
+je-li jich méně, je krok příliš velký (zmenši $\sigma$). Jde o~\emph{adaptivní}, nikoli
+samoadaptivní řízení parametru --- $\sigma$ není součástí genomu.}
+
+\podpodkap{3}{Samoadaptace strategických parametrů}
+
+\fml{Samoadaptace strategických parametrů (Schwefelova pravidla)}
+\[
+\sigma_i' = \sigma_i \cdot \exp\big(\tau' N(0,1) + \tau N_i(0,1)\big),
+\qquad
+x_i' = x_i + \sigma_i' \cdot N_i(0,1)
+\]
+\[
+\tau' \propto \frac{1}{\sqrt{2n}}, \qquad \tau \propto \frac{1}{\sqrt{2\sqrt{n}}}
+\]
+\pop{Jedinec má tvar $C = [\vec x, \vec\sigma]$ --- strategické parametry jsou
+\textbf{součástí genomu} a~podléhají mutaci i~selekci. $N(0,1)$ je \emph{jedno} losování
+společné pro celý jedinec, $N_i(0,1)$ se losuje pro každou složku zvlášť. Exponenciála
+zaručuje kladnost $\sigma$ a~symetrii zvětšení/zmenšení; $\tau'$ a~$\tau$ jsou rychlosti učení (globální a~pro jednotlivé složky).
+\textbf{Pořadí je zásadní: nejprve se mutuje $\sigma$, teprve pak se s~novým $\sigma$
+mutuje $x$} --- jinak by se hodnotilo staré $\sigma$.}
+
+\fml{Kovarianční matice z~$\sigma_i$ a~úhlů natočení}
+\[
+c_{ii} = \sigma_i^2, \qquad
+c_{ij} = \tfrac12(\sigma_i^2 - \sigma_j^2)\tan(2\alpha_{ij})
+\]
+\pop{Tři úrovně samoadaptace: jedno $\sigma$ (izotropní mutace), $n$ hodnot $\sigma_i$
+(osově orientovaný elipsoid), $\sigma_i$ + úhly $\alpha_{ij}$ (plná kovarianční matice,
+libovolně natočený elipsoid). CMA-ES místo losování $\alpha_{ij}$ odhaduje $\mathbf C$
+z~\emph{cesty evoluce} úspěšných kroků.}
+
+\podkap{2}{Diferenciální evoluce}
+
+\podpodkap{2}{Algoritmus DE/rand/1/bin}
+
+\fml{Mutace --- dárcovský vektor}
+\[
+\vec v_i \;=\; \vec x_{a} \;+\; F\,(\vec x_{b} - \vec x_{c}),
+\qquad F \in [0,2],\ \text{typicky } F \approx 0{,}8
+\]
+\pop{$\vec x_a, \vec x_b, \vec x_c$ jsou tři navzájem různí jedinci, různí od $\vec x_i$; $F$ je mutační konstanta (škálovací faktor).
+Klíčová myšlenka: \emph{velikost kroku se bere z~populace samotné} --- na začátku (rozptýlená
+populace) jsou rozdíly velké, ke konci malé. Adaptace měřítka je tedy zdarma, bez
+strategických parametrů.}
+
+\fml{Binomické křížení --- zkušební vektor}
+\[
+u_{j,i} =
+\begin{cases}
+v_{j,i} & \text{pokud } \mathrm{rand}_j \le C \text{ nebo } j = I_{\mathrm{rand}},\\[2pt]
+x_{j,i} & \text{jinak}
+\end{cases}
+\]
+\pop{$\mathrm{rand}_j \sim U(0,1)$, $C \in [0,1]$ je práh křížení, $I_{\mathrm{rand}}$
+náhodný index z~$\{1,\dots,D\}$. Podmínka $j = I_{\mathrm{rand}}$ je \uv{pojistka}:
+zaručuje, že alespoň jedna složka pochází od dárce, takže potomek není nikdy identickou kopií
+rodiče.}
+
+\fml{Environmentální selekce (souboj 1:1)}
+\[
+\vec x_i(t+1) =
+\begin{cases}
+\vec u_i & \text{pokud } f(\vec u_i) \le f(\vec x_i(t)),\\
+\vec x_i(t) & \text{jinak}
+\end{cases}
+\]
+\pop{Selekce je elitistická na úrovni jednotlivce --- populace se nikdy nezhorší.
+Rodičovská selekce je triviální: rodičem je postupně \emph{každý} jedinec.
+Varianty mutace se značí \texttt{DE/}\emph{báze}\texttt{/}\emph{počet diferencí}\texttt{/}\emph{křížení},
+např.\ \texttt{DE/best/1/bin} používá místo $\vec x_a$ nejlepšího jedince.}
+
+\podkap{3}{Koevoluce}
+
+\podpodkap{5}{Evoluce kooperace a~vězňovo dilema}
+
+\fml{Vězňovo dilema jako model evoluce kooperace}
+\[
+\begin{array}{c|cc}
+ & C & D\\\hline
+C & R/R & S/T\\
+D & T/S & P/P
+\end{array}
+\qquad
+T > R > P > S, \quad 2R > T+S
+\]
+\pop{Typicky $R=-1$, $T=0$, $P=-2$, $S=-3$. Zrada je dominantní strategie, $DD$ je Nashovo
+ekvilibrium, ale $CC$ je Pareto-lepší. V~\emph{iterované} verzi (Axelrodovy turnaje) vítězí
+\emph{tit for tat}: hodná (nezradí první), oplácející, odpouštějící a~průhledná strategie.
+Formální model recipročního altruismu --- kooperace se vyplatí při dostatečném
+\uv{stínu budoucnosti}.}
+
+\podpodkap{6}{Diverzita, druhy a~niky}
+
+\fml{Fitness sharing}
+\[
+f'(i) = \frac{f(i)}{\sum_j sh\big(d(i,j)\big)},
+\qquad
+sh(d) = \begin{cases}
+1-\big(d/\sigma_{\mathrm{share}}\big)^{\alpha} & d < \sigma_{\mathrm{share}},\\
+0 & \text{jinak}
+\end{cases}
+\]
+\pop{Fitness se \uv{dělí} mezi podobné jedince, takže obsazená nika se stává méně
+atraktivní --- vzniká tlak na pokrytí \emph{různých} nik. $\sigma_{\mathrm{share}}$ je
+poloměr niky, $d$ vzdálenost (Hammingova, fenotypová, \dots), $\alpha$ exponent sdílecí funkce $sh$. Problém je vždy volba
+$\sigma_{\mathrm{share}}$; NSGA-II ji proto nahradilo \emph{crowding distance}.}
+
+\podkap{4}{Otevřená evoluce}
+
+\fml{Novelty search --- řídkost okolí}
+\[
+\rho(x) \;=\; \frac{1}{k}\sum_{i=1}^{k} \mathrm{dist}\big(x, \mu_i\big)
+\]
+\pop{$\mu_i$ jsou $k$ nejbližších sousedů $x$ v~aktuální populaci \textbf{a~v~permanentním
+archivu}, měřeno v~\emph{prostoru chování} (např.\ koncová pozice robota v~bludišti).
+Fitness $= \rho$; původní účelová funkce se \emph{nepoužívá vůbec}. Motivace (Lehman \&
+Stanley): u~deceptivních úloh je cílová funkce zavádějící a~vede do lokálních optim.}
+
+\kap{4}{Rojové optimalizační algoritmy}
+
+\podkap{1}{Optimalizace rojem částic (PSO)}
+
+\fml{PSO --- pohybové rovnice}
+\[
+\vec v_i \;\gets\; \underbrace{w\,\vec v_i}_{\text{setrvačnost}}
+\;+\; \underbrace{c_1 r_1 (\vec p_i - \vec x_i)}_{\text{kognitivní složka}}
+\;+\; \underbrace{c_2 r_2 (\vec g - \vec x_i)}_{\text{sociální složka}},
+\qquad
+\vec x_i \;\gets\; \vec x_i + \vec v_i
+\]
+\pop{$\vec p_i$ (\emph{pBest}) = nejlepší pozice, kterou částice $i$ kdy navštívila;
+$\vec g$ (\emph{gBest}) = nejlepší pozice nalezená rojem. $r_1, r_2 \sim U(0,1)$ se losují
+pro každou složku zvlášť, $c_1, c_2$ jsou koeficienty učení (původně $c_1=c_2=2$), $w$ je
+setrvačnost. Částice pravidelně \emph{přeletí} přes $\vec g$ --- to je zdroj explorace;
+proto se rychlost omezuje ($|v_j| \le v_{\max}$) nebo se používá konstrikční faktor.}
+
+\podkap{2}{Optimalizace mravenčí kolonií (ACO)}
+
+\fml{ACO --- pravidlo přechodu (Ant System)}
+\[
+w_{ij} \;=\; \big[\tau_{ij}\big]^{\alpha}\,\big[\eta_{ij}\big]^{\beta},
+\qquad
+p_{ij}^{k} \;=\; \frac{w_{ij}}{\displaystyle\sum_{l \in \mathcal{N}_i^k} w_{il}},
+\qquad \eta_{ij} = \frac{1}{d_{ij}}
+\qquad\Longrightarrow\qquad
+p_j \;\propto\; \frac{\tau_j^{\,\alpha}}{d_j^{\,\beta}}
+\]
+\pop{$\tau_{ij}$ = feromon na hraně, $\eta_{ij}$ = heuristická \uv{viditelnost} (převrácená
+vzdálenost), $\mathcal{N}_i^k$ = dosud nenavštívená města mravence $k$, $w_{ij}$ = skóre
+kandidáta. Je to \textbf{obyčejná ruleta}: skóre / součet skóre. Indexy $i,k$ jsou během
+jednoho rozhodnutí konstanty, takže si stačí pamatovat pravý tvar --- \uv{feromon nahoře,
+vzdálenost dole} --- a~dopsat normalizaci.
+$\alpha,\beta$ váží feromon vs.\ heuristiku (typicky $\alpha=1$, $\beta \in [2,5]$);
+$\alpha=0$ dá hladový algoritmus, $\beta=0$ čistě feromonové hledání (stagnuje).}
+
+\fml{ACO --- aktualizace feromonu}
+\[
+\tau_{ij} \;\gets\; (1-\rho)\,\tau_{ij} \;+\; \sum_{k=1}^{m} \Delta\tau_{ij}^{k},
+\qquad
+\Delta\tau_{ij}^{k} =
+\begin{cases}
+Q/L_k & \text{prošel-li mravenec } k \text{ hranou } (i,j),\\
+0 & \text{jinak}
+\end{cases}
+\]
+\pop{$\rho \in (0,1)$ je míra odpařování (zapomínání --- brání předčasné konvergenci),
+$L_k$ délka trasy mravence $k$, $Q$ konstanta, $m$ počet mravenců, $\Delta\tau^k_{ij}$ příspěvek mravence $k$. \textbf{Kratší trasa $\Rightarrow$ více
+feromonu.} ACS navíc odpařuje lokálně během konstrukce a~ukládá jen po nejlepší trase.}
+
+\kap{5}{Lokální prohledávání a~memetické algoritmy}
+
+\podkap{2}{Simulované žíhání}
+
+\fml{Metropolisovo kritérium (simulované žíhání)}
+\[
+P(\text{přijmout } y) =
+\begin{cases}
+1, & \Delta \le 0 \quad (\text{zlepšení}),\\[2pt]
+e^{-\Delta / T}, & \Delta > 0 \quad (\text{zhoršení}),
+\end{cases}
+\qquad \Delta = f(y) - f(x)
+\]
+\pop{Pro minimalizaci, kandidát $y \in N(x)$. $T$ je teplota: při vysokém $T$ se algoritmus
+chová jako náhodná procházka (např.\ $\Delta=2$, $T=5$ dá $P=0{,}67$), při nízkém jako čistý
+horolezec ($T=0{,}5$ dá $P=0{,}018$). Při pevné $T$ konverguje k~Boltzmannovu rozdělení
+$\pi(x) \propto e^{-f(x)/T}$.}
+
+\fml{Rozvrhy chlazení}
+\[
+T_{k+1} = \alpha T_k,\ \ \alpha \in [0{,}8;\,0{,}99]
+\qquad
+T_k = T_0 - \beta k
+\qquad
+T_k = \frac{c}{\log(k+1)}
+\]
+\pop{$T_k$ je teplota v~$k$-té iteraci, $\alpha$ chladicí faktor, $\beta$ krok lineárního poklesu. Geometrický (v~praxi nejběžnější), lineární, logaritmický. \textbf{Jen pro logaritmický
+je dokázána konvergence} k~množině globálních optim s~pravděpodobností 1 (při dostatečně
+velkém $c$, souvisejícím s~výškou nejhlubší bariéry) --- prakticky je ale nepoužitelně
+pomalý.}
+
+\kap{6}{Aplikace evolučních algoritmů}
+
+\podkap{1}{Evoluce pravidlových a~expertních systémů}
+
+\podpodkap{2}{Learning classifier systems (Michigan)}
+
+\fml{XCS --- přesnost klasifikátoru}
+\[
+\kappa = \alpha\,(\epsilon/\epsilon_0)^{-\nu} \quad (\epsilon > \epsilon_0), \qquad
+\kappa = 1 \quad\text{jinak}
+\]
+\pop{Klasifikátor je pětice $(c, a, p, \epsilon, F)$: podmínka, akce, predikce odměny,
+chyba predikce, fitness. Wilsonova myšlenka: \emph{predikce} má odhadovat odměnu, ale
+\emph{evoluce} má preferovat \textbf{spolehlivé (přesné)} klasifikátory --- fitness je proto
+relativní přesnost v~rámci action setu, ne síla. $\kappa$ je přesnost, $\alpha, \epsilon_0, \nu$ parametry (práh a~strmost poklesu). $p$ a~$\epsilon$ se aktualizují pravidly
+Q-learningu ($r + \gamma\max_a p_a$), GA běží \emph{nikově} jen uvnitř action setu.}
+
+\fml{ZCS --- posílení}
+\[
+\text{každému v } A:\ +\frac{\beta r}{|A|},
+\qquad
+\text{každému v } A_{-1}:\ +\frac{\gamma B}{|A_{-1}|}
+\]
+\pop{$A$ = action set (pravidla prosazující zvolenou akci), $A_{-1}$ = předchozí action set,
+$B$ = \uv{kbelík} (podíl $\beta$ odebraný ze síly pravidel v~$A$), $r$ = odměna z~prostředí.
+Zjednodušení Hollandovy \emph{bucket brigade}, kde pravidlo muselo \uv{zaplatit} tomu, které
+ho aktivovalo.}
+
+\podpodkap{4}{Připomenutí: metriky klasifikace}
+
+\fml{Metriky klasifikace (fitness pravidlových systémů)}
+\[
+\text{přesnost} = \frac{TP+TN}{TP+TN+FP+FN}, \quad
+\text{senzitivita} = \frac{TP}{TP+FN}, \quad
+\text{specificita} = \frac{TN}{TN+FP}
+\]
+\pop{Fitness pravidlového systému (LCS, GIL) bývá kombinací přesnosti, pokrytí
+a~jednoduchosti (počet pravidel) --- tedy přirozeně vícekriteriální úloha.
+Podrobněji viz odd.~\ref{ssec:matice-zamen}.}
+
+\podkap{2}{Neuroevoluce}
+
+\podpodkap{3}{NEAT}
+
+\fml{NEAT --- míra podobnosti genomů (speciace)}
+\[
+\delta \;=\; \frac{c_1 E}{N} + \frac{c_2 D}{N} + c_3 \overline{\Delta W}
+\]
+\pop{\textbf{Předpoklad:} síť je v~NEAT \emph{seznam hran} a~každá hrana nese
+\emph{inovační číslo} --- pořadové číslo přidělené při prvním vzniku dané strukturální
+novinky. Hrany se stejným číslem tedy mají \textbf{společný evoluční původ}. Porovnání dvou
+genomů jen roztřídí jejich hrany do tří skupin: \emph{shodné} (totéž inovační číslo v~obou),
+\textbf{disjoint} (chybí u~druhého, ale \emph{uvnitř} rozsahu jeho čísel) a~\textbf{excess}
+(leží \emph{za} nejvyšším inovačním číslem druhého genomu).
+
+\emph{Příklad:} $A=\{1,2,3,4,5,8\}$, $B=\{1,2,3,6,7\}$. Shodné jsou 1,\,2,\,3.
+Nejvyšší číslo $B$ je 7, takže geny 4,\,5 (u~$A$) a~6,\,7 (u~$B$) leží uvnitř rozsahu
+$\Rightarrow D=4$; gen 8 je za ním $\Rightarrow E=1$; $N=6$ (větší genom).
+
+\textbf{Co který člen dělá:} $E$ a~$D$ měří rozdíl \emph{struktury} (kolik hran mají genomy
+navíc jeden proti druhému), $\overline{\Delta W}$ rozdíl \emph{parametrů} (průměrný rozdíl vah
+přes \emph{shodné} geny --- jen tam má porovnávat vah smysl). $N$ = velikost většího genomu
+normalizuje, aby velké sítě nevycházely vzdálené jen svou velikostí; $c_1,c_2,c_3$ jsou váhy,
+kterými volíš, zda víc rozhoduje topologie, nebo váhy.
+Sítě s~$\delta$ pod prahem tvoří jeden \textbf{druh} a~sdílejí fitness --- nová topologie tak
+dostane čas doladit váhy dřív, než ji vytlačí zavedená řešení.}
+
+\podkap{3}{Kombinatorické úlohy a~práce s~omezeními}
+
+\podpodkap{2}{Tři obecné strategie pro omezení}
+
+\fml{Penalizace omezení (problém batohu)}
+\[
+f'(x) = \sum_i x_i v_i - \alpha \max\Big(0, \sum_i x_i c_i - C_{\max}\Big)
+\]
+\pop{$C_{\max}$ je kapacita batohu, $v_i$ cena a~$c_i$ objem předmětu $i$, $x_i \in \{0,1\}$ jeho výběr. Tři obecné strategie pro omezení: \emph{(1)}~\textbf{penalizace} (uvedený vzorec ---
+volba $\alpha$ je zásadní: malá $\Rightarrow$ populace se plní nepřípustnými řešeními, velká
+$\Rightarrow$ nelze projít nepřípustnou oblastí ke slibnému řešení); \emph{(2)}~\textbf{oprava}
+(u~batohu vyhazuj předměty s~nejhorším poměrem $v_i/c_i$ --- baldwinovsky jen pro fitness,
+lamarckovsky i~do genotypu); \emph{(3)}~\textbf{dekodér}, kde každý genotyp reprezentuje
+přípustné řešení. Čtvrtá možnost: porušení omezení jako druhé kritérium.}
+
+\podkap{4}{Vícekriteriální optimalizace}
+
+\podpodkap{1}{Dominance a~Pareto fronta}
+
+\fml{Dominance a~Pareto optimalita}
+\[
+x \preceq y \iff \forall i:\ f_i(x) \le f_i(y),
+\qquad
+x \prec y \iff x \preceq y \ \wedge\ \exists j:\ f_j(x) < f_j(y)
+\]
+\pop{(Vše minimalizujeme.) $\prec$ je \emph{ostré částečné} uspořádání --- ireflexivní
+a~tranzitivní, ale \textbf{nikoli úplné}, takže existuje celá množina navzájem
+neporovnatelných optim. Řešení nedominované žádným přípustným je \emph{Pareto-optimální};
+množina takových řešení je \emph{Pareto množina}, její obraz v~prostoru kritérií
+\textbf{Pareto fronta}.}
+
+\podpodkap{2}{Skalarizace --- jednoduchá řešení}
+
+\fml{Skalarizace}
+\[
+f = \sum_i w_i f_i
+\qquad
+\min f_1 \text{ s.t. } f_i \le \varepsilon_i
+\qquad
+\min \max_i \lambda_i \,|f_i(x) - z_i^*|
+\]
+\pop{$w_i$ a~$\lambda_i$ jsou váhy kritérií. Lineární skalarizace, $\varepsilon$-constraint, Čebyševova skalarizace ($z^*$ =
+referenční/ideální bod). \textbf{Klíčová nevýhoda lineární skalarizace: nekonvexní části
+fronty nelze nikdy nalézt}; $\varepsilon$-constraint i~Čebyševova je najdou. Každý běh navíc
+dá jen \emph{jeden} bod fronty.}
+
+\podpodkap{4}{NSGA-II}
+
+\fml{NSGA-II --- crowding distance}
+\[
+d_i \;=\; \sum_{m=1}^{k}
+\frac{f_m(i+1) - f_m(i-1)}{f_m^{\max} - f_m^{\min}}
+\]
+\pop{Počítá se \emph{pro každou frontu zvlášť}: pro každé kritérium $m$ se jedinci seřadí
+podle $f_m$, krajní dostanou $\infty$ a~ostatním se přičte normalizovaná vzdálenost sousedů.
+Vyjadřuje \uv{obvod kvádru} tvořeného nejbližšími sousedy --- \emph{velká} hodnota znamená
+řídce obsazenou oblast, kterou chceme zachovat. Nahrazuje $\sigma_{\mathrm{share}}$
+původního NSGA (žádný parametr navíc). Selekce: nejprve nižší fronta, při shodě větší $d_i$.}
+
+\podpodkap{6}{Metriky kvality aproximace}
+
+\fml{Hypervolume ($S$-metrika)}
+\[
+HV = \mathrm{vol}\Big(\bigcup_{x \in \text{fronta}} [f(x), r]\Big)
+\]
+\pop{Objem oblasti dominované nalezenou frontou a~ohraničené \emph{referenčním bodem} $r$
+(zvoleným tak, aby byl dominován všemi řešeními). Jediná běžná metrika \emph{striktně
+monotónní vůči dominanci}, která navíc \textbf{nevyžaduje znalost skutečné Pareto fronty}.
+Příklad: fronta $\{(2,7),(4,5),(8,2)\}$, $r=(10,10)$; po svislých pruzích
+$2\cdot8 + 4\cdot5 + 2\cdot3 = 16+20+6 = 42$. GD/IGD a~spread naopak skutečnou frontu
+znát potřebují.}
+
+%% ========================================================================
+\okruh{03}{Dobývání znalostí}{Příprava dat a~relevance atributů, asociační pravidla, klasifikace, shlukování, vyhodnocování modelů, analýza sociálních sítí.}
+%% ========================================================================
+
+\kap{2}{Příprava dat, výběr atributů a~analýza jejich relevance}
+
+\podkap{3}{Čištění dat: šum a~odlehlé hodnoty}
+
+\fml{Odlehlá hodnota podle mezikvartilového rozpětí}
+\[
+\mathrm{IQR}=Q_3-Q_1,
+\qquad
+x > Q_3 + 1{,}5\cdot \mathrm{IQR} \quad\text{nebo}\quad x < Q_1 - 1{,}5\cdot \mathrm{IQR}
+\]
+\pop{$Q_1,Q_2,Q_3$ jsou kvartily (25~\%, 50~\% = medián, 75~\% pozorování pod nimi).
+Standardní pravidlo pro detekci \emph{outlieru}; základ krabicového grafu.}
+
+\podkap{5}{Transformace a~standardizace atributů}
+
+\fml{Min-max normalizace (\emph{range standardization})}
+\[
+\mathrm{range}(x_{if})=\frac{x_{if}-\min(f)}{\max(f)-\min(f)} \in [0,1],
+\qquad
+\mathrm{range}_{[-1,1]} = 2\cdot\mathrm{range}(x_{if})-1
+\]
+\pop{$f$ je atribut, $x_{if}$ jeho hodnota u~$i$-tého objektu. \textbf{Proč:} bez
+standardizace ovládne vzdálenost atribut s~největším rozsahem --- pro
+$x_i=(0{,}1;\,20)$ a~$x_j=(0{,}9;\,720)$ je $\mathrm{dist} = 700{,}0005$, tedy první atribut
+nemá prakticky žádný vliv. \emph{Desítkové škálování} dělí nejmenší mocninou 10, která
+udrží hodnoty v~$[-1,1]$.}
+
+\fml{Standardizace podle průměrné absolutní odchylky}
+\[
+m_f=\tfrac1n\big(x_{1f}+\cdots+x_{nf}\big),\qquad
+s_f=\tfrac1n\big(|x_{1f}-m_f|+\cdots+|x_{nf}-m_f|\big),\qquad
+z(x_{if})=\frac{x_{if}-m_f}{s_f}
+\]
+\pop{Dává nulový průměr a~jednotkovou \emph{střední absolutní} odchylku. Oproti klasickému
+$z$-skóre (se směrodatnou odchylkou) je robustnější vůči odlehlým hodnotám, protože se
+odchylky neumocňují.}
+
+\podkap{6}{Diskretizace numerických atributů}
+
+\podpodkap{1}{Fuzzy diskretizace}
+
+\fml{Fuzzy diskretizace --- charakteristické funkce a~váha objektu}
+\[
+\mu_{i-1}(x)=\frac{x_{i+1}-x}{x_{i+1}-x_{i-1}},\qquad
+\mu_{i+1}(x)=\frac{x-x_{i-1}}{x_{i+1}-x_{i-1}},\qquad
+w = \prod_j \mu_j < 1
+\]
+\pop{Na přechodové zóně mezi dvěma intervaly charakteristické funkce lineárně klesají, resp.\
+rostou, a~jejich součet je 1. Jedné numerické hodnotě tak mohou odpovídat \emph{dvě} sousední
+kategorie; objekt v~zóně vstupuje do dat jako \uv{fuzzy objekt} s~vahou $w$ danou součinem
+přes všechny atributy. Motivace: ostrá diskretizace ztrácí informaci a~zavádí
+\emph{kontradikce}.}
+
+\podkap{8}{Analýza relevance atributů: filtry a~wrappery}
+
+\podpodkap{1}{Kritéria na kontingenčních tabulkách}
+
+\fml{Kontingenční tabulka --- marginály a~očekávané četnosti}
+\[
+r_k=\sum_{l=1}^{S}a_{kl},\qquad s_l=\sum_{k=1}^{R}a_{kl},\qquad
+n=\sum_{k=1}^{R}\sum_{l=1}^{S}a_{kl},\qquad
+e_{kl}=\frac{r_k s_l}{n}
+\]
+\pop{$a_{kl}$ = četnost kombinace $A(v_k) \wedge C(v_l)$ vstupního atributu $A$
+($R$ hodnot) a~cílového atributu $C$ ($S$ tříd). Odhady pravděpodobností:
+$P(A(v_k)\wedge C(v_l))=a_{kl}/n$, $P(A(v_k))=r_k/n$, $P(C(v_l))=s_l/n$.
+$e_{kl}$ je očekávaná četnost \emph{při nezávislosti}.}
+
+\fml{$\chi^2$ jako kritérium relevance a~jako test}
+\[
+\chi^2=\sum_{k=1}^{R}\sum_{l=1}^{S}\frac{(a_{kl}-e_{kl})^2}{e_{kl}}
+   = n\sum_{k=1}^{R}\sum_{l=1}^{S}\frac{\big(a_{kl}-\tfrac{r_ks_l}{n}\big)^2}{r_ks_l}
+   = \sum_k\sum_l \frac{a_{kl}^2}{e_{kl}}-n
+\]
+\pop{\textbf{Čím větší, tím lepší} (relevantnější atribut). Jako test: při
+$H_0: P(A=v_k\wedge C=v_l)=P(A=v_k)P(C=v_l)$ má statistika $\chi^2$ rozdělení
+s~$(R-1)(S-1)$ stupni volnosti; je-li $\chi^2 \ge \chi^2_{(R-1)(S-1)}(\alpha)$, $H_0$
+zamítáme (pro čtyřpolní tabulku a~$\alpha = 0{,}05$ je kritická hodnota $3{,}84$).
+Poslední tvar je nejrychlejší pro ruční výpočet. \textbf{Podmínka použitelnosti:}
+$e_{kl} = r_ks_l/n \ge 5$ pro všechna $k,l$.}
+
+\fml{Fisherův exaktní test}
+\[
+p=\frac{r_1!\,r_2!\,s_1!\,s_2!}{n!\,a_{11}!\,a_{12}!\,a_{21}!\,a_{22}!}
+     =\frac{\binom{s_1}{a_{11}}\binom{s_2}{a_{12}}}{\binom{n}{r_1}},
+\qquad
+P=\sum_{i=0}^{m}\frac{r_1!\,r_2!\,s_1!\,s_2!}{n!\,(a_{11}-i)!\,(a_{12}+i)!\,(a_{21}+i)!\,(a_{22}-i)!}
+\]
+\pop{Pro čtyřpolní tabulky s~\emph{malými} četnostmi, kde $\chi^2$ test nelze použít.
+$p$ je pravděpodobnost konkrétní tabulky při daných marginálech; $P$ se sečte přes všechny
+uvažované hodnoty ($m=\min(r_1,s_1)$). Je-li $P \le \alpha$, $H_0$ o~nezávislosti se
+zamítá.}
+
+\podpodkap{2}{Kritéria založená na entropii}
+
+\fml{Entropie atributu, vzájemná informace, informační míra závislosti}
+\[
+H(A)=\sum_{k=1}^{R}\frac{r_k}{n}\,H\big(A(v_k)\big),\qquad
+H\big(A(v_k)\big)=-\sum_{l=1}^{S}\frac{a_{kl}}{r_k}\log_2\frac{a_{kl}}{r_k}
+\]
+\[
+\mathrm{MI}(A,C)=\sum_{k=1}^{R}\sum_{l=1}^{S}\frac{a_{kl}}{n}\log_2\frac{n\,a_{kl}}{r_k s_l},
+\qquad
+\mathrm{ID}(A,C)=\frac{\mathrm{MI}(A,C)}{H(C)}
+   =\frac{\mathrm{MI}(A,C)}{-\sum_{l}\frac{s_l}{n}\log_2\frac{s_l}{n}}
+\]
+\pop{$H(A)$ je vážený průměr entropií jednotlivých hodnot --- \textbf{čím menší, tím lepší}
+atribut. $\mathrm{MI}$ i~$\mathrm{ID}$ naopak \textbf{čím větší, tím lepší};
+$\mathrm{ID}$ je vzájemná informace normalizovaná entropií cílového atributu, takže
+je srovnatelná napříč úlohami.}
+
+\podpodkap{3}{Kritéria pro numerické atributy: korelace}
+
+\fml{Pearsonův korelační koeficient}
+\[
+r=\frac{\mathrm{cov}(X,Y)}{s_X\,s_Y}
+   =\frac{\sum_{i=1}^{n}(x_i-\bar x)(y_i-\bar y)}
+          {\sqrt{\sum_{i=1}^{n}(x_i-\bar x)^2\ \sum_{i=1}^{n}(y_i-\bar y)^2}}\ \in[-1,1]
+\]
+\pop{$s_X, s_Y$ jsou směrodatné odchylky, $\bar x, \bar y$ průměry. Míra \textbf{lineárního}
+vztahu: $r=\pm1$ = body přesně na přímce, $r=0$ = žádná \emph{lineární} závislost.
+$r^2$ (\emph{koeficient determinace}) = podíl rozptylu $Y$ vysvětlený lineární závislostí
+na~$X$. Vztah k~regresi: $\beta=\mathrm{cov}(X,Y)/s_X^2$, tedy $r=\beta\,s_X/s_Y$.
+\textbf{Tři pasti:} měří jen \emph{lineární} vztah (pro $y=x^2$ symetricky kolem nuly vyjde
+$r=0$, přestože je závislost funkční --- nulová korelace \emph{není} nezávislost); je citlivý
+na odlehlé hodnoty; a~korelace není kauzalita.}
+
+\fml{Spearmanův koeficient $\rho$ (korelace pořadí)}
+\[
+\rho = 1-\frac{6\sum_{i=1}^{n} d_i^2}{n\,(n^2-1)}\ \in[-1,1]
+\]
+\pop{Je to \textbf{Pearson spočítaný z~pořadí} místo z~hodnot; $d_i$ = rozdíl pořadí $i$-tého
+objektu v~$X$ a~$Y$. Uvedený zjednodušený tvar platí, \emph{nejsou-li shodná pořadí}
+(\emph{ties}). Zachytí \textbf{libovolný monotónní} vztah (ne jen lineární), je robustní vůči
+odlehlým hodnotám, \textbf{invariantní vůči monotónní transformaci} ($\log$, $\sqrt{\ }$)
+a~funguje i~pro \emph{ordinální} atributy. \emph{Příklad:} $x=(1,2,3,4,5)$, $y=(1,2,4,8,16)$
+--- pořadí shodná, všechna $d_i=0$, tedy $\rho=1$, kdežto $r\doteq0{,}93$ (Pearson penalizuje
+nelinearitu). Alternativa: Kendallovo $\tau$ přes konkordantní/diskordantní dvojice.}
+
+\podkap{9}{Vztahy mezi atributy: regrese}
+
+\fml{Lineární regrese jedné proměnné (metoda nejmenších čtverců)}
+\[
+E=\sum_{i=1}^{p}\big(y_i-\beta x_i-\alpha\big)^2
+\ \longrightarrow\ \min
+\qquad\Longrightarrow\qquad
+\beta=\frac{\sum_{i}(x_i-\bar x)(y_i-\bar y)}{\sum_{i}(x_i-\bar x)^2},
+\quad \alpha=\bar y-\beta\bar x
+\]
+\pop{Odvození: položíme $\partial E/\partial\alpha = \partial E/\partial\beta = 0$.
+$\beta$ je \emph{výběrová kovariance dělená výběrovým rozptylem $x$}. Predikce
+$\hat y = \beta x + \alpha$; regresní přímka vždy prochází bodem $(\bar x, \bar y)$.}
+
+\fml{Vícerozměrná lineární regrese --- normální rovnice}
+\[
+E=(Y-X\beta)^{\!\top}(Y-X\beta), \qquad
+X^{\!\top}\!X\beta=X^{\!\top}Y \qquad\Longrightarrow\qquad
+\beta=\big(X^{\!\top}\!X\big)^{-1}X^{\!\top}Y
+\]
+\pop{$Y$ je vektor cílových hodnot, $X$ rozšířená matice vstupních vzorů (první sloupec jedničky),
+$\beta=(\beta_0,\dots,\beta_m)$. Uzavřené řešení, ale invertování $X^{\!\top}X$ je pro
+velké úlohy nákladné $\Rightarrow$ iterativní (gradientní) metody.}
+
+\kap{3}{Metody pro dobývání znalostí}
+
+\podkap{1}{Asociační pravidla a~frekventované vzory}
+
+\podpodkap{2}{Support, confidence a~lift}
+
+\fml{Support, confidence, lift}
+\begin{gather*}
+\mathrm{sup}(R)=\frac{\text{počet transakcí obsahujících } i \text{ a } j}
+   {\text{počet všech transakcí}}\cdot 100\,\%,\\
+\mathrm{conf}(R)=\frac{\text{počet transakcí obsahujících } i \text{ a } j}
+   {\text{počet transakcí obsahujících } i}\cdot 100\,\%,\\
+\mathrm{lift}(R)=\frac{p(i\wedge j)}{p(i)\,p(j)}
+\end{gather*}
+\pop{Pro pravidlo $R: i \Rightarrow j$ nad množinou transakcí.
+\emph{Support} --- jak často lze pravidlo použít; \emph{confidence} --- jak spolehlivé jsou
+jeho výsledky (odhad $P(j \mid i)$); \emph{lift} --- kolikrát je lepší použít pravidlo než
+jen předpokládat závěr. \textbf{Je-li $\mathrm{lift} < 1$, je pravidlo horší než náhodná
+volba} a~negace závěru může dát lepší pravidlo; $\mathrm{lift}=1$ znamená nezávislost.}
+
+\podpodkap{4}{Algoritmus Apriori}
+
+\fml{Apriori --- rozklad kombinace na pravidla}
+\[
+\mathit{Suc}=\mathit{Comb}\setminus \mathit{Ant},\qquad
+\mathit{Ant}\cap \mathit{Suc}=\emptyset,\quad \mathit{Ant}\cup \mathit{Suc}=\mathit{Comb}
+\]
+\pop{Po nalezení frekventovaných kombinací se každá rozdělí na všechny možné dvojice
+podkombinací. \emph{Support} pravidla $\mathit{Ant} \Rightarrow \mathit{Suc}$ odpovídá
+frekvenci $\mathit{Comb}$, \emph{confidence} poměru frekvencí $\mathit{Comb}$
+a~$\mathit{Ant}$. Základ algoritmu je \textbf{uzavřenost dolů} (\emph{downward closure}):
+frekvence nadkombinace $\le$ frekvence kombinace, takže nadmnožinu nefrekventované množiny
+lze prořezat.}
+
+\podpodkap{5}{Vícenásobný minimální support: MS-Apriori}
+
+\fml{MS-Apriori --- vícenásobný minimální support}
+\[
+\mathrm{minsup}(\text{pravidla}) = \min_{i \in s} \mathrm{MIS}(i),
+\qquad
+\max_{i\in s}\mathrm{sup}(i)-\min_{i\in s}\mathrm{sup}(i)\le\varphi
+\]
+\pop{Řeší \emph{problém vzácných položek} (chléb vs.\ kuchyňský robot): každá položka má
+vlastní $\mathrm{MIS}$, minsup pravidla je minimum přes jeho položky, a~rozdíl supportů
+uvnitř množiny je omezen $\varphi$. \textbf{Důsledek: uzavřenost dolů neplatí}
+--- $\{1,2\}$ může být nefrekventovaná, a~přesto $\{1,2,3\}$ frekventovaná; položky se proto
+třídí vzestupně podle MIS a~testuje se proti MIS \emph{první} položky.}
+
+\podkap{2}{Přístupy založené na principu učení s~učitelem}
+
+\podpodkap{2}{Rozhodovací stromy}
+
+\fml{Entropie a~vážená průměrná entropie atributu}
+\[
+H=-\sum_{j=1}^{m}p_j\log_2 p_j,
+\qquad
+H\big(A(v)\big)=-\sum_{j=1}^{m}p_j^{A(v)}\log_2 p_j^{A(v)},
+\qquad
+H(A)=\sum_{v}\frac{|A(v)|}{|D|}\,H\big(A(v)\big)
+\]
+\pop{$p_j$ = relativní frekvence třídy $j$ na uvažované množině vzorů, $m$ = počet tříd.
+Konvence $0\log_2 0 = 0$; přepočet $\log_2 x = \log_{10}x/0{,}301$.
+\textbf{Vybírá se atribut s~minimální $H(A)$.} Čistý uzel má $H=0$, dvě stejně velké třídy
+dají $H=1$.}
+
+\fml{Informační zisk a~poměrný informační zisk (ID3, C4.5)}
+\[
+\mathrm{GAIN}(D,A)=H(D)-\sum_{v}\frac{|D_v|}{|D|}H(D_v),
+\qquad
+\mathrm{GAIN\_RATIO}(D,A)=\frac{\mathrm{GAIN}(D,A)}
+   {-\sum_{v}\frac{|D_v|}{|D|}\log_2\frac{|D_v|}{|D|}}
+\]
+\pop{Očekávané snížení entropie po rozdělení podle atributu; bere se \textbf{největší}.
+Protože $H(D)$ je pro všechny atributy stejná, je maximalizace GAIN ekvivalentní minimalizaci
+$H(A)$. Jmenovatel GAIN\_RATIO (\emph{split info}) penalizuje \textbf{nadměrné větvení} ---
+bez něj by vyhrával atribut jako \uv{rodné číslo}, který dělí data na samé jednoprvkové
+podmnožiny.}
+
+\fml{Gini index a~kritérium dělení v~CART}
+\[
+G=\sum_{i=1}^{r}\frac{n_i}{n}G(v_i),\qquad G(v_i)=1-\sum_{j=1}^{m}p_j^2,
+\qquad
+\Phi=2P_LP_R\sum_{j=1}^{m}\big|P(C_j\mid t_L)-P(C_j\mid t_R)\big|
+\]
+\pop{CART generuje \emph{binární} stromy. $n_i$ = počet vzorů s~hodnotou $v_i$,
+$p_j$ = pravděpodobnost třídy $j$ v~těchto vzorech; \textbf{nižší $G$ = lepší diskriminace}.
+$\Phi$ je kritérium volby dělicího bodu: $P_L, P_R$ jsou pravděpodobnosti levého a~pravého
+podstromu; $\Phi$ \textbf{nabývá maxima}, jsou-li všechny vzory dané třídy seskupeny v~témže
+podstromu.}
+
+\fml{C4.5 --- pesimistický odhad přesnosti pravidla}
+\[
+\mathit{acc}-1{,}96\sqrt{\frac{\mathit{acc}(1-\mathit{acc})}{n}},
+\qquad \mathit{acc}=\frac{k}{n}
+\]
+\pop{$k$ = správně klasifikované, $n$ = pokryté vzory. C4.5 hodnotí pravidla \emph{na
+trénovacích datech}, kde je přesnost optimistická; charakteristikou pravidla je proto
+\emph{dolní mez} intervalu spolehlivosti z~binomického rozdělení (95\% hladina).
+Používá se při \emph{rule post-pruning}: vypouštěj předpoklady, dokud se tato mez nezhorší.}
+
+\podpodkap{3}{Bayesovská klasifikace}
+
+\fml{Bayesova formule a~hypotéza MAP}
+\[
+P(H\mid E)=\frac{P(E\mid H)\,P(H)}{P(E)},
+\qquad
+H_{MAP}=\arg\max_{H\in\mathcal H} P(H\mid E)=\arg\max_{H\in\mathcal H} P(E\mid H)\,P(H)
+\]
+\pop{$P(H)$ = apriorní pravděpodobnost hypotézy, $P(H\mid E)$ = aposteriorní, $P(E\mid H)$ =
+věrohodnost. Jmenovatel $P(E)$ je pro všechny hypotézy stejný, takže jej lze při
+maximalizaci \emph{zanedbat}.}
+
+\fml{Naivní bayesovský klasifikátor}
+\[
+P(H\mid E_1,\dots,E_k)=\frac{P(H)}{P(E_1,\dots,E_k)}\prod_{i=1}^{k}P(E_i\mid H),
+\qquad
+H_{MAP}=\arg\max_{H_t} P(H_t)\prod_{i=1}^{k}P(E_i\mid H_t)
+\]
+\pop{\textbf{Předpoklad:} jevy $E_1,\dots,E_k$ jsou \emph{podmíněně nezávislé} při platnosti
+$H$ --- v~reálných úlohách splněn jen zřídka, odtud \uv{naivní}. Odhady z~dat:
+$P(H_t) = \frac{\text{počet vzorů z~}t}{\text{počet všech vzorů}}$,
+$P(E_k \mid H_t) = \frac{\text{počet vzorů z~}t\text{ splňujících }E_k}{\text{počet vzorů z~}t}$.
+Přes nesplněný předpoklad funguje překvapivě dobře, protože pro \emph{argmax} stačí správné
+pořadí, ne přesné pravděpodobnosti.}
+
+\podpodkap{4}{Support Vector Machines}
+
+\fml{Lineární SVM --- rozhodovací funkce a~okraj}
+\[
+f(x)=\langle w\cdot x\rangle+b, \qquad
+d_+=d_-=\frac{1}{\|w\|},\qquad \text{margin}=d_++d_-=\frac{2}{\|w\|}
+\]
+\pop{Trénovací množina $D=\{(x_i,y_i)\}$, $y_i \in \{1,-1\}$; $w$ je normálový vektor a~$b$ posun hyperroviny. Vzdálenost bodu od
+hyperroviny je $|\langle w\cdot x_i\rangle+b| / \|w\|$. Separujících hyperrovin je mnoho ---
+SVM hledá tu s~\textbf{největším okrajem}, protože ta podle teorie učení minimalizuje mez
+chyby.}
+
+\fml{Primární optimalizační úloha a~Lagrangián}
+\[
+\min\ \frac{\langle w\cdot w\rangle}{2}
+   \quad\text{za podmínek}\quad y_i\big(\langle w\cdot x_i\rangle+b\big)\ge 1
+\]
+\[
+L_P=\frac{\langle w\cdot w\rangle}{2}-\sum_{i=1}^{r}\alpha_i
+   \big[y_i(\langle w\cdot x_i\rangle+b)-1\big],\qquad \alpha_i\ge 0
+\]
+\pop{Maximalizace $2/\|w\|$ je ekvivalentní minimalizaci $\langle w\cdot w\rangle/2$.
+Podmínka je souhrnný zápis $\langle w\cdot x_i\rangle+b\ge 1$ pro $y_i=1$ a~$\le -1$ pro
+$y_i=-1$. Řešení musí splňovat \emph{Kuhn--Tuckerovy podmínky}, které jsou pro konvexní
+účelovou funkci s~lineárními omezeními nejen nutné, ale i~\emph{postačující}.}
+
+\fml{Kuhn--Tuckerovy podmínky a~vznik duálu}
+\[
+\frac{\partial L_P}{\partial w_j}=0 \Rightarrow w=\sum_{i=1}^{r} y_i\alpha_i x_i,
+\qquad
+\frac{\partial L_P}{\partial b}=0 \Rightarrow \sum_{i=1}^{r} y_i\alpha_i=0,
+\qquad
+\alpha_i\big(y_i(\langle w\cdot x_i\rangle+b)-1\big)=0
+\]
+\pop{\textbf{Postup: (1)} vynuluj parciální derivace $L_P$ podle \emph{primárních} proměnných
+$w$ a~$b$; \textbf{(2)} dosaď získané vztahy zpět do $L_P$ --- $w$ a~$b$ se vyeliminují
+a~zbudou jen $\alpha_i$. KKT podmínky jsou obecně jen nutné, pro konvexní účelovou funkci
+s~lineárními omezeními i~\emph{postačující}. Poslední je \textbf{komplementarita}: součin je
+nulový, takže je-li $\alpha_i>0$, musí být $y_i(\langle w\cdot x_i\rangle+b)=1$ --- bod leží
+\emph{přesně na} okrajové hyperrovině. To jsou \textbf{podpůrné vektory}; pro ostatní je
+$\alpha_i=0$ a~řešení neovlivňují.}
+
+\fml{Wolfeho duální úloha (\emph{vázaná}) a~rekonstrukce $w$, $b$}
+\[
+\text{max } L_D=\sum_{i=1}^{r}\alpha_i-\frac12\sum_{i,j}y_iy_j\alpha_i\alpha_j
+   \langle x_i\cdot x_j\rangle
+\qquad\text{za podmínek}\qquad
+\sum_{i=1}^{r} y_i\alpha_i=0,\ \ \alpha_i\ge 0
+\]
+\[
+w=\sum_{i\in \mathit{sv}} y_i\alpha_i x_i,
+\qquad
+b = y_k - \langle w\cdot x_k\rangle \ \ (x_k \text{ podpůrný vektor})
+\]
+\pop{\textbf{Omezení jsou součástí úlohy} --- vznikla v~kroku (1), bez nich je duál nedopsaný.
+Maximum $L_D$ se nabývá pro tytéž $w,b,\alpha_i$ jako minimum $L_P$; řeší se numericky
+(prakticky SMO). Duál obsahuje vstupy \emph{jen} přes skalární součiny $\langle x_i\cdot
+x_j\rangle$ --- právě to umožňuje kernelový trik. Vztah pro $b$ plyne z~komplementarity
+($y_k(\langle w\cdot x_k\rangle+b)=1$ a~$y_k^2=1$); numericky se průměruje přes všechny
+podpůrné vektory.}
+
+\fml{Rozhodovací hranice a~testování}
+\[
+\langle w\cdot x\rangle+b=\sum_{i\in \mathit{sv}}y_i\alpha_i\langle x_i\cdot x\rangle+b=0,
+\qquad
+\text{test: } \mathrm{sign}\Big(\sum_{i\in \mathit{sv}}\alpha_iy_i\langle x_i\cdot z\rangle+b\Big)
+\]
+\pop{$z$ je testovaný vzor, $\mathit{sv}$ množina podpůrných vektorů. Vrátí-li výraz 1, je $z$
+pozitivní, jinak negativní. Všimni si, že $w$ ani $\phi$ se nikde nevyčíslují --- stačí
+skalární součiny s~podpůrnými vektory.}
+
+\fml{Kernelový trik a~měkký okraj}
+\[
+K(x,z)=\langle\phi(x)\cdot\phi(z)\rangle,
+\qquad
+\min\ \frac{\langle w\cdot w\rangle}{2}+C\sum_i\xi_i, \quad \xi_i\ge 0
+\]
+\pop{Kernel nahradí skalární součin ve všech výrazech, aniž bychom $\phi$ kdy vyčíslili ---
+odstraňuje prokletí dimenzionality při explicitní transformaci. Příklad
+($d=2$, 2-D vstup): $\langle x\cdot z\rangle^2 = \big\langle (x_1^2,x_2^2,\sqrt2 x_1x_2)
+\cdot(z_1^2,z_2^2,\sqrt2 z_1z_2)\big\rangle$. Zda je funkce kernelem, říká
+\emph{Mercerova věta}; běžné kernely: lineární, polynomiální, gaussovský (RBF), sigmoidální.
+\emph{Slack variables} $\xi_i$ připouštějí chyby; $C$ řídí kompromis mezi šířkou okraje
+a~počtem chyb.}
+
+\podpodkap{5}{Logistická regrese}
+
+\fml{Logit a~sigmoida}
+\[
+\ln\frac{P(y=1\mid x)}{1-P(y=1\mid x)}=\beta_0+\beta_1x_1+\cdots+\beta_mx_m=z,
+\qquad
+P(y=1\mid x)=\frac{1}{1+e^{-z}}=\sigma(z)
+\]
+\pop{$\beta_j$ jsou koeficienty modelu a~$z$ jejich lineární kombinace (\emph{logit}). Modeluje se logaritmus \emph{podmíněné šance} (\emph{conditional odds}) jako lineární
+kombinace vstupů. Logistická regrese je nejdůležitější případ nelineární regrese a~zároveň
+klasifikátor; výstupem je \emph{pravděpodobnost}, ne jen třída.}
+
+\fml{Učení logistické regrese --- věrohodnost a~křížová entropie}
+\[
+L=\prod_{i=1}^{p}\Big(\frac{1}{1+e^{-z_i}}\Big)^{y_i}\Big(\frac{1}{1+e^{z_i}}\Big)^{1-y_i},
+\qquad
+E=-\log L=-\sum_i\Big[y_i\log\sigma(z_i)+(1-y_i)\log\big(1-\sigma(z_i)\big)\Big]
+\]
+\pop{Místo maximalizace věrohodnosti $L$ se minimalizuje \emph{křížová entropie} $E$
+(numericky stabilnější, součet místo součinu).}
+
+\fml{Adaptační pravidla logistické regrese}
+\[
+\Delta\beta_j=-\eta\frac{\partial E}{\partial\beta_j}
+   =\eta\sum_i\big(y_i-\sigma(z_i)\big)x_{i,j},\qquad
+\Delta\beta_0=\eta\sum_i\big(y_i-\sigma(z_i)\big)
+\]
+\pop{$\eta$ je rychlost učení. Odvození využívá $\sigma'=\sigma(1-\sigma)$, po zjednodušení se derivace sigmoidy
+\emph{vykrátí}. Chyba tedy vstupuje do úpravy vah přímo jako rozdíl \emph{pozorované}
+a~\emph{predikované} hodnoty --- tentýž tvar jako delta pravidlo perceptronu.}
+
+\podpodkap{6}{Diskriminační analýza}
+
+\fml{Diskriminační analýza --- diskriminační funkce}
+\[
+x \in C_j \iff g_j(x)=\max_{k} g_k(x),
+\qquad
+g_j(x)=\beta_{j0}+\beta_{j1}x_1+\cdots+\beta_{jm}x_m \ \text{(lineární DA)}
+\]
+\pop{Optimální klasifikace ve smyslu minimální chyby nastane, jsou-li diskriminační funkce
+úměrné aposteriorním pravděpodobnostem: $g_j(x)=P(C_j\mid x)=p(x\mid C_j)P(C_j)/p(x)$;
+pro dvě třídy $g(x)=p(x\mid C_1)P(C_1)-p(x\mid C_2)P(C_2)$.}
+
+\fml{LDA vs.\ QDA pro normální rozdělení}
+\[
+g(x)=(\mu_1-\mu_2)^{\!\top}S^{-1}x-\tfrac12(\mu_1-\mu_2)^{\!\top}S^{-1}(\mu_1+\mu_2)
+   -\ln\frac{P(C_2)}{P(C_1)}
+\]
+\[
+g_j(x)=\ln p_j-\tfrac12\,(x-\mu_j)^{\!\top}\Sigma^{-1}(x-\mu_j)
+\]
+\pop{Pro normální rozdělení s~\emph{obecnými} kovariančními maticemi $S_1 \ne S_2$ vychází
+\textbf{kvadratická} diskriminační funkce (QDA); jsou-li matice \emph{shodné} ($S_1=S_2=S$),
+redukuje se na \textbf{lineární} (LDA) --- první vzorec. Druhý je ekvivalentní tvar LDA se
+společnou $\Sigma$; odhaduje se jen $\mu_j$ ($q$ parametrů na třídu), a~hranice mezi dvěma
+třídami $\{x: g_j(x)=g_k(x)\}$ je \emph{nadrovina}. Jsou-li navíc třídy stejně pravděpodobné
+a~$S=I$, jde o~prosté srovnávání vzdáleností od středních hodnot.}
+
+\podpodkap{7}{Neuronové sítě a~extrémní učicí stroje (ELM)}
+
+\fml{ELM --- extrémní učicí stroj}
+\[
+f_L(x)=\sum_{i=1}^{L}\beta_i\,G(a_i,b_i,x),
+\qquad
+H\beta=T \qquad\Longrightarrow\qquad \beta = H^{+}T
+\]
+\pop{Dopředná síť s~\emph{jednou} skrytou vrstvou o~$L$ neuronech, $\beta_i$ jsou výstupní váhy; $G$ je např.\ sigmoida
+$g(\langle a_i\cdot x\rangle+b_i)$ nebo RBF $g(b_i\|x-a_i\|)$.
+\textbf{Klíčová myšlenka:} parametry skrytých neuronů $(a_i,b_i)$ se \emph{neadaptují} ---
+vygenerují se \emph{náhodně}, i~bez znalosti dat (s~pravděpodobností 1 platí
+$\lim_{L\to\infty}\|f-f_L\|=0$). Učí se jen výstupní váhy, a~to \emph{jednou},
+Mooreovou--Penroseovou pseudoinverzí $H^{+}$ výstupní matice skryté vrstvy $H$.
+Neiterativní $\Rightarrow$ rychlé, bez lokálních minim; regularizace přičtením $I/C$
+na diagonálu $H^{\!\top}H$.}
+
+\podpodkap{8}{Ensemble metody}
+
+\fml{Bagging --- pokles rozptylu a~bootstrap}
+\[
+\mathrm{var}\Big(\tfrac1k\sum_{i=1}^k h_i\Big) = \frac{\sigma^2}{k} \quad\text{(i.i.d.)},
+\qquad
+1-\Big(1-\frac1n\Big)^{\!n}\approx 1-\frac1e=63{,}2\,\%
+\]
+\pop{Bagging snižuje \emph{rozptyl}. Bootstrapový vzorek (výběr $n$ bodů \emph{s~opakováním})
+obsahuje asi 63,2~\% různých bodů originálu --- pravděpodobnost, že bod ve vzorku \emph{není},
+je $(1-1/n)^n \to 1/e$. Ideální bázový model: rozhodovací stromy (nízké zkreslení, vysoký
+rozptyl). \textbf{Omezení: bagging nesnižuje zkreslení.}}
+
+\fml{Náhodné lesy --- rozptyl při korelovaných komponentách}
+\[
+\mathrm{var} = \rho\sigma^2+\frac{(1-\rho)\sigma^2}{k}
+\]
+\pop{$\rho$ je vzájemná pozitivní korelace $k$ klasifikátorů. Člen $\rho\sigma^2$ je
+\textbf{nezávislý na $k$} --- právě on omezuje přínos baggingu, protože bootstrapované stromy
+bývají korelované. Náhodný les korelaci snižuje tím, že v~každém uzlu předloží jen
+\emph{náhodnou podmnožinu} $m \approx \sqrt{\text{počet příznaků}}$ příznaků.}
+
+\fml{AdaBoost --- váha komponenty a~převáženi vzorů}
+\[
+\alpha_t = \tfrac12\ln\frac{1-\epsilon_t}{\epsilon_t},
+\qquad
+W_{t+1}(i) = \frac{W_t(i)\,e^{\pm\alpha_t}}{\sum_j W_{t+1}(j)}
+\]
+\pop{$\epsilon_t$ = vážená chyba v~$t$-té iteraci, $W_1(i)=1/n$. Znaménko v~exponentu:
+$+\alpha_t$ pro \emph{nesprávně} klasifikované (jejich váha roste), $-\alpha_t$ pro správně
+klasifikované. Konec, když $t \ge T$, $\epsilon_t = 0$ nebo $\epsilon_t \ge 0{,}5$.
+\textbf{Boosting snižuje zkreslení} (bagging rozptyl), musí ale běžet \emph{sekvenčně}
+a~je citlivý na šum.}
+
+\podkap{3}{Klastrová analýza}
+
+\podpodkap{1}{Formulace úlohy a~míry vzdálenosti}
+
+\fml{Metriky vzdálenosti}
+\[
+d_H=\sum_{i=1}^{m}|x_{1i}-x_{2i}|,\quad
+d_E=\sqrt{\sum_{i=1}^{m}(x_{1i}-x_{2i})^2},\quad
+d_C=\max_i |x_{1i}-x_{2i}|,\quad
+d_q=\Big(\sum_{i=1}^{m}|x_{1i}-x_{2i}|^{q}\Big)^{1/q}
+\]
+\pop{Hammingova (Manhattan, $L_1$), euklidovská ($L_2$), Čebyševova ($L_\infty$)
+a~Minkowského ($L_q$), jejímiž speciálními případy jsou první tři:
+$d_H=d_1$, $d_E=d_2$, $d_C=\lim_{q\to\infty}d_q$. Všechny předpokládají \emph{stejný
+rozptyl} veličin $\Rightarrow$ nutná normalizace.}
+
+\fml{Mahalanobisova vzdálenost}
+\[
+d_M^2(x_1,x_2)=(x_1-x_2)^{\!\top}S^{-1}(x_1-x_2)
+\]
+\pop{$S$ je kovarianční matice. Zohledňuje \emph{různé rozptyly i~korelace} mezi veličinami;
+pro $S=I$ se redukuje na kvadrát euklidovské vzdálenosti. Používá se, mají-li veličiny různý
+rozptyl.}
+
+\fml{Vzdálenost mezi klastry (metody spojování)}
+\[
+D_{\min}=\min_{x_i,x_j} d(x_i,x_j),\quad
+D_{\max}=\max_{x_i,x_j} d(x_i,x_j),\quad
+D_{\mathrm{avg}}=\frac{1}{n_kn_l}\sum_{i=1}^{n_k}\sum_{j=1}^{n_l} d(x_i,x_j)
+\]
+\pop{\emph{Single linkage} (nejbližší soused --- řetězí, umí protáhlé tvary),
+\emph{complete linkage} (nejvzdálenější soused --- kompaktní kulovité klastry),
+\emph{average linkage} (kompromis), \emph{centroidní} $D=d(c_k,c_l)$.
+Volba metody určuje tvar nalezených klastrů v~hierarchickém shlukování.}
+
+\podpodkap{2}{Metoda $k$-means}
+
+\fml{$k$-means --- centroid a~$k$-medoids --- účelová funkce}
+\[
+c_k=\frac{1}{|C_k|}\sum_{x\in C_k}x,
+\qquad
+O=\sum_{i=1}^{n}\min_{j} d(x_i,y_j)
+\]
+\pop{$k$-means iteruje \uv{spočti centroidy $\to$ přiřaď každý vzor k~nejbližšímu}, dokud
+dochází k~přesunům. $k$-medoids hledá $k$ reprezentantů $y_1,\dots,y_k$ \emph{z~původní
+databáze} minimalizujících $O$ --- je proto robustní vůči odlehlým hodnotám a~funguje pro
+libovolný typ dat, ale je pomalejší; složitost jedné iterace $O(k\,n\,d)$.
+CLARA/CLARANS jej škálují vzorkováním, resp.\ náhodným prohledáváním.}
+
+\podpodkap{5}{Vektorová kvantizace: algoritmus LVQ}
+
+\fml{LVQ --- adaptace vah (shlukování s~učitelem)}
+\[
+q = \arg\min_j \|x-w_j\|_2^2,
+\qquad
+w_q(k+1)= w_q(k) \pm \mu(k)\big(x-w_q(k)\big)
+\]
+\pop{Znaménko $+$ (\uv{přitáhni}), souhlasí-li třída $x$ s~třídou vítězného vektoru $w_q$,
+jinak $-$ (\uv{odtlač}). Rychlost učení klesá, např.\ $\mu(k)=\mu(k-1)/(k+1)$.
+Váhové vektory se inicializují prvními $m$ vzory (musí pokrýt všechny třídy), čímž se
+neurony \uv{zkalibrují} s~třídami.}
+
+\kap{4}{Charakteristická a~diskriminační pravidla a~jejich zajímavost}
+
+\podkap{1}{Pravidla jako srozumitelná forma klasifikace}
+
+\fml{Fuzzy implikace jako reziduum t-normy}
+\[
+t(\varphi\Rightarrow\psi)=\sup\{\,c\in[0,1]: T(t(\varphi),c)\le t(\psi)\,\},
+\qquad
+t(\varphi\Leftrightarrow\psi)=T\big(t(\varphi\Rightarrow\psi),\,t(\psi\Rightarrow\varphi)\big)
+\]
+\pop{Booleovská pravidla pracují s~$t(\varphi)\in\{0,1\}$, fuzzy pravidla se stupni
+pravdivosti $t(\varphi)\in[0,1]$. Na objektech, kde antecedent \emph{plně} platí
+($t(\varphi)=1$), implikace splývá s~ekvivalencí --- proto se v~praxi pravidla vyhodnocují
+právě tam.}
+
+\podkap{3}{Charakteristická a~diskriminační pravidla: t-weight a~d-weight}
+
+\fml{t-weight (typičnost) a~kvantitativní charakteristické pravidlo}
+\[
+t\text{-}\mathrm{weight}(q_a)=\frac{\mathrm{count}(q_a)}{\sum_{i=1}^{N}\mathrm{count}(q_i)}\in[0,1]
+\]
+\[
+\forall X\ \ \mathrm{target}(X)\Rightarrow \mathrm{cond}_1(X)\,[t{:}\,w_1]\ \vee\
+   \cdots\ \vee\ \mathrm{cond}_N(X)\,[t{:}\,w_N]
+\]
+\pop{$q_1,\dots,q_N$ jsou zobecněné záznamy cílové třídy, $X$ objekt (pravidlo platí pro všechny). t-weight = \emph{podíl objektů
+cílové třídy, které $q_a$ pokrývá} (součet přes všechny záznamy je 100~\%). Charakteristické
+pravidlo je \textbf{nutná podmínka} --- implikace \emph{z}~třídy. Odpovídá \emph{recallu}
+pravidla vůči cílové třídě.}
+
+\fml{d-weight (rozlišovací váha) a~kvantitativní diskriminační pravidlo}
+\[
+d\text{-}\mathrm{weight}(q_a)=\frac{\mathrm{count}(q_a\in C_t)}
+   {\mathrm{count}(q_a\in C_t)+\sum_{j=1}^{m}\mathrm{count}(q_a\in C_j)}\in[0,1]
+\]
+\[
+\forall X\ \ \mathrm{target}(X)\Leftarrow \mathrm{cond}(X)\,[d{:}\,w]
+\]
+\pop{$C_t$ je cílová třída, $C_1,\dots,C_m$ kontrastní třídy. d-weight = \emph{podíl objektů
+pokrytých záznamem $q_a$, které patří do cílové třídy}. Diskriminační pravidlo je
+\textbf{postačující podmínka} --- implikace \emph{do}~třídy. Odpovídá \emph{precision}
+pravidla. \emph{Kvantitativní popisné pravidlo} kombinuje obojí:
+$\Leftrightarrow$ s~$[t{:}\,w,\ d{:}\,w']$.}
+
+\podkap{6}{Observační pravidla: konfidence, podpora a~testy hypotéz}
+
+\fml{Observační pravidlo s~konfidencí a~podporou}
+\[
+\mathrm{conf}=\frac{a}{a+b},\qquad \mathrm{sup}=\frac{a}{n},\qquad
+(\varphi\sim\psi)=1 \iff \mathrm{conf}\ge c_0\ \wedge\ \mathrm{sup}\ge s_0
+\]
+\pop{Čtyřpolní tabulka: $a$ objektů splňuje $\varphi\wedge\psi$, $b$ objektů
+$\varphi\wedge\neg\psi$, $c$ objektů $\neg\varphi\wedge\psi$, $d$ objektů
+$\neg\varphi\wedge\neg\psi$, $n=a+b+c+d$. $\mathrm{conf}$ je nestranný odhad
+$P(\psi\mid\varphi)$. Druhý typ observačních pravidel je založen na \emph{testech hypotéz}
+místo prahů. Každá volba míry a~prahu je jiný \emph{zobecněný kvantifikátor}, a~tedy jiná
+množina nalezených pravidel.}
+
+\podkap{8}{Měření zajímavosti pravidel}
+
+\fml{Střední hodnota ceny (různá cena různých chyb)}
+\[
+\frac1n\sum_{i,j}c(i,j)\,n_{ij}
+\]
+\pop{$c(i,j)$ = cena klasifikace třídy $i$ jako $j$, $n_{ij}$ = odpovídající četnost.
+Tradiční chybovost je speciální případ: $c(i,i)=0$, jinak 1. Realističtější, protože
+nedoručený ham vadí víc než nerozpoznaný spam a~nerozpoznané napadení sítě víc než falešný
+poplach.}
+
+\kap{5}{Reprezentace, vyhodnocování a~vizualizace znalostí}
+
+\podkap{2}{Vyhodnocování modelů}
+
+\podpodkap{1}{Kritéria hodnocení klasifikačních metod}
+
+\fml{Přesnost a~křížová validace}
+\[
+\mathit{Accuracy}=\frac{\text{počet správných klasifikací}}{\text{počet všech testovaných případů}},
+\qquad
+\mathit{Accuracy}_{CV}=\frac1k\sum_{i=1}^{k}\mathit{Accuracy}_i
+\]
+\pop{\textbf{Zásadní pravidlo:} trénovací množina se nesmí použít při testování a~testovací
+při učení --- jen neviděná data dají nezkreslený odhad. \emph{Holdout} pro velká data,
+\emph{$k$-násobná křížová validace} ($k=5$ nebo 10) pro menší, \emph{leave-one-out} pro velmi
+malá. \emph{Validační} množina (třetí část) slouží k~ladění \emph{parametrů} algoritmu.}
+
+\fml{Interval spolehlivosti pro křížovou validaci}
+\[
+\mathit{Accuracy}_{CV}\pm t_{N,k-1}\cdot s_{\mathit{Accuracy}},
+\qquad
+s_{\mathit{Accuracy}}=\sqrt{\frac{1}{k(k-1)}\sum_{i=1}^{k}
+   \big(\mathit{Accuracy}_i-\mathit{Accuracy}_{CV}\big)^2}
+\]
+\pop{Přibližný $N\%$ interval; $t_{N,k-1}$ je kvantil Studentova rozdělení
+s~$k-1$ stupni volnosti. Umožňuje říct, zda je rozdíl mezi dvěma modely
+\emph{statisticky významný}, nebo jen šum.}
+
+\podpodkap{3}{Matice záměn a~odvozené míry\label{ssec:matice-zamen}}
+
+\fml{Matice záměn: precision, recall, $F_1$}
+\[
+p=\mathit{precision}=\frac{TP}{TP+FP},\qquad
+r=\mathit{recall}=\frac{TP}{TP+FN},\qquad
+F_1=\frac{2pr}{p+r}=\frac{2}{\frac1p+\frac1r}
+\]
+\pop{$TP$/$TN$ = správně klasifikované pozitivní/negativní vzory, $FP$/$FN$ = nesprávně.
+\emph{Precision} = podíl správných mezi vzory \emph{označenými} za pozitivní;
+\emph{recall} = podíl nalezených mezi \emph{skutečně} pozitivními. \textbf{Obě hodnotí jen
+pozitivní třídu} --- proto se používají u~nevyvážených dat, kde je accuracy zavádějící.
+$F_1$ je \emph{harmonický průměr}, a~je tedy blíž tomu \emph{menšímu} z~obou čísel: velký
+je jen tehdy, jsou-li velké \emph{obě} míry.}
+
+\podpodkap{5}{ROC křivka a~AUC}
+
+\fml{ROC křivka: TPR, FPR, TNR}
+\[
+\mathit{TPR}=\frac{TP}{TP+FN},\qquad \mathit{FPR}=\frac{FP}{FP+TN},\qquad
+\mathit{TNR}=\frac{TN}{FP+TN}
+\]
+\pop{ROC je graf TPR proti FPR při měnícím se prahu skóre. $\mathit{TPR}$ je \emph{recall}
+pozitivní třídy (též \emph{senzitivita}), $\mathit{TNR}$ \emph{specificita}
+($=1-\mathit{FPR}$). \textbf{AUC} = plocha pod křivkou: 0,5 = náhodný klasifikátor,
+1,0 = dokonalý; interpretuje se jako pravděpodobnost, že náhodný pozitivní vzor dostane vyšší
+skóre než náhodný negativní. Na rozdíl od accuracy nezávisí na zvoleném prahu ani na poměru
+tříd.}
+
+\kap{6}{Modely pro analýzu sociálních sítí, centralita a~detekce komunit}
+
+\podkap{3}{Síla vazeb}
+
+\fml{Překryv sousedství (síla vazby)}
+\[
+O(i,j)=\frac{|N_i\cap N_j|}{|N_i\cup N_j|-2}
+\]
+\pop{$N_i$ = sousedé uzlu $i$; $-2$ ve jmenovateli vylučuje $i$ a~$j$ samotné.
+\textbf{Čím větší překryv, tím silnější vazba.} Souvisí se \emph{sílou slabých vazeb}
+(Granovetter): mosty a~zkratkové mosty mají překryv blízký nule, ale zprostředkovávají
+nové informace. \emph{Zkratkový most}: hrana, jejímž odstraněním se vzdálenost koncových
+uzlů zvětší na více než 2 --- čím větší výsledná vzdálenost, tím slabší vazba.}
+
+\podkap{4}{Klíčoví hráči: míry centrality}
+
+\fml{Centrality}
+\[
+C_D(v) = \deg(v), \qquad
+C_B(v) = \sum_{s \ne v \ne t} \frac{\sigma_{st}(v)}{\sigma_{st}}, \qquad
+C_C(v) = \frac{n-1}{\sum_{u} d(v,u)}
+\]
+\pop{\emph{Stupňová} ($C_D$) --- kolik lidí osoba dosáhne \textbf{přímo}; propojenost,
+vliv, popularita. \emph{Mezilehlá} ($C_B$) --- $\sigma_{st}$ je počet nejkratších cest mezi
+$s$ a~$t$, $\sigma_{st}(v)$ počet těch přes $v$; indikuje uzly na komunikačních cestách,
+tedy místa, kde se síť může \textbf{rozpadnout}. \emph{Blízkostní} ($C_C$, kde $d(v,u)$ je vzdálenost uzlů a~$n$ počet uzlů sítě) --- převrácená
+průměrná délka nejkratších cest; míra \emph{dosahu} a~rychlosti šíření.
+\textbf{Jednotlivé míry nestačí:} dva uzly \emph{společně} mohou být pro síť důležitější než
+nejcentrálnější uzel sám.}
+
+\fml{Vlastní centralita (\emph{eigenvector centrality})}
+\[
+x_i=\frac1\lambda\sum_{j\in M(i)}x_j=\frac1\lambda\sum_{j\in V}a_{i,j}x_j
+   \quad\Longleftrightarrow\quad Ax=\lambda x
+\]
+\pop{$A$ je matice sousednosti, $M(i)$ množina sousedů $i$, $x_i$ centralita uzlu $i$. Centralita uzlu je úměrná součtu centralit jeho sousedů --- moc a~status jsou definovány
+\emph{rekurzivně}. Vlastních čísel je mnoho, ale \emph{požadavek nezápornosti} všech složek
+vlastního vektoru vybírá právě \textbf{největší} $\lambda$ (Perronova--Frobeniova věta).
+Vektor je určen až na násobek $\Rightarrow$ nutná normalizace. Blízce souvisí s~PageRankem.}
+
+\podkap{5}{Koheze: míry na úrovni sítě}
+
+\fml{Reciprocita, hustota, klastrovací koeficient}
+\[
+\text{density}=\frac{|E|}{|V|(|V|-1)/2} \ \text{(neor.)},\quad
+\frac{|E|}{|V|(|V|-1)} \ \text{(or.)},
+\qquad
+C_i=\frac{2\,|\{e_{jk}: v_j,v_k\in N_i\}|}{k_i(k_i-1)}
+\]
+\pop{\emph{Reciprocita} = podíl obousměrných vztahů; \textbf{má smysl jen v~orientovaných
+grafech}. \emph{Hustota} = podíl hran na počtu \emph{možných}; klika má hustotu 1.
+\emph{Klastrovací koeficient} uzlu = hustota jeho \emph{sousedství} $N_i$, $k_i=|N_i|$
+(u~orientovaných grafů bez faktoru 2); koeficient sítě $C=\frac{1}{|V|}\sum_i C_i$
+indikuje přítomnost (sub)komunit.}
+
+\podkap{7}{Modelování vlivu}
+
+\fml{Model lineárního prahu (LTM)}
+\[
+\sum_{u\in N_v^{\text{aktivní}}} w_{u,v}\ \ge\ \theta_v \sum_{u\in N_v} w_{u,v}
+\]
+\pop{$w_{u,v}$ je váha vazby ze souseda $u$ na $v$. Každý uzel $v$ si zvolí prah $\theta_v$ \emph{náhodně} z~$U[0,1]$; aktivní uzly zůstávají
+aktivní a~v~každém kroku se aktivují uzly splňující tuto podmínku. LTM se soustředí na
+\textbf{příjemce} vlivu (ten sčítá tlak okolí); nezávislý kaskádový model (ICM) naopak na
+\emph{odesílatele} --- každý nově aktivovaný uzel dostane jediný pokus aktivovat každého
+souseda.}
+
+\fml{Maximalizace vlivu}
+\[
+\max_{|B|\le k}\ \sigma(B)
+\]
+\pop{$\sigma(B)$ = očekávaný počet uzlů ovlivněných počáteční aktivační množinou $B$.
+Úloha je \textbf{NP-těžká}, ale $\sigma$ je submodulární, takže \emph{hladový} přístup
+(přidávej uzel s~největším marginálním přírůstkem) dává řešení na úrovni
+\textbf{63~\%} ($1-1/e$) optima.}
+
+\podkap{8}{Vliv versus korelace}
+
+\fml{Logistický model vlivu}
+\[
+p(a)=\frac{e^{\alpha\ln(a+1)+\beta}}{1+e^{\alpha\ln(a+1)+\beta}},\qquad
+\ln\frac{p(a)}{1-p(a)}=\alpha\ln(a+1)+\beta
+\]
+\pop{$a$ = počet aktivních kontaktů uzlu, $\alpha$ = \emph{koeficient sociální korelace},
+$\beta$ = vrozená tendence k~aktivaci, $\ln(a+1)$ = vysvětlující proměnná (logaritmus tlumí
+vliv velkého počtu kontaktů). Jde o~logistickou regresi; \emph{shuffle test} (přeházení
+časových značek) rozliší skutečný vliv od pouhé korelace.}
+
+\podkap{9}{Homofilie, výběr a~sociální vliv}
+
+\fml{Test homofilie}
+\[
+\text{očekávaný podíl heterogenních hran} = 2pq
+\]
+\pop{$p$, $q$ jsou podíly obou hodnot atributu v~síti; při náhodném přiřazení je
+pravděpodobnost hrany muž--muž $p^2$, žena--žena $q^2$, různopohlavní $2pq$.
+\textbf{Je-li podíl heterogenních hran významně \emph{nižší} než $2pq$, jde o~důkaz
+homofilie}; významně \emph{vyšší} znamená \emph{inverzní} homofilii (partnerské vztahy).
+Příklad: 5 z~18 hran různopohlavních, $p=2/3$, $q=1/3$, $2pq=4/9$, tj.\ očekáváno 8 z~18
+$\Rightarrow$ homofilie. Test funguje i~pro více než dvě hodnoty.}
+
+\podkap{13}{Analýza vazeb: huby, autority a~algoritmus HITS}
+
+\fml{HITS --- huby a~autority}
+\[
+a(i)=\sum_{(j,i)\in E}h(j),\qquad h(i)=\sum_{(i,j)\in E}a(j),
+\qquad\text{maticově}\qquad
+a=L^{\!\top}h,\qquad h=La
+\]
+\pop{$L$ je matice sousednosti hypertextového grafu \emph{bázové množiny}
+(kořenová množina $S$ z~vyhledávače $+$ stránky odkazující na $S$ a~odkazované z~$S$).
+$a(i)$ je skóre autority a~$h(i)$ skóre hubu stránky $i$; vzájemné zesilování: dobrá autorita je odkazovaná dobrými huby a~naopak.
+\textbf{Normalizace je nezbytná} --- bez ní hodnoty rostou nade všechny meze
+a~mocninná iterace nekonverguje.}
+
+\fml{HITS --- spektrální analýza}
+\[
+a_k=\big(L^{\!\top}L\big)^{k-1}a_0,\qquad h_k=\big(LL^{\!\top}\big)^{k}h_0,
+\qquad
+\frac{a_k}{c_1^{k}}=x_1z_1+x_2\Big(\frac{c_2}{c_1}\Big)^{\!k}z_2+\cdots
+\]
+\pop{$L^{\!\top}L$ je \emph{symetrická}, má tedy $n$ vlastních vektorů $z_1,\dots,z_n$
+s~vlastními čísly $|c_1|\ge\cdots\ge|c_n|$; rozvineme-li $a_0=\sum_i x_iz_i$, jde pro
+$c_1 > c_2$ a~$k\to\infty$ každý člen kromě prvního k~nule. Vektor autorit tedy konverguje
+k~\textbf{hlavnímu vlastnímu vektoru} $L^{\!\top}L$ --- rychlost konvergence určuje poměr
+$c_2/c_1$.}
+
+\podkap{14}{PageRank}
+
+\fml{Prestiž pořadí a~základní PageRank}
+\[
+P(i)=A_{1i}P(1)+\cdots+A_{ni}P(n) \iff P=A^{\!\top}P,
+\qquad
+P(i)=\sum_{(j,i)\in E}\frac{P(j)}{O_j}
+\]
+\pop{Prestiž je lineární kombinace pořadí těch, kteří na $i$ odkazují --- \emph{charakteristická
+rovnice} vlastního systému matice $A^{\!\top}$. PageRank navíc \textbf{dělí} skóre stránky
+mezi její odkazy: $O_j$ = počet výstupních odkazů $j$, tedy $A_{ij}=1/O_i$ pro $(i,j)\in E$.
+Hlas důležité stránky váží víc, ale stránka odkazující na tisíc jiných dá každé málo.}
+
+\fml{Finální PageRank s~tlumicím faktorem}
+\[
+P=\Big(\frac{1-d}{n}\Big)\,\mathbf{E}+d\,A^{\!\top}P
+\qquad\Longrightarrow\qquad
+P(i)=(1-d)+d\sum_{(j,i)\in E}\frac{P(j)}{O_j}
+\]
+\pop{$\mathbf E = \mathbf{ee}^{\!\top}$ je matice samých jedniček ($n\times n$).
+Model \emph{náhodného surfaře}: s~pravděpodobností $d$ (typicky 0,85) následuje náhodný odkaz,
+s~$1-d$ skočí na náhodnou stránku. \textbf{Proč augmentace:} řeší slepé uličky (stránky bez
+odkazů) a~pasti --- rozšířená matice je stochastická, \emph{ireducibilní} i~\emph{aperiodická},
+takže mocninná iterace konverguje k~jedinému stacionárnímu rozdělení. Druhý tvar vzniká
+přeškálováním tak, aby $\mathbf e^{\!\top}P=n$.}
+
+\podkap{16}{Detekce komunit}
+
+\fml{Modularita $Q$}
+\[
+Q=\frac{1}{2m}\sum_{i,j}\Big(A_{ij}-\frac{k_ik_j}{2m}\Big)\delta(c_i,c_j)
+\]
+\pop{$A_{ij}$ = prvek matice sousednosti, $m$ = počet hran, $k_i$ = stupeň vrcholu $i$,
+$c_i$ = komunita $i$, $\delta$ = Kroneckerovo delta (sčítá se tedy jen přes dvojice
+\emph{uvnitř} komunit). $k_ik_j/2m$ je \emph{očekávaný} počet hran mezi $i$ a~$j$ v~náhodné
+síti se stejnými stupni. Síť má smysluplnou komunitní strukturu, je-li hran uvnitř komunit
+\emph{víc}, než by odpovídalo náhodě. Maximalizuje ji \emph{Louvainova metoda}
+(hladově, $O(n\log n)$) a~její upřesnění \emph{Leiden}.}
+
+\fml{Poměrový a~normalizovaný řez}
+\[
+\mathrm{RatioCut}(\pi)=\frac{1}{k}\sum_{i=1}^{k}\frac{\mathrm{cut}(C_i,\bar C_i)}{|C_i|},
+\qquad
+\mathrm{NCut}(\pi)=\frac{1}{k}\sum_{i=1}^{k}\frac{\mathrm{cut}(C_i,\bar C_i)}{\mathrm{vol}(C_i)}
+\]
+\pop{$\pi=\{C_1,\dots,C_k\}$ je \emph{rozdělení} na komunity (nikoli Ludolfovo číslo),
+$\mathrm{cut}(A,B)=\sum_{i\in A, j\in B}a_{ij}$, $|C_i|$ = počet uzlů,
+$\mathrm{vol}(C_i)$ = součet stupňů v~$C_i$. Prostý minimální řez vrací nevyvážená rozdělení
+(často singleton) --- \textbf{obě míry proto normalizují velikostí komunity a~preferují
+vyvážené řezy}. S~balančním omezením a~obecnými vahami je úloha \textbf{NP-těžká};
+řeší se spektrálně.}
+
+\podkap{17}{Predikce vazeb}
+
+\fml{Sousedské míry predikce vazeb}
+\[
+\mathrm{CN}(i,j)=|S_i\cap S_j|,
+\qquad
+\mathrm{Jaccard}=\frac{|S_i\cap S_j|}{|S_i\cup S_j|},
+\qquad
+\mathrm{AA}(i,j)=\sum_{k\in S_i\cap S_j}\frac{1}{\log|S_k|}
+\]
+\pop{$S_i$ = sousedé uzlu $i$. Každá míra opravuje slabinu předchozí: \emph{společní sousedé}
+nezohledňují stupně (dvě celebrity mají mnoho společných sousedů náhodou); \emph{Jaccard}
+normalizuje vůči stupňům \emph{koncových} uzlů, ne však prostředních; \emph{Adamic--Adar}
+snižuje váhu společného souseda s~jeho stupněm --- populární soused je společný mnoha párům,
+a~je tedy méně informativní.}
+
+\fml{Katzova míra}
+\[
+\mathrm{Katz}(i,j)=\sum_{t=1}^{\infty}\beta^{t}\,W_{ij}^{(t)},
+\qquad
+K=\sum_{t=1}^{\infty}\beta^{t}A^{t}=(I-\beta A)^{-1}-I
+\]
+\pop{$W_{ij}^{(t)}$ = počet procházek délky $t$ mezi $i$ a~$j$, $\beta<1$ = \emph{diskontní
+faktor} potlačující dlouhé procházky (nutný pro konvergenci geometrické řady).
+Měří \emph{nepřímou} propojenost, a~pomáhá proto ve \textbf{velmi řídkých} sítích, kde je
+společných sousedů málo a~sousedské míry nerozlišují. $A$ je matice sousednosti, $I$ jednotková matice a~$K$ matice Katzových koeficientů. Součet Katzových koeficientů uzlu vůči
+ostatním je jeho \emph{Katzova centralita}.}
+
+\bigskip
+\begin{center}
+\begin{minipage}{0.9\textwidth}
+\begin{poznbox}[Na co si dát pozor u~vzorců]
+\small
+\begin{itemize}
+\item \textbf{Konvence pořadí:} u~turnajové selekce značí $i=1$ nejlepšího, u~lineární
+  pořadové selekce nejhoršího. Zkoušející se na to rád zeptá.
+\item \textbf{Směr optimalizace:} entropie $H(A)$ a~Gini se \emph{minimalizují}, informační
+  zisk, $\chi^2$, MI a~$\Phi$ se \emph{maximalizují}.
+\item \textbf{Off-policy vs.\ on-policy:} jediný rozdíl mezi Q-learningem a~SARSA je
+  $\max_{a'}Q(s',a')$ vs.\ $Q(s',a')$.
+\item \textbf{Harmonický vs.\ aritmetický průměr:} $F_1$ je harmonický, a~proto je blízko
+  té \emph{menší} z~obou měr.
+\item \textbf{Kde je normalizace nutná:} HITS, vlastní centralita a~PageRank bez ní
+  nekonvergují; míry vzdálenosti bez normalizace atributů měří jen ten s~největším
+  rozsahem.
+\item \textbf{Nerovnost ve větě o~schématech} je \uv{$\ge$}, ne rovnost --- schéma může
+  být křížením i~\emph{obnoveno}.
+\end{itemize}
+\end{poznbox}
+\end{minipage}
+\end{center}
+
+\end{document}

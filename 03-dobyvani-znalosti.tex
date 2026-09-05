@@ -182,18 +182,6 @@ průsečíku tří disciplín:
 (strategického) rozhodování v~podniku. Bez ní se dobývání znalostí redukuje na akademické
 cvičení.
 
-\textbf{Vztah k~datovým skladům a~OLAP.} \mimo{} Typickým zdrojem dat pro KDD je
-\emph{datový sklad} (\emph{data warehouse}) --- integrovaná, subjektově orientovaná, časově
-variantní a~stálá databáze konsolidovaná z~provozních systémů. Data se v~něm organizují do
-\emph{datové kostky}: \emph{dimenze} (čas, produkt, region, \dots) $\times$ \emph{míry}
-(tržby, počty kusů); v~relační implementaci jde o~\emph{hvězdicové schéma} (tabulka faktů
-obklopená tabulkami dimenzí), fyzicky MOLAP (multidimenzionální uložení) nebo ROLAP
-(relační). \textbf{OLAP} (\emph{On-Line Analytical Processing}) nad kostkou umožňuje
-agregační operace \emph{roll-up} / \emph{drill-down} a~řezy \emph{slice \& dice} ---
-odpovídá ale jen na otázky, které si analytik umí \emph{předem položit}. Dobývání znalostí
-jde o~krok dál: hledá vzory, o~nichž předem nevíme, že v~datech jsou. Souvislost
-generalizace v~OLAP s~indukcí orientovanou na atributy viz kap.~\ref{sec:pravidla}.
-
 \subsection{Proces KDD}
 
 \mimoq{pětifázový rámec jako celek; náplň jednotlivých fází ve slidech je}
@@ -227,37 +215,34 @@ o~zkoumaných objektech (klientech banky, zákaznících, \dots). Tento krok typ
 60--80~\% celkového času projektu.
 
 \textbf{Sedm kroků očima manažera.} \mimo{} Organizační pohled na tentýž proces (impuls $=$
-problém, výstup $=$ znalost k~jeho řešení): \emph{(1)}~\emph{tým} --- experti na oblast, na data
-a~na metody KDD, žádná role není zastupitelná; \emph{(2)}~\emph{specifikace problému} --- převod
-obchodního zadání (\uv{zvýšit zisk} $\to$ \uv{predikovat odchod zákazníka});
-\emph{(3)}~\emph{sběr dat} včetně externích o~prostředí (sezóna, kampaně, počasí) --- může vést
-k~přeformulování problému; \emph{(4)}~\emph{volba metod} včetně vizualizačních;
-\emph{(5)}~\emph{předzpracování}; \emph{(6)}~\emph{dolování} --- opakovaně, výsledky ovlivňují
-parametry dalších běhů; \emph{(7)}~\emph{interpretace} --- analytická zpráva, případně akce.
+problém, výstup $=$ znalost k~jeho řešení):
+\begin{enumerate}
+\item \textbf{tým} --- experti na oblast, na data a~na metody KDD;
+\item \textbf{specifikace problému} --- \uv{zvýšit zisk} $\to$ \uv{predikovat odchod zákazníka};
+\item \textbf{sběr dat} --- i~externí o~prostředí (sezóna, kampaně, počasí);
+\item \textbf{volba metod};
+\item \textbf{předzpracování};
+\item \textbf{dolování} --- opakovaně, výsledky ladí parametry dalších běhů;
+\item \textbf{interpretace} --- analytická zpráva, případně akce.
+\end{enumerate}
 
 \subsection{Typy úloh dobývání znalostí}
 
-\mimo{} Podle vztahu nalezené znalosti k~cílovému konceptu:
+Úlohy se třídí dvěma nezávislými pohledy: \emph{co od výsledku chceme} a~\emph{zda máme
+k~dispozici cílovou proměnnou}.
 
-\begin{center}
-\small
-\begin{tabular}{@{}p{2.9cm}p{6.0cm}p{6.4cm}@{}}
-\toprule
-\textbf{Typ úlohy} & \textbf{Cíl} & \textbf{Charakter výsledku} \\
-\midrule
-Klasifikace / predikce & zařadit nové případy, resp.\ odhadnout budoucí vývoj entity &
-  preferujeme \emph{přesnost pokrytí} před jednoduchostí; hodně znalosti, obtížně
-  interpretovatelné \\
-Popis (charakterizace, profil) & najít dominantní strukturu či vztahy v~datech &
-  požadujeme \emph{srozumitelnost} při plném pokrytí konceptu; méně znalosti a~méně přesné \\
-Hledání \uv{nugetů} & najít zajímavou (novou, překvapivou) znalost & znalost \emph{nemusí}
-  pokrývat celý koncept; hodnotí se překvapivost \\
-\bottomrule
-\end{tabular}
-\end{center}
-
-\emph{Predikce:} počasí, cena akcií, spotřeba elektřiny. \emph{Popis:} profil bonitního klienta.
-\emph{Nuget:} neobvyklá kombinace zboží v~košíku, podezřelý vzorec transakcí.
+\mimo{} \textbf{Podle toho, co od výsledku chceme:}
+\begin{itemize}
+\item \textbf{Klasifikace / predikce} --- zařadit nové případy, resp.\ odhadnout budoucí
+      vývoj (počasí, cena akcií, spotřeba elektřiny). Rozhoduje \emph{přesnost}, nikoli
+      jednoduchost; výsledkem bývá hodně znalosti, obtížně interpretovatelné.
+\item \textbf{Popis} (charakterizace, profil) --- vystihnout dominantní strukturu či vztahy
+      v~datech (profil bonitního klienta). Rozhoduje \emph{srozumitelnost} při plném pokrytí
+      konceptu; znalosti je méně a~je méně přesná.
+\item \textbf{Hledání \uv{nugetů}} --- najít novou, \emph{překvapivou} znalost (neobvyklá
+      kombinace zboží v~košíku, podezřelý vzorec transakcí); \emph{nemusí} pokrývat celý
+      koncept.
+\end{itemize}
 
 \begin{defbox}[Deskriptivní vs.\ prediktivní úlohy]
 \textbf{Deskriptivní} (\emph{descriptive}) úlohy charakterizují obecné vlastnosti dat:
@@ -267,12 +252,12 @@ hodnot, analýza vývoje.
 \textbf{Prediktivní} (\emph{predictive}) úlohy provádějí inferenci nad daty za účelem
 predikce: klasifikace (diskrétní cílový atribut), regrese (spojitý cílový atribut),
 predikce časových řad.
-
-Ortogonální dělení podle dostupnosti cílové proměnné: \emph{učení s~učitelem}
-(\emph{supervised}) --- klasifikace, regrese; \emph{učení bez učitele}
-(\emph{unsupervised}) --- shlukování, asociační pravidla, detekce odlehlých hodnot;
-\emph{poloučené} (\emph{semi-supervised}) --- malá označkovaná a~velká neoznačkovaná část.
 \end{defbox}
+
+\textbf{Podle dostupnosti cílové proměnné:} \emph{učení s~učitelem} (\emph{supervised}) ---
+klasifikace, regrese; \emph{učení bez učitele} (\emph{unsupervised}) --- shlukování,
+asociační pravidla, detekce odlehlých hodnot; \emph{poloučené} (\emph{semi-supervised}) ---
+malá označkovaná a~velká neoznačkovaná část dat.
 
 Toto dělení je klíčem ke kap.~\ref{sec:metody}: okruh v~ní jmenuje po jednom representantu
 učení bez učitele nad transakčními daty (asociační pravidla), učení s~učitelem a~učení bez
@@ -445,11 +430,6 @@ Základní strategie (v~pořadí od nejjednodušší k~nejpřesnější):
       nejpřesnější, výpočetně nejdražší, riskuje umělou závislost mezi atributy.
 \end{enumerate}
 
-\mimo{} Terminologicky se rozlišuje MCAR (\emph{missing completely at random}), MAR
-(\emph{missing at random} --- chybění závisí na pozorovaných atributech) a~MNAR
-(\emph{missing not at random} --- závisí na nepozorované hodnotě samotné). Jen u~MCAR je
-prosté vypuštění nezkreslené.
-
 Některé metody umí chybějící hodnoty zpracovat samy: C4.5 je při konstrukci stromu ignoruje
 (kritérium dělení počítá jen ze známých hodnot) a~při klasifikaci je odhaduje z~ostatních
 vzorů; CART chybějící hodnoty do rozhodovacího kritéria nezapočítává; naivní Bayes umí
@@ -505,6 +485,7 @@ $Q_1=400$, $Q_3=580$~g $\Rightarrow$ $\mathrm{IQR}=180$, meze 220 a~760 --- z~ho
 a~420 --- odlehlé jsou 170~g a~440~g.
 
 \subsection{Integrace dat}
+\label{ssec:integrace}
 
 \mimo{} Při \emph{integraci} (\emph{data integration}) spojujeme více zdrojů do jedné
 tabulky. Hlavní problémy: \textbf{problém identity entity} (atribut \texttt{cust\_id}
@@ -537,91 +518,75 @@ střední absolutní odchylka:
 \[ m_f=\tfrac1n\big(x_{1f}+\cdots+x_{nf}\big),\qquad
 s_f=\tfrac1n\big(|x_{1f}-m_f|+\cdots+|x_{nf}-m_f|\big),\qquad
 z(x_{if})=\frac{x_{if}-m_f}{s_f}. \]
-
-\textbf{Standardizace podle směrodatné odchylky} (\emph{std-score}) --- nulový průměr
-a~jednotková korigovaná výběrová směrodatná odchylka:
-\[ \mathrm{cor}s_f=\sqrt{\frac{1}{n-1}\sum_{i=1}^n\big(x_{if}-m_f\big)^2},\qquad
-\mathrm{std}(x_{if})=\frac{x_{if}-m_f}{\mathrm{cor}s_f}. \]
 \end{defbox}
 
-Volba mezi z-skóry: střední absolutní odchylka je \emph{robustnější} k~odlehlým hodnotám než
-směrodatná (odchylky se neumocňují), takže outliery stlačí ostatní data méně.
+Střední absolutní odchylka je \emph{robustní} k~odlehlým hodnotám (odchylky se neumocňují),
+takže outliery stlačí ostatní data méně.
 
 \subsection{Diskretizace numerických atributů}
 
-Řada metod (asociační pravidla, ID3, CHAID, bayesovská klasifikace s~diskrétními atributy)
+Řada metod (asociační pravidla, ID3, bayesovská klasifikace s~diskrétními atributy)
 vyžaduje kategoriální vstup. \emph{Diskretizace} rozdělí rozsah numerického atributu na
 intervaly. Metody se liší ve čtyřech ohledech: \emph{strategií} (dělení intervalů shora,
 nebo slučování zdola), \emph{počtem} intervalů, \emph{typem} intervalů a~\emph{kritériem}
 kvality (minimální klasifikační chyba, entropie, $\chi^2$ test).
 
 \begin{itemize}
-\item \textbf{Ekvidistantní} (\emph{equi-width}) --- rozsah se rozdělí na intervaly stejné
-      délky. Nejjednodušší, ale citlivé na odlehlé hodnoty a~nerovnoměrné rozdělení.
-\item \textbf{Ekvifrekvenční} (\emph{equi-depth}) \mimo{} --- intervaly se stejným počtem
-      objektů.
+\item \textbf{Ekvidistantní} (\emph{equi-width}) --- rozsah $[\min(f),\max(f)]$ se rozdělí
+      na předem zvolený počet $k$ intervalů stejné délky $(\max(f)-\min(f))/k$.
+      Nejjednodušší (nepotřebuje ani třídy, ani řazení hodnot), ale citlivé na odlehlé
+      hodnoty a~nerovnoměrné rozdělení: jediný outlier natáhne rozsah a~většina objektů pak
+      skončí v~jediném intervalu.
+\item \textbf{Ekvifrekvenční} (\emph{equi-depth}) \mimo{} --- hodnoty se vzestupně seřadí
+      a~hranice se kladou po $n/k$ objektech, takže každý interval obsahuje stejný počet
+      objektů. Robustní k~outlierům, hranice ale nemusí odpovídat přirozeným shlukům
+      hodnot.
 \item \textbf{S~využitím informace o~třídě} --- hranice se volí tak, aby intervaly byly co
-      nejčistší; kritériem je entropie (rekurzivní dělení, jako v~C4.5) nebo $\chi^2$
-      (slučování zdola, jako v~CHAID).
+      nejčistší vzhledem k~cílové třídě. \emph{Shora} (dělením): kandidátní hranicí je
+      každé místo mezi sousedními seřazenými hodnotami, kde se mění třída; vybere se
+      hranice s~nejmenším váženým součtem entropií vzniklých částí a~dělí se rekurzivně,
+      dokud dělení přináší zlepšení (stejně se volí práh numerického atributu v~C4.5,
+      kap.~\ref{sec:metody}). \emph{Zdola} (slučováním): na začátku má každá hodnota
+      vlastní interval a~opakovaně se slučuje sousední dvojice s~nejpodobnějším rozdělením
+      tříd (nejmenší $\chi^2$), dokud $\chi^2$ všech sousedních dvojic nepřekročí zvolený
+      práh významnosti.
 \end{itemize}
 
 \subsubsection{Fuzzy diskretizace}
 
-Ostré hranice pošlou dva blízké objekty do různých kategorií. \emph{Fuzzy diskretizace} je
-\uv{rozostří}: jedné numerické hodnotě mohou odpovídat \emph{dvě} diskretizované hodnoty se
-součtem charakteristických funkcí 1. Vznikají \uv{fuzzy}-objekty s~vahou $<1$ danou
-\emph{součinem} charakteristických funkcí všech atributů:
-\[ w = \prod_j \mu_j. \]
-Rizika: ztráta informace a~\emph{kontradikce} --- objekty se stejnými diskretizovanými
-hodnotami, ale různými třídami.
+Ostré hranice mají nepříjemný důsledek: dvě téměř totožné hodnoty těsně po obou stranách
+hranice padnou do různých kategorií. \emph{Fuzzy diskretizace} hranice rozostří ---
+charakteristická funkce $\mu$ intervalu neklesá na hranici skokem z~1 na 0, ale lineárně
+přes přechodovou zónu. Vhodné intervaly hledá procedura \textbf{Interval}: hodnoty
+atributu se vzestupně seřadí a~maximální posloupnosti hodnot se stejnou třídou se spojí do
+intervalů s~$\mu=1$; úseky s~promíchanými třídami (a~mezery mezi intervaly) dostanou třídu
+\uv{?}. Každý interval $Int_i$ třídy \uv{?} se pak vyřeší podle sousedů: patří-li
+$Int_{i-1}$ i~$Int_{i+1}$ téže třídě, spojí se všechny tři v~jeden ostrý interval
+s~$\mu=1$; jinak vzniknou \emph{dva překrývající se fuzzy intervaly}
+$Int_{i-1}\cup Int_i$ a~$Int_i\cup Int_{i+1}$ --- na své původní ostré části má každý
+$\mu=1$ a~přes zónu \uv{?} (mezi horní mezí $x_{i-1}$ intervalu $Int_{i-1}$ a~dolní mezí
+$x_{i+1}$ intervalu $Int_{i+1}$) charakteristické funkce lineárně klesají, resp. rostou:
+\[ \mu_{i-1}(x)=\frac{x_{i+1}-x}{x_{i+1}-x_{i-1}},\qquad
+   \mu_{i+1}(x)=\frac{x-x_{i-1}}{x_{i+1}-x_{i-1}},\qquad x\in[x_{i-1},x_{i+1}]. \]
 
-\begin{defbox}[Procedura \emph{Interval} (fuzzy diskretizace)]
-\begin{enumerate}
-\item Má-li posloupnost hodnot stejnou třídu, vytvoř z~ní interval s~charakteristickou
-      funkcí rovnou 1 na celém intervalu.
-\item Pro každý interval $\mathit{Int}_i$ patřící do třídy \uv{?}:
-      \begin{itemize}
-      \item patří-li sousední intervaly $\mathit{Int}_{i-1}$ a~$\mathit{Int}_{i+1}$ do
-            \emph{téže} třídy, spoj je do jednoho intervalu
-            $\mathit{Int}_{i-1}\cup \mathit{Int}_i\cup \mathit{Int}_{i+1}$
-            (charakteristická funkce $=1$ na celém intervalu);
-      \item jinak vytvoř \emph{dva fuzzy-intervaly}: spojením $\mathit{Int}_{i-1}\cup
-            \mathit{Int}_i$ s~charakteristickou funkcí rovnou 1 na
-            $[L_{i-1},U_{i-1}]$ a~lineárně klesající
-            $\frac{U_{i+1}-x}{U_{i+1}-L_{i-1}}$ na přechodové oblasti, a~analogicky
-            spojením $\mathit{Int}_i\cup \mathit{Int}_{i+1}$ s~funkcí lineárně rostoucí
-            $\frac{x-L_{i-1}}{U_{i+1}-L_{i-1}}$.
-      \end{itemize}
-\item Zajisti spojité pokrytí celého rozsahu (mezery mezi intervaly se chápou jako
-      intervaly třídy \uv{?}).
-\end{enumerate}
-\end{defbox}
+Jedné numerické hodnotě tak mohou odpovídat \emph{dvě} sousední kategorie se součtem
+charakteristických funkcí 1. Objekt s~hodnotou v~přechodové zóně vstupuje do dat jako
+\uv{fuzzy objekt} s~vahou danou součinem charakteristických funkcí všech atributů,
+\[ w = \prod_j \mu_j < 1. \]
+Diskretizace obecně může ztratit informaci a~zavést \emph{kontradikce} --- objekty se
+stejnými diskretizovanými hodnotami vstupů, které patří do různých tříd.
 
 \subsubsection{Seskupování hodnot kategoriálních atributů (KEX)}
 
-Má-li kategoriální atribut příliš mnoho hodnot, je užitečné je seskupit. \textbf{Cíl:}
-vytvořit takové grupy $A(\mathit{Grp})$, aby $P(\mathrm{Class}\mid A(\mathit{Grp}))$
-\emph{významně} lišilo od apriorního $P(\mathrm{Class})$ --- a~vytvořit jich tolik, kolik je
-tříd, plus jednu navíc (\uv{?}).
-
-\begin{defbox}[Algoritmus seskupování hodnot (KEX)]
-\textbf{Hlavní cyklus:}
-\begin{enumerate}
-\item vytvoř uspořádaný seznam hodnot uvažovaného atributu;
-\item pro každou hodnotu: \emph{(a)}~spočítej četnosti výskytu objektů s~touto hodnotou
-      v~jednotlivých třídách; \emph{(b)}~přiřaď hodnotě kód třídy procedurou
-      \emph{Assign};
-\item vytvoř grupy hodnot procedurou \emph{Group}.
-\end{enumerate}
-
-\textbf{Procedura \emph{Assign}:} patří-li pro danou hodnotu všechny objekty do téže třídy,
-přiřaď hodnotě kód této třídy; jinak --- liší-li se rozdělení tříd pro danou hodnotu
-\emph{významně} (podle $\chi^2$ testu) od apriorního rozdělení tříd --- přiřaď kód
-nejčastější třídy, a~pokud ne, přiřaď kód \uv{?}.
-
-\textbf{Procedura \emph{Group}:} vytvoř grupu z~hodnot, kterým byl přiřazen stejný kód
-třídy.
-\end{defbox}
+Kategoriální atribut s~příliš mnoha hodnotami se zpracuje seskupením hodnot; cílem jsou
+grupy $\mathrm{Grp}$, pro něž se $P(\mathrm{Class}\mid A(\mathrm{Grp}))$ významně liší od
+apriorního $P(\mathrm{Class})$. Algoritmus: \emph{(1)}~sestaví se seznam hodnot atributu;
+\emph{(2)}~pro každou hodnotu se spočtou četnosti tříd mezi objekty s~touto hodnotou
+a~procedura \textbf{Assign} jí přiřadí kód --- patří-li všechny takové objekty do téže
+třídy, kód této třídy; liší-li se rozdělení tříd pro tuto hodnotu \emph{významně} (podle
+$\chi^2$ testu) od apriorního, kód nejčetnější třídy; jinak kód \uv{?};
+\emph{(3)}~procedura \textbf{Group} spojí hodnoty se stejným kódem do grup --- vznikne
+jich nejvýše tolik, kolik je tříd, plus jedna (\uv{?}).
 
 \subsection{Redukce dat}
 
@@ -661,31 +626,21 @@ zahodit směr, který je pro predikci klíčový, ale má malý rozptyl.
 Hledáme atributy, které nejlépe přispívají ke správné klasifikaci objektů.
 
 \begin{defbox}[Filtry vs.\ wrappery]
-\textbf{Filtrační metody} (\emph{filter}) --- pro každý atribut spočítáme charakteristiku
-odrážející jeho přínos ke klasifikaci, atributy podle ní seřadíme a~vybereme určitý počet
-nejlepších. Charakteristika je \emph{nezávislá} na následně použitém modelu; metoda je
-rychlá.
-
-\textbf{Obalové metody} (\emph{wrapper}) --- pomocí algoritmu strojového učení se postaví
-model nad \emph{podmnožinou} atributů a~model se vyhodnotí; použije se nejlepší
-z~postavených modelů (s~odpovídající podmnožinou atributů). Metoda je výpočetně drahá, ale
-zohledňuje interakci atributů \emph{s~konkrétním} modelem.
-
-Prohledávání prostoru podmnožin:
 \begin{itemize}
-\item \uv{zdola nahoru} (\emph{bottom-up}, \emph{dopředná selekce}) --- začneme od modelů
-      nad jednotlivými atributy a~postupně přidáváme další;
-\item \uv{shora dolů} (\emph{top-down}, \emph{zpětná eliminace}) --- začneme od modelu nad
-      úplnou množinou atributů a~postupně odstraňujeme nepotřebné.
+\item \textbf{Filtr} (\emph{filter}) --- pro každý atribut spočti charakteristiku přínosu
+      ke klasifikaci, seřaď, vyber nejlepší. \emph{Nezávislý} na modelu, rychlý.
+\item \textbf{Wrapper} --- nad \emph{podmnožinou} atributů postav model a~vyhodnoť jej;
+      použij nejlepší podmnožinu. Drahý, ale zohledňuje interakci atributů
+      \emph{s~konkrétním} modelem.
+\item Prohledávání podmnožin: \emph{bottom-up} (dopředná selekce --- přidávání atributů)
+      vs.\ \emph{top-down} (zpětná eliminace --- odebírání).
 \end{itemize}
 \end{defbox}
 
-\textbf{Zásadní omezení filtrů:} každý atribut se hodnotí \emph{samostatně}, takže vzájemný
-vliv atributů se zachycuje obtížně. Kritérium lze počítat pro \emph{množinu} atributů, ale
-kombinatorická explozivnost to omezuje na hladové dopředné či zpětné prohledávání.
-\mimo{} Důsledek: filtr propustí dvojici silně korelovaných atributů (oba mají vysoké skóre,
-druhý ale nepřináší nic nového) a~zahodí atribut užitečný jen \emph{v~kombinaci} s~jiným
-(XOR-vztah).
+\textbf{Omezení filtrů:} každý atribut se hodnotí \emph{samostatně} $\Rightarrow$ interakce
+atributů se zachytí obtížně (kritérium pro celé množiny naráží na kombinatorickou explozi).
+\mimo{} Filtr tak propustí dvojici silně korelovaných atributů a~zahodí atribut užitečný jen
+\emph{v~kombinaci} s~jiným (XOR-vztah).
 
 \subsubsection{Kritéria na kontingenčních tabulkách}
 \label{ssec:kontingencni}
@@ -775,13 +730,83 @@ Normalizace v~$\mathrm{ID}$ je podstatná: samotná $\mathrm{MI}$ systematicky z
 atributy s~mnoha hodnotami (v~limitě je identifikátor objektu \uv{nejinformativnější}
 atribut). Totéž zvýhodnění řeší poměrný informační zisk v~C4.5 (kap.~\ref{sec:metody}).
 
-\subsection{Vztahy mezi atributy: regrese a~korelace}
+\subsubsection{Kritéria pro numerické atributy: korelace}
+\label{ssec:korelace}
+
+Kritéria výše ($\chi^2$, entropie) pracují s~\emph{kategoriálními} atributy nad kontingenční
+tabulkou. Pro dvojici \textbf{numerických} atributů se místo nich používá \emph{korelační
+analýza} --- ta se uplatní dvakrát: k~měření \textbf{relevance} vstupu vůči numerickému
+výstupu a~k~odhalení \textbf{redundance} mezi dvojicí vstupů (viz odd.~\ref{ssec:integrace}).
+
+\begin{defbox}[Pearsonův korelační koeficient]
+Míra \textbf{lineárního} vztahu dvou numerických veličin; je to výběrová kovariance
+normalizovaná směrodatnými odchylkami:
+\[ r=\frac{\mathrm{cov}(X,Y)}{s_X\,s_Y}
+   =\frac{\sum_{i=1}^{n}(x_i-\bar x)(y_i-\bar y)}
+          {\sqrt{\sum_{i=1}^{n}(x_i-\bar x)^2\ \sum_{i=1}^{n}(y_i-\bar y)^2}}\ \in[-1,1]. \]
+$r=\pm 1$ znamená, že body leží \emph{přesně} na přímce (kladně, resp.\ záporně skloněné);
+$r=0$ znamená, že mezi nimi není \emph{lineární} vztah. Druhá mocnina $r^2$
+(\emph{koeficient determinace}) udává, jakou část rozptylu $Y$ vysvětlí lineární závislost
+na~$X$.
+
+\textbf{Vztah k~regresi} (odd.~\ref{ssec:regrese}): směrnice $\beta=\mathrm{cov}(X,Y)/s_X^2$,
+takže $r=\beta\,s_X/s_Y$ --- jde o~tutéž informaci, jen bezrozměrně škálovanou.
+\end{defbox}
+
+\begin{poznbox}[Tři pasti Pearsonova koeficientu]
+\textbf{(1) Měří jen lineární vztah.} Pro data symetricky rozložená kolem nuly a~$y=x^2$
+vyjde $r=0$, přestože je $Y$ na $X$ závislé \emph{funkčně}. Nulová korelace tedy
+\textbf{neznamená nezávislost} (opačná implikace platí: nezávislost $\Rightarrow r=0$).
+
+\textbf{(2) Je citlivý na odlehlé hodnoty.} Jediný extrémní bod dokáže $r$ vyhnat k~jedničce
+i~tam, kde zbytek dat žádný trend nemá.
+
+\textbf{(3) Korelace není kauzalita.} Souvislost může způsobovat skrytá třetí veličina;
+k~rozlišení je potřeba experiment nebo časové uspořádání (srov.\ vliv versus korelace
+v~kap.~\ref{sec:sna}).
+\end{poznbox}
+
+\begin{defbox}[Spearmanův korelační koeficient $\rho$]
+\emph{Spearman's rank correlation.} Je to \textbf{Pearsonův koeficient spočítaný z~pořadí}
+(\emph{ranks}) místo z~hodnot. Nejsou-li v~datech shodná pořadí (\emph{ties}), zjednoduší se na
+\[ \rho = 1-\frac{6\sum_{i=1}^{n} d_i^2}{n\,(n^2-1)}\ \in[-1,1], \]
+kde $d_i$ je rozdíl pořadí $i$-tého objektu v~$X$ a~v~$Y$.
+
+\textbf{Co tím získáš:}
+\begin{itemize}
+\item Zachytí \emph{libovolný \textbf{monotónní}} vztah, nejen lineární.
+\item Je \textbf{robustní vůči odlehlým hodnotám} --- pořadí extrémy stlačí.
+\item Je \textbf{invariantní vůči monotónní transformaci} ($\log$, $\sqrt{\ }$, \dots);
+      Pearson není.
+\item Funguje i~pro \textbf{ordinální} atributy, kde lze hodnoty seřadit, ale ne odečítat
+      (známky, stupně spokojenosti).
+\end{itemize}
+\end{defbox}
+
+\textbf{Číselný příklad.} Pět objektů, $x=(1,2,3,4,5)$ a~$y=(1,2,4,8,16)$ --- vztah je
+\emph{dokonale monotónní}, ale exponenciální, tedy nelineární.
+Pořadí obou veličin jsou shodná, takže všechna $d_i=0$ a~$\rho=1$ (dokonalá shoda).
+Pearson naproti tomu dá $r\doteq 0{,}93$: nelinearitu \emph{penalizuje}.
+Kdybychom $y$ zlogaritmovali ($\log_2 y = 0,1,2,3,4$), vyjde i~Pearsonovi $r=1$ --- což přesně
+ukazuje onu invarianci: Spearman dá $1$ rovnou, Pearson až po správné transformaci.
+
+\textbf{Kterou míru zvolit.} Pearson tam, kde je vztah přibližně lineární a~data bez
+odlehlých hodnot (a~kde chceme $r^2$ interpretovat jako vysvětlený rozptyl); Spearman tam, kde
+jde jen o~\emph{sílu a~směr trendu}, kde jsou v~datech extrémy, nebo kde jsou atributy pouze
+ordinální. \mimo{} Třetí běžnou variantou je \emph{Kendallovo $\tau$}, které místo rozdílů
+pořadí počítá podíl konkordantních a~diskordantních dvojic.
+
+\textbf{Použití při redukci dat.} Sestaví se \emph{korelační matice} všech dvojic vstupních
+atributů; dvojice s~$|r|$ blízkým 1 nesou prakticky tutéž informaci a~jednu z~nich lze
+odstranit. Pozor ale na výhradu z~odd.~\ref{ssec:filtr}: samotná párová korelace nepozná
+atribut, který je užitečný až \emph{v~kombinaci} s~jiným.
+
+\subsection{Vztahy mezi atributy: regrese}
 \label{ssec:regrese}
 
 Zatímco kontingenční tabulky popisují vztah \emph{kategoriálních} atributů, u~numerických se
-používá regresní a~korelační analýza. \emph{Korelační analýza} odpovídá na otázku, zda mezi
-dvěma numerickými veličinami \emph{existuje} lineární vztah; \emph{lineární regrese} určuje
-jeho \emph{parametry}.
+používá regresní analýza: \emph{lineární regrese} určuje \emph{parametry} lineárního vztahu
+mezi dvěma numerickými veličinami.
 
 \textbf{Důvody pro regresní analýzu:} nákladné měření výstupu (predikovat jej z~dostupných
 vstupů); vstupy známé dříve než výstup (odhad); řízené vstupy pomohou najít chování výstupu;
@@ -798,17 +823,6 @@ odkud po úpravě $\alpha=\bar y-\beta\bar x$ a
 \[ \beta=\frac{\sum_{i=1}^{p}(x_i-\bar x)(y_i-\bar y)}{\sum_{i=1}^{p}(x_i-\bar x)^2}
    \qquad(\text{tj.\ výběrová kovariance dělená výběrovým rozptylem }x). \]
 Predikce: $\hat y=\beta x+\alpha$.
-\end{defbox}
-
-\begin{defbox}[Korelační koeficient]
-Posouzení \uv{množství} lineární závislosti:
-\[ \rho(x,y)=\frac{\sigma_{xy}}{\sqrt{\sigma_x^2\sigma_y^2}}=\frac{\sigma_{xy}}{\sigma_x\sigma_y},
-\qquad
-\sigma_{xy}=\frac{1}{n-1}\sum_i (x_i-\bar x)(y_i-\bar y), \]
-\[ \sigma_x^2=\frac{1}{n-1}\sum_i (x_i-\bar x)^2,\qquad
-   \sigma_y^2=\frac{1}{n-1}\sum_i (y_i-\bar y)^2. \]
-Platí $\rho\in[-1,1]$; $|\rho|=1$ znamená přesný lineární vztah, $\rho=0$ žádný
-\emph{lineární} vztah (nikoli žádnou závislost --- $\rho$ nezachytí nelineární vztahy).
 \end{defbox}
 
 \textbf{Vícerozměrná lineární regrese.} Předpokládáme lineární závislost vysvětlované
@@ -839,14 +853,15 @@ zpracována v~kap.~\ref{sec:metody}, odd.~\ref{ssec:logreg}.
       z~vzestupně seřazených dat (pravidlo $n/4$ a~$3n/4$, zaokrouhlení nahoru) a~nakreslit
       box plot.
 \item \textbf{Standardizace}: desítkové škálování, min-max do $[0,1]$ a~$[-1,1]$, z-skóre
-      podle střední absolutní odchylky (robustnější), std-skóre podle směrodatné odchylky.
+      podle střední absolutní odchylky (robustní k~outlierům).
       Motivace: bez ní vzdálenost ovládne atribut s~největším rozsahem.
-\item \textbf{Diskretizace}: ekvidistantní, ekvifrekvenční, s~využitím třídy (entropie,
-      $\chi^2$); \textbf{fuzzy diskretizace} --- rozostřené hranice, jedné hodnotě odpovídají
-      dvě kategorie se součtem charakteristických funkcí 1, váha fuzzy-objektu je součin
-      $\prod_j\mu_j$; rizika: ztráta informace a~kontradikce. \textbf{KEX} seskupuje hodnoty
-      kategoriálního atributu podle $\chi^2$ testu proti apriornímu rozdělení tříd
-      (procedury \emph{Assign} a~\emph{Group}).
+\item \textbf{Diskretizace}: ekvidistantní (stejná délka), ekvifrekvenční (stejný počet
+      objektů), s~využitím třídy (entropie shora dělením, $\chi^2$ zdola slučováním);
+      \textbf{fuzzy diskretizace} --- procedura Interval, rozostřené hranice, jedné hodnotě
+      dvě kategorie se součtem charakteristických funkcí 1, váha objektu $\prod_j\mu_j$.
+      \textbf{KEX} seskupuje hodnoty kategoriálního atributu (Assign: kód třídy podle
+      $\chi^2$ testu proti apriornímu rozdělení tříd, jinak \uv{?}; Group: hodnoty se
+      stejným kódem).
 \item \textbf{Redukce dat}: příliš mnoho objektů $\to$ vzorkování (reprezentativnost!),
       efektivní uložení, více modelů nad podmnožinami; nevyvážené třídy $\to$ váhy chyb nebo
       různé pravděpodobnosti výběru. Příliš mnoho atributů $\to$ \emph{transformace} (PCA:
@@ -863,10 +878,9 @@ zpracována v~kap.~\ref{sec:metody}, odd.~\ref{ssec:logreg}.
 \item \textbf{$\chi^2$ test}: $(R-1)(S-1)$ stupňů volnosti, podmínka $r_ks_l/n\ge 5$; pro
       malé četnosti \textbf{Fisherův exaktní test}. Umět projít výpočet na čtyřpolní tabulce
       (příklad s~úvěrem: $\chi^2=42{,}857>3{,}84$ $\Rightarrow$ závislost).
-\item \textbf{Regrese a~korelace}: metoda nejmenších kvadrátů, $\beta$ jako kovariance dělená
+\item \textbf{Regrese}: metoda nejmenších kvadrátů, $\beta$ jako kovariance dělená
       rozptylem, $\alpha=\bar y-\beta\bar x$; vícerozměrně
-      $\beta=(X^{\!\top}\!X)^{-1}X^{\!\top}Y$; korelační koeficient
-      $\rho=\sigma_{xy}/(\sigma_x\sigma_y)$ měří jen \emph{lineární} závislost.
+      $\beta=(X^{\!\top}\!X)^{-1}X^{\!\top}Y$.
 \end{itemize}
 
 %=====================================================================
@@ -967,15 +981,12 @@ konkrétní položky, a~to jen z~transakcí, které je obsahují. Uvažované po
 přibližně stejnou frekvenci --- \emph{vzácné posunout výše} v~taxonomii, \emph{častější nechat
 níže} (aby nejfrekventovanější nedominovaly pravidlům).
 
-\textbf{Virtuální položky} přesahují taxonomii: rozostřují hranici mezi typy produktů (značky
---- Calvin Klein) a~nesou informaci o~transakci samotné --- anonymní (den, čas) nebo
-podepsanou (zákazník a~jeho chování). Riziko \emph{redundance} v~pravidlech: virtuální položka
-odpovídá právě jedné položce z~taxonomie (\uv{IF produkt\_Škoda THEN Škoda}), nebo se
-v~pravidle sejde virtuální i~obecná položka (\uv{IF produkt\_Škoda AND malé auto THEN stan}
-místo \uv{IF Fabia THEN stan}). \emph{Srovnání prodejen:} virtuální položka označí typ
-prodejny (neodpovídá žádnému produktu) --- vezmi data z~nových prodejen a~přibližně stejně
-velká data ze stávajících, aplikuj MBA na oba soubory a~zaměř se na pravidla s~virtuálními
-položkami.
+\textbf{Virtuální položky} přesahují taxonomii: značky napříč typy produktů (Calvin Klein)
+nebo informace o~transakci samotné (den, čas, zákazník). Rizikem je \emph{redundance}
+v~pravidlech (virtuální položka odpovídá právě jedné položce taxonomie, nebo se s~obecnou
+položkou sejde v~jednom pravidle). Typické užití je \emph{srovnání prodejen}: virtuální
+položka označí typ prodejny, MBA se aplikuje na srovnatelně velká data z~nových
+i~stávajících prodejen a~sledují se pravidla, v~nichž se objeví.
 
 \textbf{Prořezávání podle minimálního supportu} eliminuje málo frekventované položky (akce se
 musí týkat dost transakcí): buď eliminovat vzácné položky a~jejich pravidla, nebo taxonomií
@@ -1053,212 +1064,68 @@ jednoduchý a~snadno pochopitelný výpočet & \emph{produkuje nadměrné množs
 
 \subsubsection{Vícenásobný minimální support: MS-Apriori}
 
-\textbf{Problém vzácných položek.} Jediný \emph{minsup} předpokládá, že všechny položky mají
-podobnou povahu a~frekvenci. V~praxi se ale některé položky vyskytují velmi často a~jiné
-vzácně (kuchyňský robot vs.\ chléb a~mléko). Důsledek:
-\begin{itemize}
-\item je-li \emph{minsup} příliš \textbf{vysoký}, pravidla se vzácnými položkami se nenajdou;
-\item je-li příliš \textbf{nízký} (aby se našla pravidla s~vzácnými i~častými položkami),
-      hrozí \emph{kombinatorická explozivnost} --- časté položky se pospojují všemi možnými
-      způsoby.
-\end{itemize}
+\textbf{Problém vzácných položek:} jediný \emph{minsup} nesedí častým i~vzácným položkám
+zároveň (chléb vs.\ kuchyňský robot) --- vysoký pravidla se vzácnými položkami nenajde,
+nízký kombinatoricky exploduje na častých.
 
-\begin{defbox}[Model vícenásobných minimálních supportů (MIS)]
-Minimální support pravidla se vyjádří pomocí \emph{minimálních supportů položek}
-(\emph{minimum item support}, MIS) těch položek, které v~pravidle vystupují. Každá položka
-může mít vlastní $\mathrm{MIS}(i)$; zadáním různých hodnot vyjádří uživatel různé požadavky
-na support pro různá pravidla.
-
-\textbf{Minsup pravidla} $R: a_1,\dots,a_k\Rightarrow a_{k+1},\dots,a_r$ je
-\emph{nejnižší} hodnota MIS mezi jeho položkami: pravidlo splňuje minimální support, je-li
-jeho skutečný support $\ge \min\big(\mathrm{MIS}(a_1),\dots,\mathrm{MIS}(a_r)\big)$.
-
-\textbf{Omezení rozdílu supportů:} aby se v~téže množině neobjevily velmi časté a~velmi
-vzácné položky, požaduje se
-\[ \max_{i\in s}\{\mathrm{sup}(i)\}-\min_{i\in s}\{\mathrm{sup}(i)\}\le\varphi, \]
-kde $0\le\varphi\le 1$ je uživatelem zadaný maximální rozdíl supportů (stejný pro všechny
-množiny).
+\begin{defbox}[Hlavní rozdíl oproti Apriori]
+Každá položka má \emph{vlastní minimální support} $\mathrm{MIS}(i)$ (\emph{minimum item
+support}); \textbf{minsup pravidla je minimum MIS jeho položek}. Aby se v~jedné množině
+nemíchaly velmi časté a~velmi vzácné položky, omezuje se navíc rozdíl supportů:
+$\max_{i\in s}\mathrm{sup}(i)-\min_{i\in s}\mathrm{sup}(i)\le\varphi$.
 \end{defbox}
 
-\begin{defbox}[Příklad --- minsup pravidla podle MIS]
-Položky \emph{chléb}, \emph{obuv}, \emph{oděvy} s~$\mathrm{MIS}(\text{chléb})=2\,\%$,
-$\mathrm{MIS}(\text{obuv})=0{,}1\,\%$, $\mathrm{MIS}(\text{oděvy})=0{,}2\,\%$.
-
-$R_1$: oděvy $\Rightarrow$ chléb $[\mathrm{sup}=0{,}15\,\%]$ minsup \textbf{nesplňuje},
-protože $0{,}15\,\%<\mathrm{MIS}(\text{oděvy})=0{,}2\,\%$.
-
-$R_2$: oděvy $\Rightarrow$ obuv $[\mathrm{sup}=0{,}15\,\%]$ minsup \textbf{splňuje},
-protože $0{,}15\,\%\ge\mathrm{MIS}(\text{obuv})=0{,}1\,\%$.
-\end{defbox}
-
-\textbf{Uzavřenost dolů v~novém modelu neplatí!} MIS totiž dovoluje vyšší minimální supporty
-pro pravidla s~jen frekventovanými položkami a~nižší pro pravidla s~méně frekventovanými.
-Příklad: $\mathrm{MIS}(1)=10\,\%$, $\mathrm{MIS}(2)=20\,\%$, $\mathrm{MIS}(3)=5\,\%$,
-$\mathrm{MIS}(4)=6\,\%$. Množina $\{1,2\}$ se supportem 9~\% je nefrekventovaná, ale
-$\{1,2,3\}$ a~$\{1,2,4\}$ frekventované být mohou --- $\{1,2\}$ tedy \emph{nesmíme}
-zahodit.
-
-\textbf{Řešení:} položky se seřadí \emph{vzestupně podle hodnot MIS} a~toto pořadí se pak
-používá ve všech dalších operacích algoritmu. Každá množina $w$ má formu
-$\{w[1],\dots,w[k]\}$, kde $\mathrm{MIS}(w[1])\le\cdots\le\mathrm{MIS}(w[k])$.
-
-\begin{defbox}[Algoritmus MS-Apriori]
-\begin{algorithmic}[1]
-\State $M\gets \textsc{sort}(I,\mathit{MS})$ \Comment{setřídění položek podle $\mathrm{MIS}(i)$}
-\State $L\gets \textsc{init-pass}(M,T)$ \Comment{první průchod daty; $L$ je množina semen}
-\State $F_1\gets \{\{i\}\mid i\in L,\ i.\mathrm{count}/n\ge \mathrm{MIS}(i)\}$
-\For{$k=2$; $F_{k-1}\neq\emptyset$; $k{+}{+}$}
-  \If{$k=2$}
-     \State $C_k\gets \textsc{level2-candidate-gen}(L,\varphi)$
-  \Else
-     \State $C_k\gets \textsc{MScandidate-gen}(F_{k-1},\varphi)$
-  \EndIf
-  \For{každou transakci $t\in T$}
-     \For{každého kandidáta $c\in C_k$}
-        \If{$c\subseteq t$} \State $c.\mathrm{count}{+}{+}$ \EndIf
-        \If{$c\setminus\{c[1]\}\subseteq t$} \State $c.\mathrm{tailCount}{+}{+}$
-           \Comment{pro generování pravidel} \EndIf
-     \EndFor
-  \EndFor
-  \State $F_k\gets \{c\in C_k\mid c.\mathrm{count}/n\ge \mathrm{MIS}(c[1])\}$
-\EndFor
-\State \Return $F=\bigcup_k F_k$
-\end{algorithmic}
-\end{defbox}
-
-\textbf{První průchod daty} (\textsc{init-pass}): algoritmus zjistí support každé položky,
-pak v~setříděném pořadí najde \emph{první} položku $i$, která splní $\mathrm{MIS}(i)$,
-a~vloží ji do množiny semen $L$. Pro každou další položku $j$ za $i$ platí: je-li
-$j.\mathrm{count}/n\ge \mathrm{MIS}(i)$, patří $j$ také do $L$.
-
-\emph{Příklad:} $\mathrm{MIS}(1)=10\,\%$, $\mathrm{MIS}(2)=20\,\%$, $\mathrm{MIS}(3)=5\,\%$,
-$\mathrm{MIS}(4)=6\,\%$; 100 transakcí, četnosti $\{3\}=6$, $\{4\}=3$, $\{1\}=9$,
-$\{2\}=25$. Pak $L=\{3,1,2\}$ a~$F_1=\{\{3\},\{2\}\}$. Položka 4 není v~$L$, protože
-$4.\mathrm{count}/n<\mathrm{MIS}(3)=5\,\%$; $\{1\}$ není v~$F_1$, protože
-$1.\mathrm{count}/n<\mathrm{MIS}(1)=10\,\%$.
-
-\textbf{Generování kandidátů úrovně 2} (\textsc{level2-candidate-gen}): pro každou položku
-$l\in L$ v~daném pořadí, splňuje-li $l.\mathrm{count}/n\ge\mathrm{MIS}(l)$, se pro každou
-položku $h$ za $l$ přidá kandidát $\{l,h\}$, pokud
-$h.\mathrm{count}/n\ge\mathrm{MIS}(l)$ \emph{a} $|\mathrm{sup}(h)-\mathrm{sup}(l)|\le\varphi$.
-Podstatné je, že se používá $L$, ne $F_1$ --- $F_1$ totiž neobsahuje položky, které splňují
-MIS nějaké dřívější položky, ale ne své vlastní (v~příkladu položka 1).
-
-\textbf{Generování kandidátů vyšších úrovní} (\textsc{MScandidate-gen}) má dvě části.
-\emph{Krok spojení} je jako v~Apriori: spojí se $f_1=\{i_1,\dots,i_{k-2},i_{k-1}\}$
-a~$f_2=\{i_1,\dots,i_{k-2},i'_{k-1}\}$, které se liší jen v~poslední položce, pokud
-$i_{k-1}<i'_{k-1}$ a~$|\mathrm{sup}(i_{k-1})-\mathrm{sup}(i'_{k-1})|\le\varphi$.
-\emph{Krok prořezání}: pro každou $(k-1)$-podmnožinu $s$ kandidáta $c$ --- není-li $s\in
-F_{k-1}$, lze $c$ smazat, \textbf{s~jedinou výjimkou}: neobsahuje-li $s$ položku $c[1]$
-(taková $s$ je právě jedna), tedy položku s~nejnižší hodnotou MIS, nesmíme $c$ smazat ---
-nevíme totiž, zda $s$ nesplňuje $\mathrm{MIS}(c[1])$, víme jen, že nesplňuje
-$\mathrm{MIS}(c[2])$; to platí, jen pokud $\mathrm{MIS}(c[2])=\mathrm{MIS}(c[1])$.
-
-\textbf{Proč \texttt{tailCount}.} U~Apriori platí: je-li $f$ frekventovaná a~$f_{sub}\subseteq
-f$, je i~$f_{sub}$ frekventovaná --- k~určení confidence pravidel tedy stačí supporty
-frekventovaných množin. U~MS-Apriori to nestačí; problém vzniká, když by v~závěru pravidla
-byla položka s~\emph{nejnižší} hodnotou MIS. Proto se zvlášť počítá
-$c.\mathrm{tailCount}$ --- support množiny $c$ bez první položky.
-
-\textbf{Jak zadat hodnoty MIS:} \emph{(a)}~$\lambda\cdot\mathrm{sup}(i)$ podle skutečného
-supportu položky ($0\le\lambda\le 1$ stejné pro všechny); \emph{(b)}~seskupit položky do bloků
-s~podobnými frekvencemi a~dát bloku jednu hodnotu MIS. Trik: $\mathrm{MIS}=100\,\%$ generování
-pravidel s~těmito položkami zakáže. Model vícenásobných minsupů \emph{zahrnuje} model jediného
-supportu jako speciální případ.
+\textbf{Důsledek: uzavřenost dolů neplatí.} Protipříklad: $\mathrm{MIS}(1)=10\,\%$,
+$\mathrm{MIS}(2)=20\,\%$, $\mathrm{MIS}(3)=5\,\%$; množina $\{1,2\}$ se supportem 9~\% je
+nefrekventovaná, ale $\{1,2,3\}$ frekventovaná být může --- $\{1,2\}$ tedy nelze zahodit.
+MS-Apriori se s~tím vyrovnává třemi úpravami: \emph{(a)}~položky setřídí \emph{vzestupně
+podle MIS} a~frekventovanost množiny testuje proti MIS její \emph{první} položky
+($c.\mathrm{count}/n\ge\mathrm{MIS}(c[1])$); \emph{(b)}~kandidáty úrovně~2 generuje
+z~množiny semen $L$ (položky splňující MIS nějaké dřívější položky), ne z~$F_1$;
+\emph{(c)}~pro generování pravidel počítá navíc \texttt{tailCount} --- support množiny bez
+první položky --- protože supporty podmnožin už nejsou zaručeně k~dispozici. Model jediného
+minsupu je speciální případ ($\mathrm{MIS}=100\,\%$ generování pravidel s~položkou zakáže).
 
 \subsubsection{Třídní asociační pravidla (CAR)}
 
-Běžné dolování necílí na žádný atribut --- najde všechna pravidla a~libovolná položka může být
-podmínkou i~závěrem. Někdy ale uživatele zajímají právě \emph{cílové} atributy či třídy (které
-slovo je asociováno s~kterým tématem dokumentu).
+Běžné dolování najde všechna pravidla; někdy ale zajímají jen pravidla s~\emph{cílovou
+třídou} v~závěru (které slovo je asociováno s~kterým tématem dokumentu).
 
 \begin{defbox}[Třídní asociační pravidlo]
-Nechť $T$ je množina $n$ transakcí, každá navíc označkovaná třídou $y$; $I$ je množina všech
-položek, $Y$ množina všech tříd a~$I\cap Y=\emptyset$.
-
-\emph{Třídní asociační pravidlo} (\emph{class association rule}, CAR) je implikace
-$X\to y$, kde $X\subseteq I$ a~$y\in Y$. Support a~confidence jsou definovány stejně jako
-u~běžných asociačních pravidel.
+Transakce jsou navíc označkovány třídou; \emph{třídní asociační pravidlo} (\emph{class
+association rule}, CAR) je implikace $X\to y$, kde $X\subseteq I$ (položky) a~$y\in Y$
+(třídy), $I\cap Y=\emptyset$. Support a~confidence jsou definovány stejně jako u~běžných
+asociačních pravidel. Např.\ na kolekci dokumentů:
+Student, Škola $\to$ Vzdělávání $[\mathrm{sup}=2/7,\ \mathrm{conf}=2/2]$.
 \end{defbox}
 
-\begin{defbox}[Příklad --- CAR na textové kolekci]
-\begin{center}
-\small
-\begin{tabular}{@{}ll@{}}
-\toprule
-Dokument & Třída \\
-\midrule
-1: Student, Učit, Škola & Vzdělávání \\
-2: Student, Škola & Vzdělávání \\
-3: Učit, Škola, Město, Hra & Vzdělávání \\
-4: Baseball, Basketbal & Sport \\
-5: Basketbal, Hráč, Divák & Sport \\
-6: Baseball, Trenér, Hra, Tým & Sport \\
-7: Basketbal, Tým, Město, Hra & Sport \\
-\bottomrule
-\end{tabular}
-\end{center}
-Pro $\mathit{minsup}=20\,\%$ a~$\mathit{minconf}=60\,\%$ jsou příklady CAR:
-\[ \text{Student, Škola}\to\text{Vzdělávání}\ [\mathrm{sup}=2/7,\ \mathrm{conf}=2/2],\qquad
-   \text{Hra}\to\text{Sport}\ [\mathrm{sup}=2/7,\ \mathrm{conf}=2/3]. \]
-\end{defbox}
-
-CAR lze dolovat \textbf{přímo v~jednom kroku} (na rozdíl od běžných asociačních pravidel).
-Klíčovou operací je nalezení všech \emph{pravidlových položek} (\emph{rule-items}) tvaru
-$(\mathit{condset},y)$, kde $\mathit{condset}\subseteq I$ a~$y\in Y$, se supportem nad
-\emph{minsup}; každá pravidlová položka reprezentuje pravidlo
-$\mathit{condset}\to y$. Apriori lze na generování CAR snadno upravit.
-
-Také zde lze použít ideu vícenásobných minimálních supportů: uživatel zadá
-\emph{různé minimální supporty různým třídám} (tím efektivně různý minsup pravidlům každé
-třídy) --- např.\ pravidla třídy \emph{Ano} s~minsup 5~\% a~třídy \emph{Ne} s~minsup 10~\%.
-Nastavením minimálního třídního supportu na 101~\% se generování pravidel pro danou třídu
-zakáže.
+CAR se dolují \textbf{přímo v~jednom kroku} (upraveným Apriori) přes \emph{pravidlové
+položky} $(\mathit{condset},y)$ se supportem nad \emph{minsup}. Lze zadat \emph{různé
+minsupy různým třídám} (idea vícenásobných supportů); minsup třídy 101~\% generování jejích
+pravidel zakáže.
 
 \subsubsection{Dolování sekvenčních vzorů}
 
-Asociační pravidla neuvažují \emph{pořadí} transakcí. V~mnoha aplikacích je ale pořadí
-podstatné: v~MBA je zajímavé vědět, zda lidé kupují položky v~posloupnosti (nejprve postel,
-o~nějakou dobu později povlečení); v~dolování z~webových logů (\emph{web usage mining}) se
-hledají navigační vzory podle posloupností návštěv stránek.
+Asociační pravidla neuvažují \emph{pořadí} transakcí; to je podstatné např.\ v~MBA (nejprve
+postel, později povlečení) nebo při hledání navigačních vzorů ve webových lozích
+(\emph{web usage mining}).
 
 \begin{defbox}[Sekvence, velikost, délka, podsekvence]
-Nechť $I=\{i_1,\dots,i_m\}$ je množina položek. \emph{Sekvence} je uspořádaný seznam
-množin položek. \emph{Množina položek} (\emph{prvek} sekvence) je neprázdná
-$X\subseteq I$; sekvenci $s$ značíme $\langle a_1a_2\dots a_r\rangle$, kde $a_i$ je prvek.
-Bez újmy na obecnosti předpokládáme položky v~prvku v~lexikografickém pořadí.
-
-\emph{Velikost} sekvence je počet jejích prvků, \emph{délka} počet položek; sekvence délky
-$k$ se nazývá $k$-sekvence.
-
-$s_1=\langle a_1\dots a_r\rangle$ je \emph{podsekvencí} $s_2=\langle b_1\dots b_v\rangle$
-(a~$s_2$ \emph{nadsekvencí} $s_1$, též $s_2$ \emph{obsahuje} $s_1$), existují-li celá čísla
-$1\le j_1<j_2<\cdots<j_r\le v$ taková, že $a_1\subseteq b_{j_1},\dots,a_r\subseteq b_{j_r}$.
+\emph{Sekvence} $s=\langle a_1a_2\dots a_r\rangle$ je uspořádaný seznam neprázdných množin
+položek (\emph{prvků}). \emph{Velikost} $=$ počet prvků, \emph{délka} $=$ počet položek
+($k$-sekvence). $s_1=\langle a_1\dots a_r\rangle$ je \emph{podsekvencí}
+$s_2=\langle b_1\dots b_v\rangle$, existují-li indexy $1\le j_1<\cdots<j_r\le v$ takové, že
+$a_1\subseteq b_{j_1},\dots,a_r\subseteq b_{j_r}$. Pozor: $\langle\{3\}\{8\}\rangle$
+a~$\langle\{3,8\}\rangle$ se navzájem \emph{neobsahují}.
 \end{defbox}
 
-\emph{Příklad.} Pro $I=\{1,\dots,9\}$ je $\langle\{3\}\{4,5\}\{8\}\rangle$ podsekvencí
-$\langle\{6\}\{3,7\}\{9\}\{4,5,8\}\{3,8\}\rangle$, protože $\{3\}\subseteq\{3,7\}$,
-$\{4,5\}\subseteq\{4,5,8\}$ a~$\{8\}\subseteq\{3,8\}$. Naopak
-$\langle\{3\}\{8\}\rangle$ \emph{není} obsažena v~$\langle\{3,8\}\rangle$ ani naopak.
-Velikost $\langle\{3\}\{4,5\}\{8\}\rangle$ je 3, délka 4.
-
-\textbf{Úloha:} pro danou množinu $S$ vstupních datových sekvencí (sekvenční databázi) najít
-všechny sekvence, které mají uživatelem zadaný minimální support; taková sekvence se nazývá
-\emph{frekventovaná sekvence} nebo \emph{sekvenční vzor}. Support sekvence je podíl
-datových sekvencí v~$S$, které ji obsahují.
-
-Algoritmus \textbf{GSP} (\emph{Generalized Sequential Pattern}) generuje sekvenční vzory
-způsobem obdobným Apriori --- prohledávání do šířky s~generováním a~testováním kandidátů,
-kde kandidáti délky $k$ vznikají spojováním frekventovaných sekvencí délky $k-1$.
-
-\textbf{Analýza časových řad pomocí MBA} --- \uv{příčina--následek}: zavedou se nové položky
-pro transakce \emph{před} uvažovanou událostí (příčiny) a~\emph{po} ní (následky), duplicity
-se odstraní. \emph{Okno} je snímek dat za období (transakce z~posledního měsíce) --- zachycuje
-trendy u~vzácných položek. Může být nutná identifikace zákazníka.
-
-\textbf{Disociační pravidla} \uv{IF $A$ AND NOT $B$ THEN $C$}: zavedou se položky
-komplementární k~původním. Nevýhody: dvojnásobný počet položek, větší transakce a~negované
-položky jsou častější než původní (pravidla s~vše\-mi negovanými se obtížně využívají).
+\textbf{Úloha:} najít všechny sekvence se supportem (podíl datových sekvencí, které je
+obsahují) alespoň \emph{minsup} --- \emph{sekvenční vzory}. Algoritmus \textbf{GSP}
+(\emph{Generalized Sequential Pattern}) pracuje obdobně jako Apriori: do šířky, kandidáti
+délky $k$ spojováním frekventovaných sekvencí délky $k-1$. Doplňky: analýza
+\uv{příčina--následek} zavedením položek pro transakce \emph{před} a~\emph{po} události;
+\emph{disociační pravidla} (IF $A$ AND NOT $B$) přes komplementární položky --- za cenu
+dvojnásobku položek.
 
 \subsubsection{FP-Growth a~FP-strom}
 
@@ -1546,9 +1413,8 @@ minimalizaci vážené entropie $H(A)$.
       jmenovatel penalizuje \emph{nadměrné větvení} (atributy s~mnoha hodnotami).
 \end{itemize}
 
-\textbf{Algoritmus C5.0} --- komerční C4.5 pro velké databáze: efektivnější generování pravidel
-a~vyšší přesnost díky \emph{boostingu} (vzorům se přiřadí váhy podle vlivu při klasifikaci, pro
-každou kombinaci vah vznikne samostatný klasifikátor, hlasuje se většinově).
+\textbf{Algoritmus C5.0} --- komerční nástupce C4.5 pro velké databáze: efektivnější
+generování pravidel a~vyšší přesnost díky \emph{boostingu} (viz ensemble metody níže).
 
 \begin{defbox}[CART --- \emph{Classification And Regression Trees}]
 Generuje \emph{binární} stromy --- při každém dělení dat se tvoří právě dvě hrany. Volba
@@ -1571,25 +1437,6 @@ které nabývá maxima, jsou-li všechny vzory dané třídy seskupeny v~témže
 klasifikaci; chybějící data jsou ignorována a~nezapočítávají se do vyhodnocení rozhodovacích
 kritérií; zastavovací kritérium --- žádné další dělení už nezlepší klasifikační přesnost;
 vysoká přesnost na trénovací množině nemusí odrážet přesnost na testovacích datech.
-\end{defbox}
-
-\begin{defbox}[CHAID --- \emph{Chi-square Automatic Interaction Detection}]
-Kritériem větvení je $\chi^2$. Algoritmus automaticky \emph{seskupuje hodnoty} kategoriálních
-atributů --- hodnoty se postupně slučují od původního počtu, dokud nezůstanou jen dvě grupy;
-následně se vybere atribut a~jeho kategorizace, které jsou pro dělení dat v~daném kroku
-nejlepší. Při větvení tedy nevzniká tolik větví, kolik má atribut hodnot.
-
-\textbf{Seskupování hodnot atributu:}
-\begin{enumerate}
-\item Opakuj, dokud nezůstanou jen dvě grupy hodnot:
-      \emph{(a)}~vyber pár kategorií atributu, které jsou si z~hlediska $\chi^2$ nejvíce
-      podobné a~lze je sloučit; \emph{(b)}~novou kategorii uvažuj jako možné seskupení
-      v~daném kroku.
-\item Pro každou možnou grupu hodnot testuj $\chi^2$ testem její relevanci k~predikované
-      proměnné.
-\item Vyber seskupení, které dává \uv{nejlepší} rozdělení s~nejvýznamnějším rozštěpením.
-\item Urči, zda toto seskupení statisticky významně přispívá k~rozlišení vzorů z~různých tříd.
-\end{enumerate}
 \end{defbox}
 
 \subsubsection{Bayesovská klasifikace}
@@ -1674,21 +1521,58 @@ a~$\langle w\cdot x_i\rangle+b\le -1$ pro $y_i=-1$.
 \end{defbox}
 
 \begin{defbox}[Duální formulace a~podpůrné vektory]
-Úloha se řeší standardní \emph{Lagrangeovou} metodou:
+Úloha se řeší standardní \emph{Lagrangeovou} metodou --- omezení se vtáhnou do účelové funkce
+pomocí \emph{Lagrangeových multiplikátorů} $\alpha_i$, jeden na každou trénovací podmínku:
 \[ L_P=\frac{\langle w\cdot w\rangle}{2}-\sum_{i=1}^{r}\alpha_i
    \big[y_i(\langle w\cdot x_i\rangle+b)-1\big],\qquad \alpha_i\ge 0. \]
-Optimální řešení musí splňovat \emph{Kuhn--Tuckerovy podmínky}, které jsou pro \emph{konvexní}
-účelovou funkci s~\emph{lineárními} omezeními nejen nutné, ale i~postačující. Podmínka
-komplementarity ukazuje, že $\alpha_i>0$ mohou mít jen body \emph{na} okrajových
-hyperrovinách (pro ně $y_i(\langle w\cdot x_i\rangle+b)-1=0$) --- to jsou
-\textbf{podpůrné vektory} (\emph{support vectors}); pro všechny ostatní je $\alpha_i=0$.
 
-Vynulováním parciálních derivací $L_P$ podle $w$ a~$b$ a~substitucí zpět dostaneme
-\emph{Wolfeho duální} úlohu
-\[ L_D=\sum_{i=1}^{r}\alpha_i-\frac12\sum_{i,j}y_iy_j\alpha_i\alpha_j
-   \langle x_i\cdot x_j\rangle\ \longrightarrow\ \max, \]
-jejíž maximum se nabývá pro tytéž hodnoty $w,b,\alpha_i$ jako minimum $L_P$. Duální úloha se
-řeší snáz než primární (numerické techniky).
+\textbf{Kuhn--Tuckerovy podmínky.} Optimální řešení je musí splňovat. Obecně jsou pouze
+\emph{nutné}, ale pro \emph{konvexní} účelovou funkci s~\emph{lineárními} omezeními --- což je
+právě náš případ --- jsou i~\emph{postačující}:
+\begin{align*}
+\frac{\partial L_P}{\partial w_j} &= w_j - \sum_{i=1}^{r} y_i\alpha_i x_{ij} = 0,
+  \quad j=1,\dots,n && \text{stacionarita v~}w\\
+\frac{\partial L_P}{\partial b} &= -\sum_{i=1}^{r} y_i\alpha_i = 0
+  && \text{stacionarita v~}b\\
+y_i\big(\langle w\cdot x_i\rangle+b\big)-1 &\ge 0, \quad i=1,\dots,r
+  && \text{původní omezení}\\
+\alpha_i &\ge 0, \quad i=1,\dots,r && \text{nezápornost multiplikátorů}\\
+\alpha_i\big(y_i(\langle w\cdot x_i\rangle+b)-1\big) &= 0, \quad i=1,\dots,r
+  && \text{\textbf{komplementarita}}
+\end{align*}
+kde $x_{ij}$ je $j$-tá složka vektoru $x_i$ (vektorově $w=\sum_i y_i\alpha_i x_i$).
+
+\textbf{Proč z~komplementarity plynou podpůrné vektory:} součin je nulový, takže pro každé $i$
+musí být nulový alespoň jeden z~obou faktorů. Je-li $\alpha_i>0$, musí být nulová druhá
+závorka, tj.\ $y_i(\langle w\cdot x_i\rangle+b)=1$ --- bod leží \emph{přesně na} okrajové
+hyperrovině $H_+$ nebo $H_-$. To jsou \textbf{podpůrné vektory} (\emph{support vectors}).
+Pro všechny ostatní body je $\alpha_i=0$, a~ty tedy do řešení vůbec nevstupují: SVM je určeno
+jen malou podmnožinou trénovacích dat.
+
+\textbf{Postup od primárního k~duálnímu programu} --- dva kroky:
+\begin{enumerate}
+\item \emph{Vynuluj parciální derivace $L_P$ podle primárních proměnných} $w$ a~$b$. To dá
+      první dvě KKT podmínky, přepsané do tvaru
+      \[ w=\sum_{i=1}^{r} y_i\alpha_i x_i, \qquad \sum_{i=1}^{r} y_i\alpha_i = 0. \]
+\item \emph{Dosaď tyto vztahy zpět do $L_P$.} Primární proměnné $w$ a~$b$ se tím
+      \textbf{vyeliminují} a~zůstanou jen multiplikátory $\alpha_i$.
+\end{enumerate}
+Výsledkem je \textbf{Wolfeho duální} úloha. \emph{Pozor:} je to úloha \textbf{vázaná} ---
+omezení vzniklá v~kroku~1 jsou její součástí:
+\[ \text{maximalizuj }\ L_D=\sum_{i=1}^{r}\alpha_i-\frac12\sum_{i,j}y_iy_j\alpha_i\alpha_j
+   \langle x_i\cdot x_j\rangle
+   \quad\text{za podmínek}\quad \sum_{i=1}^{r} y_i\alpha_i=0,\ \ \alpha_i\ge 0. \]
+Maximum $L_D$ se nabývá pro tytéž hodnoty $w,b,\alpha_i$ jako minimum $L_P$. Duál se řeší
+snáz než primár (numerické techniky, prakticky např.\ SMO) a~hlavně obsahuje vstupní vektory
+\emph{pouze} přes skalární součiny $\langle x_i\cdot x_j\rangle$ --- právě to umožní
+kernelový trik (viz níže).
+
+\textbf{Zpětná rekonstrukce $w$ a~$b$.} Řešením duálu dostaneme $\alpha_i$; z~nich
+\[ w=\sum_{i\in \mathit{sv}} y_i\alpha_i x_i, \qquad
+   b = y_k - \langle w\cdot x_k\rangle \quad\text{pro libovolný podpůrný vektor } x_k, \]
+kde vztah pro $b$ plyne z~komplementarity: pro podpůrný vektor je
+$y_k(\langle w\cdot x_k\rangle+b)=1$, a~protože $y_k\in\{1,-1\}$, tedy $y_k^2=1$, stačí
+vynásobit $y_k$. Numericky se $b$ obvykle \emph{zprůměruje} přes všechny podpůrné vektory.
 
 \textbf{Rozhodovací hranice} a~\textbf{testování} vzoru $z$:
 \[ \langle w\cdot x\rangle+b=\sum_{i\in \mathit{sv}}y_i\alpha_i\langle x_i\cdot x\rangle+b=0,
@@ -1801,39 +1685,27 @@ matic} (korigovanými výběrovými rozptyly).
 \subsubsection{Neuronové sítě a~extrémní učicí stroje (ELM)}
 
 \begin{defbox}[Síť ELM (\emph{Extreme Learning Machine}, G.-B.~Huang)]
-Dopředná síť s~\emph{jednou} skrytou vrstvou: $n$ vstupních neuronů, $L$ skrytých, 1 výstupní.
-Výstup skrytých neuronů $h(x)=\big[G(a_1,b_1,x),\dots,G(a_L,b_L,x)\big]$, kde $a_i$ je
-váhový vektor a~$b_i$ bias $i$-tého neuronu; např.\
-$G(a_i,b_i,x)=g(\langle a_i\cdot x\rangle+b_i)$ (sigmoida) nebo
-$G(a_i,b_i,x)=g(b_i\|x-a_i\|)$ (RBF). Výstup sítě
-$f_L(x)=\sum_{i=1}^{L}\beta_iG(a_i,b_i,x)$.
+Dopředná síť s~\emph{jednou} skrytou vrstvou ($n$ vstupů, $L$ skrytých neuronů, 1 výstup):
+$f_L(x)=\sum_{i=1}^{L}\beta_i\,G(a_i,b_i,x)$, kde $G$ je např.\ sigmoida
+$g(\langle a_i\cdot x\rangle+b_i)$ nebo RBF $g(b_i\|x-a_i\|)$.
 
-\textbf{Klíčová myšlenka:} parametry skrytých neuronů \emph{není nutné adaptovat} --- mohou být
-vygenerovány \emph{náhodně}, dokonce bez znalosti trénovacích dat. Pro každou spojitou $f$
-a~náhodnou posloupnost $\{(a_i,b_i)\}$ platí s~pravděpodobností 1
-\[ \lim_{L\to\infty}\Big\|f-\textstyle\sum_{i=1}^{L}\beta_iG(a_i,b_i,\cdot)\Big\|=0 \]
-při $\beta_i$ minimalizujících $\|f-f_L\|$.
-
-\textbf{Maticový model:} soustava $\sum_{i=1}^{L}\beta_iG(a_i,b_i,x_j)=t_j$, $j=1,\dots,N$ je
-ekvivalentní $H\beta=T$, kde $H$ je \emph{výstupní matice skryté vrstvy} ($j$-tý řádek $=$
-výstupy skrytých neuronů pro vzor $x_j$).
-
-\textbf{Algoritmus učení} (tři neiterativní kroky):
+\textbf{Klíčová myšlenka:} parametry skrytých neuronů $(a_i,b_i)$ se \emph{neadaptují} ---
+vygenerují se \emph{náhodně}, i~bez znalosti trénovacích dat (s~pravděpodobností 1 platí
+$\lim_{L\to\infty}\|f-f_L\|=0$). Učí se jen výstupní váhy $\beta$, a~to \emph{jednou} ---
+řešením soustavy $H\beta=T$, kde $H$ je \emph{výstupní matice skryté vrstvy} ($j$-tý řádek
+$=$ výstupy skrytých neuronů pro vzor $x_j$):
 \begin{algorithmic}[1]
 \State zvol \emph{náhodně} parametry skrytých neuronů $(a_i,b_i)$, $i=1,\dots,L$
 \State spočítej výstupní matici skryté vrstvy $H$
-\State spočítej výstupní váhy $\beta=H^{+}T$
+\State $\beta\gets H^{+}T$ \Comment{Mooreova--Penroseova pseudoinverze}
 \end{algorithmic}
-kde $H^{+}$ je Mooreova--Penroseova pseudoinverze $H$. Stabilnější řešení s~lepší generalizací
-dá regularizace --- přičtení $I/C$ na diagonálu $H^{\!\top}H$:
-$f(x)=h(x)\big(I/C+H^{\!\top}H\big)^{-1}H^{\!\top}T$.
+Regularizace (přičtení $I/C$ na diagonálu $H^{\!\top}H$) dává stabilnější řešení s~lepší
+generalizací.
 \end{defbox}
 
-\textbf{Výhody ELM:} neiterativní procedura ze tří kroků; velmi rychlé trénování --- neřeší se
-lokální minima, inicializace ani přeučení; parametry $a_i,b_i$ jsou nezávislé na datech i~na
-sobě, takže je lze vygenerovat \emph{už před} předložením dat (konvenční techniky musí data
-\uv{vidět}); funguje s~\emph{libovolnou} omezenou po částech spojitou nekonstantní přenosovou
-funkcí (gradientní algoritmy vyžadují hladké).
+\textbf{Výhody ELM:} neiterativní tři kroky --- velmi rychlé, žádná lokální minima ani
+inicializace; parametry skrytých neuronů nezávisí na datech; stačí libovolná omezená po
+částech spojitá přenosová funkce (gradientní algoritmy vyžadují hladkou).
 
 \subsubsection{Ensemble metody}
 
@@ -2087,25 +1959,17 @@ $k$-medoids je \emph{pomalejší} než $k$-means, ale použitelný na různé ty
 \end{defbox}
 
 \begin{defbox}[Škálovatelné varianty: CLARA a~CLARANS]
-Škálovatelné implementace $k$-medoids pro data, která se nevejdou do hlavní paměti. Dědí výhody
-i~nevýhody bázového algoritmu (generalizovatelnost na různé typy dat, ale vysokou výpočetní
-složitost).
-
-\textbf{CLARA} (\emph{Clustering LARge Applications}) vychází z~varianty \emph{PAM}
-(\emph{Partitioning Around Medoids}), která testuje na výměnu \emph{všech} $k(n-k)$ párů
-medoid--nemedoid a~vymění nejlepší z~nich, až do konvergence k~lokálnímu optimu --- $O(kn^2)$
-výpočtů vzdálenosti, tj.\ $O(kn^2d)$ času na iteraci, \emph{značně drahé}. CLARA proto PAM
-aplikuje na \emph{vzorek} velikosti $f\cdot n$ ($f\ll 1$) a~zbylé body přiřadí k~nalezeným
-medoidům; postup se opakuje nad nezávisle volenými vzorky a~vybere se nejlepší shlukování.
-Iterace pak stojí $O(kf^2n^2d+k(n-k))$ --- pro malá $f$ o~řády rychleji. \textbf{Hlavní
-problém:} vzorek nemusí obsahovat dobrou volbu medoidů.
-
-\textbf{CLARANS} (\emph{\dots\ based on RANdomized Search}) pracuje s~\emph{plnými} daty, čímž
-se problému špatných vzorků vyhýbá. Testuje výměny \emph{náhodných} medoidů za \emph{náhodné}
-nemedoidy; zlepší-li se kvalita, výměna se provede definitivně, jinak roste počítadlo
-neúspěchů --- lokální optimum je nalezeno po \emph{MaxAttempt} neúspěšných pokusech. Celé se
-opakuje \emph{MaxLocal}-krát. CLARANS prozkoumá \emph{větší rozmanitost} prostoru řešení než
-CLARA.
+Škálovatelné implementace $k$-medoids; bázová varianta \emph{PAM} (\emph{Partitioning Around
+Medoids}) testuje všech $k(n-k)$ výměn medoid--nemedoid, $O(kn^2d)$ na iteraci ---
+příliš drahé.
+\begin{itemize}
+\item \textbf{CLARA} (\emph{Clustering LARge Applications}): aplikuj PAM jen na
+      \emph{vzorek}, zbylé body přiřaď k~medoidům; opakuj nad nezávislými vzorky, vyber
+      nejlepší. Riziko: vzorek nemusí obsahovat dobré medoidy.
+\item \textbf{CLARANS} (\emph{\dots\ based on RANdomized Search}): pracuje s~\emph{plnými}
+      daty, zkouší \emph{náhodné} výměny; lokální optimum po \emph{MaxAttempt} neúspěších,
+      celé \emph{MaxLocal}-krát. Prozkoumá větší rozmanitost řešení než CLARA.
+\end{itemize}
 \end{defbox}
 
 \subsubsection{Hierarchické shlukování}
@@ -2129,19 +1993,9 @@ klastrů není znám předem} --- volí se řezem dendrogramu ve vhodné výšce
 jedním klastrem obsahujícím všechny vzory a~ten postupně dělí. Nejznámějším příkladem
 v~kontextu sítí je Girvanové--Newmanův algoritmus (kap.~\ref{sec:sna}).
 
-\begin{defbox}[CURE (\emph{Clustering Using REpresentatives})]
-Aglomerativní hierarchický algoritmus, \emph{velmi rychlý} a~schopný odhalit klastry
-\emph{libovolného tvaru} (na rozdíl např.\ od CLARANS). Postup:
-\begin{enumerate}
-\item Vyber vzorek $s$ bodů z~databáze $D$ o~$n$ bodech.
-\item Rozděl $s$ bodů na $p$ částí velikosti $s/p$.
-\item Každou část shlukuj \emph{nezávisle} hierarchickým slučováním do $k'$ klastrů;
-      celkový počet $k'\cdot p$ klastrů přes všechny části je stále větší než uživatelem
-      požadované $k$.
-\item Nad $k'\cdot p$ klastry proveď hierarchické shlukování až na požadovaných $k$.
-\item Každý z~$(n-s)$ nevzorkovaných bodů přiřaď ke klastru s~nejbližším reprezentantem.
-\end{enumerate}
-\end{defbox}
+Existuje i~škálovatelná aglomerativní varianta \textbf{CURE} (\emph{Clustering Using
+REpresentatives}): vzorkování a~hierarchické slučování po částech; je velmi rychlá a~odhalí
+klastry \emph{libovolného tvaru}.
 
 \subsubsection{Vektorová kvantizace: algoritmus LVQ}
 
@@ -2168,44 +2022,13 @@ zahrnovat vzory ze všech tříd) --- tím se neurony automaticky \uv{kalibrují
 
 \subsubsection{Mřížkové a~hustotní metody}
 
-\begin{defbox}[Mřížkové metody (např.\ MAFIA)]
-\begin{itemize}
-\item Data se diskretizují do $p$ (ekvidistantních) intervalů, což pro $d$-rozměrná data dá
-      $p^d$ hyperkrychlí.
-\item Výsledné hyperkrychle jsou stavebními bloky pro shlukování.
-\item Pomocí prahu hustoty $\tau$ se identifikují \emph{husté} hyperkrychle (alespoň $\tau$
-      bodů).
-\item Klastr libovolného tvaru se skládá z~více hustých oblastí, které jsou \emph{propojeny};
-      dvě mřížkové oblasti jsou propojené, sdílejí-li stěnu.
-\end{itemize}
-\textbf{Cíl:} určit klastry jako husté vzájemně propojené oblasti. Hustým mřížkovým buňkám
-odpovídají uzly grafu, hrany reprezentují sousedskou propojenost; data pokrytá buňkami
-z~komponent souvislosti tohoto grafu tvoří výsledné klastry.
-\end{defbox}
-
-\begin{defbox}[DBSCAN --- \emph{Density-Based Spatial Clustering of Applications with Noise}]
-Stavebními bloky jsou místo mřížkových buněk \emph{jednotlivé datové body}, resp.\ kruhové
-oblasti okolo nich; hustota je dána počtem bodů ležících v~jejich radiu $\varepsilon$
-(včetně bodu samotného):
-\begin{enumerate}
-\item \textbf{Jádrový bod} (\emph{core point}) --- kulová oblast o~radiu $\varepsilon$ okolo
-      něj obsahuje alespoň $\tau$ datových bodů.
-\item \textbf{Hraniční bod} (\emph{border point}) --- oblast obsahuje \emph{méně} než $\tau$
-      bodů, ale zároveň alespoň jeden jádrový bod ve vzdálenosti $\varepsilon$.
-\item \textbf{Šumový bod} (\emph{noise point}) --- není ani jádrový, ani hraniční.
-\end{enumerate}
-
-\textbf{Algoritmus:}
-\begin{enumerate}
-\item Urči jádrové, hraniční a~šumové body.
-\item Zkonstruuj graf propojenosti, kde každý uzel odpovídá jádrovému bodu; hrana mezi dvěma
-      jádrovými body existuje \emph{právě když} leží od sebe ve vzdálenosti nejvýše
-      $\varepsilon$.
-\item Najdi všechny komponenty souvislosti tohoto grafu --- odpovídají klastrům (postaveným
-      na jádrových bodech). Hraniční body se přiřadí ke klastru, s~nímž mají nejvyšší úroveň
-      propojenosti; šumové body se ohlásí jako \emph{odlehlé hodnoty}.
-\end{enumerate}
-\end{defbox}
+Mřížkové a~hustotní metody nacházejí klastry \emph{libovolného tvaru} jako \textbf{souvislé
+husté oblasti} (komponenty souvislosti grafu propojenosti). \emph{Mřížkové} metody (např.\
+MAFIA) diskretizují prostor na $p^d$ hyperkrychlí a~spojují \emph{husté} buňky (alespoň
+$\tau$ bodů) sdílející stěnu. Hustotní \textbf{DBSCAN} staví místo buněk na \emph{jádrových
+bodech} (alespoň $\tau$ bodů v~radiu $\varepsilon$): klastry jsou komponenty souvislosti
+grafu jádrových bodů vzdálených nejvýše $\varepsilon$, \emph{hraniční} body se přiřadí
+k~nejbližšímu klastru a~\emph{šumové} body se ohlásí jako odlehlé hodnoty.
 
 \begin{center}
 \small
@@ -2281,8 +2104,7 @@ DBSCAN & libovolný & vyplyne & \emph{detekuje je} & parametry $\varepsilon$, $\
       $\mathit{acc}-1{,}96\sqrt{\mathit{acc}(1-\mathit{acc})/n}$, \emph{poměrný} informační
       zisk (penalizuje nadměrné větvení). \textbf{C5.0} --- komerční, boosting.
       \textbf{CART} --- \emph{binární} stromy, Gini index $G(v_i)=1-\sum_j p_j^2$ (nižší $=$
-      lepší), kritérium $\Phi=2P_LP_R\sum_j|P(C_j|t_L)-P(C_j|t_R)|$. \textbf{CHAID} ---
-      $\chi^2$, automatické seskupování hodnot kategoriálních atributů.
+      lepší), kritérium $\Phi=2P_LP_R\sum_j|P(C_j|t_L)-P(C_j|t_R)|$.
 \item \textbf{Bayes}: $H_{MAP}=\arg\max_H P(E\mid H)P(H)$ (jmenovatel lze zanedbat);
       \emph{naivní} předpoklad podmíněné nezávislosti $\Rightarrow$
       $\arg\max_{H_t}P(H_t)\prod_i P(E_i\mid H_t)$. Umí nekompletní vzory; problém nulových
@@ -2290,7 +2112,13 @@ DBSCAN & libovolný & vyplyne & \emph{detekuje je} & parametry $\varepsilon$, $\
 \item \textbf{SVM}: maximální okraj $2/\|w\|$, primární úloha $\min\frac{\langle w\cdot
       w\rangle}{2}$ za podmínek $y_i(\langle w\cdot x_i\rangle+b)\ge 1$; Kuhn--Tuckerovy
       podmínky jsou pro konvexní úlohu s~lineárními omezeními nutné \emph{i~postačující};
-      $\alpha_i>0$ jen pro \emph{podpůrné vektory}; Wolfeho duál. \textbf{Kernelový trik}:
+      $\alpha_i>0$ jen pro \emph{podpůrné vektory} (plyne z~\emph{komplementarity}).
+      \textbf{Wolfeho duál} vznikne ve dvou krocích: vynulovat $\partial L_P/\partial w$
+      a~$\partial L_P/\partial b$ (dá $w=\sum_i y_i\alpha_i x_i$ a~$\sum_i y_i\alpha_i=0$)
+      a~dosadit zpět do $L_P$, čímž se $w,b$ vyeliminují; je to úloha \emph{vázaná}
+      --- $\max L_D$ za podmínek $\sum_i y_i\alpha_i=0$, $\alpha_i\ge 0$. Zpět:
+      $w$ ze stacionarity, $b=y_k-\langle w\cdot x_k\rangle$ z~komplementarity.
+      \textbf{Kernelový trik}:
       duál potřebuje jen skalární součiny $\Rightarrow$ $K(x,z)=\langle\phi(x)\cdot\phi(z)\rangle$,
       $\phi$ nikdy nevyčíslíme (Mercerova věta). Jen 2 třídy, jen reálný prostor,
       neinterpretovatelné.
@@ -2332,21 +2160,19 @@ DBSCAN & libovolný & vyplyne & \emph{detekuje je} & parametry $\varepsilon$, $\
 \item \textbf{$k$-medians} (Manhattan, medián po dimenzích, robustnější) vs.\
       \textbf{$k$-medoids} (reprezentanti \emph{z~dat}, hill-climbing s~výměnami,
       $O(knd)$ na iteraci, libovolný typ dat). \textbf{PAM} testuje všech $k(n-k)$ výměn
-      ($O(kn^2d)$); \textbf{CLARA} vzorkuje ($O(kf^2n^2d+k(n-k))$, riziko špatného vzorku),
-      \textbf{CLARANS} prohledává náhodně nad plnými daty (\emph{MaxAttempt},
+      ($O(kn^2d)$); \textbf{CLARA} aplikuje PAM na vzorky (riziko špatného vzorku),
+      \textbf{CLARANS} zkouší náhodné výměny nad plnými daty (\emph{MaxAttempt},
       \emph{MaxLocal}).
 \item \textbf{Hierarchické shlukování} zdola nahoru: každý vzor svůj klastr $\to$ slučuj dva
       nejbližší; výstupem \textbf{dendrogram}, počet klastrů se volí až řezem.
-      \textbf{CURE}: vzorek $\to$ $p$ částí $\to$ nezávisle hierarchicky na $k'$ klastrů
-      $\to$ hierarchicky na $k$ $\to$ přiřaď zbytek; rychlé, libovolný tvar klastrů.
+      \textbf{CURE}: škálovatelná varianta (vzorkování, hierarchické slučování po částech);
+      rychlá, libovolný tvar klastrů.
 \item \textbf{LVQ}: shlukování \emph{s~učitelem} --- vítězný váhový vektor se ke vzoru
       přitáhne při souhlasu tříd a~odtlačí při nesouhlasu; $\mu$ klesá jako $\mu(k-1)/(k+1)$.
-\item \textbf{Mřížkové metody} (MAFIA): $p^d$ hyperkrychlí, prah hustoty $\tau$, klastry
-      jako propojené husté oblasti (komponenty souvislosti grafu buněk).
-      \textbf{DBSCAN}: \emph{jádrový} bod ($\ge\tau$ bodů v~radiu $\varepsilon$),
-      \emph{hraniční} ($<\tau$, ale jádrový bod do $\varepsilon$), \emph{šumový};
-      klastry $=$ komponenty souvislosti grafu jádrových bodů, šumové body se hlásí jako
-      odlehlé. Umí klastry \emph{libovolného tvaru} a~sama detekuje odlehlé hodnoty.
+\item \textbf{Mřížkové a~hustotní metody} (MAFIA, \textbf{DBSCAN}): klastry libovolného
+      tvaru jako souvislé husté oblasti; DBSCAN --- jádrové body ($\ge\tau$ bodů v~radiu
+      $\varepsilon$), klastry $=$ komponenty souvislosti grafu jádrových bodů, šum $=$
+      odlehlé hodnoty.
 \end{itemize}
 
 %=====================================================================
@@ -2364,8 +2190,9 @@ extrakce pravidel z~klasifikačních stromů (odd.~\ref{ssec:extrakce}) a~evoluc
 pohled (odd.~\ref{ssec:stat-pohled}), měření zajímavosti (odd.~\ref{ssec:zajimavost})
 a~aplikace (odd.~\ref{ssec:aplikace-pravidel}). Pojmy \emph{charakteristické}
 a~\emph{diskriminační} pravidlo s~mírami t-weight a~d-weight
-(odd.~\ref{ssec:char-diskr}) jsou doplněny podle Han--Kamber, protože je okruh jmenuje
-výslovně.
+(odd.~\ref{ssec:char-diskr}) jsou spolu s~\emph{indukcí orientovanou na atributy}
+(odd.~\ref{ssec:aoi}), která tato pravidla vyrábí, doplněny podle Han--Kamber, protože je
+okruh jmenuje výslovně.
 
 \begin{poznbox}[Zdroje kapitoly]
 \small
@@ -2378,8 +2205,9 @@ kvality binární klasifikace) a~\texttt{ikm3} (diskriminační analýza). Látk
 klasifikátorů: bagging, boosting, náhodné lesy) se kryje s~kap.~\ref{sec:metody}, matice
 záměn a~ROC/AUC z~\texttt{ikm2} s~kap.~\ref{sec:reprez} --- zpracovány jsou tam. Slidy
 \texttt{nmr1}--\texttt{nmr5} z~téže složky patří jinému (volitelnému) Holeňovu kurzu
-a~látku kapitoly nepokrývají. Podle Han--Kamber je jen odd.~\ref{ssec:char-diskr};
-regresní a~diskriminační analýzu dokládají i~slidy NDBI023 (\emph{Data Analysis}).
+a~látku kapitoly nepokrývají. Podle Han--Kamber jsou odd.~\ref{ssec:aoi}
+a~\ref{ssec:char-diskr}; regresní a~diskriminační analýzu dokládají i~slidy NDBI023
+(\emph{Data Analysis}).
 \end{poznbox}
 
 \subsection{Pravidla jako srozumitelná forma klasifikace}
@@ -2411,10 +2239,135 @@ případy: je-li $t(\varphi)\le t(\psi)$, je $t(\varphi\Rightarrow\psi)=1$; je-l
 $t(\varphi)=t(\psi)$, je $t(\varphi\Leftrightarrow\psi)=1$.
 \end{defbox}
 
+\textbf{Intuice.} Fuzzy stupeň pravdivosti \emph{není} podíl objektů, na kterých
+pravidlo platí (to je konfidence asociačního pravidla, jiná vrstva), ale míra, do jaké
+\emph{jeden konkrétní objekt} splňuje neostrou vlastnost. Pravidlo \uv{kdo koupí
+\emph{hodně} housek, koupí \emph{hodně} másla} se vyhodnotí pro každého zákazníka
+zvlášť. U~Petra je 8~housek \uv{hodně} na $0{,}7$ a~250~g másla \uv{hodně} na $0{,}9$;
+antecedent $0{,}7 \le 0{,}9$, takže pravidlo pro něj platí \emph{plně}, $t = 1$. Máslo by
+mu mohlo klesnout až na $0{,}7$ a~pravidlo by stále platilo naplno --- ta rezerva se ale
+nikam nepřičítá, pravdivost je shora omezena jedničkou. Reziduum řeší opačný případ:
+Jana má housky \uv{hodně} na $0{,}9$, ale máslo jen na $0{,}4$, pravidlo tedy porušuje
+a~otázka je \emph{jak moc}. Booleovsky by prostě neplatilo; fuzzy říká \uv{částečně}
+a~různé t-normy jsou různě přísné způsoby, jak schodek mezi antecedentem a~konsekventem
+trestat (pro $t(\varphi) > t(\psi)$): minimum (Gödel) dá $t(\psi) = 0{,}4$, součin
+(Goguen) dá $t(\psi)/t(\varphi) \approx 0{,}44$, Łukasiewicz dá
+$1 - t(\varphi) + t(\psi) = 0{,}5$. Teprve zprůměrování těchto hodnot přes všechny
+zákazníky dává fuzzy obdobu konfidence pravidla.
+
 Srozumitelnost je důvod, proč se pravidla používají tam, kde výsledek klasifikace
 posuzuje člověk: analytik malwaru chce vědět, \emph{proč} je program podezřelý,
 a~doporučovací systémy vysvětlením zvyšují důvěru uživatele v~doporučení
 (odd.~\ref{ssec:aplikace-pravidel}).
+
+\subsection{Indukce orientovaná na atributy (AOI)}
+\label{ssec:aoi}
+
+\mimo{} Oddíl je zpracován podle Han--Kamber; okruh mluví o~charakteristických
+a~diskriminačních pravidlech, a~AOI je metoda, která je vyrábí.
+
+\textbf{Motivace.} Data v~databázi jsou na \emph{příliš nízké úrovni abstrakce}. Jednotlivý
+záznam \uv{Jan Novák, 23 let, Brno, obor fyzika} neříká o~třídě nic --- popis třídy potřebuje
+\emph{pojmy}, ne jednotlivé hodnoty. \textbf{Indukce orientovaná na atributy}
+(\emph{attribute-oriented induction}, AOI) proto data \emph{zvedne} na vyšší pojmovou úroveň
+a~teprve nad nimi hledá pravidelnosti.
+
+\begin{defbox}[Koncepční hierarchie]
+\emph{Concept hierarchy} --- doménová znalost dodaná uživatelem (nebo odvozená z~dat), která
+říká, jak hodnoty atributu zobecňovat. Například
+\[ \text{Brno} \to \text{Jihomoravský kraj} \to \text{Česko} \to \text{Evropa} \to \mathrm{ANY} \]
+Vrchol \textbf{ANY} znamená \uv{na hodnotě nezáleží} --- zobecněním až sem atribut fakticky
+zmizí. Pro numerické atributy hierarchii tvoří intervaly (věk $21 \to 20$--$25 \to$ mladý),
+získané diskretizací (kap.~\ref{sec:priprava}).
+\end{defbox}
+
+\begin{defbox}[Dvě základní operace AOI]
+\textbf{1. Odstranění atributu} (\emph{attribute removal}) --- použije se, když má atribut
+\emph{mnoho různých hodnot} a~přitom \emph{není k~dispozici koncepční hierarchie} (jméno,
+rodné číslo, telefon). Takový atribut nelze zobecnit, a~ponechat ho by znamenalo, že se žádné
+dva záznamy nesloučí.
+
+\textbf{2. Zobecnění atributu} (\emph{attribute generalization}) --- má-li atribut hierarchii,
+nahradí se jeho hodnoty pojmy o~úroveň výš. Opakuje se, dokud počet různých hodnot neklesne
+pod zvolený práh.
+
+Po každém kroku se \textbf{shodné zobecněné záznamy sloučí} a~jejich počet se akumuluje do
+atributu \texttt{count} (případně dalších agregátů \texttt{sum}, \texttt{avg}).
+\end{defbox}
+
+\begin{defbox}[Kdy přestat zobecňovat --- dva prahy]
+\textbf{Práh pro atribut} (\emph{attribute generalization threshold}): každý atribut smí mít
+nejvýše $k$ různých hodnot, typicky 2--8. Zobecňuje se, dokud se pod práh nedostane.
+
+\textbf{Práh pro relaci} (\emph{generalized relation threshold}): celá výsledná relace smí mít
+nejvýše $k$ záznamů, typicky 10--30. Je-li jich víc, zobecní se dál (zvedne se o~úroveň
+atribut s~nejvíce hodnotami).
+
+Volba prahů je zásadní a~je to \emph{kompromis}: příliš nízké prahy vedou k~\textbf{přílišnému
+zobecnění} --- pravidlo \uv{všichni klienti jsou lidé} je pravdivé a~bezcenné; příliš vysoké
+nechají výsledek nepřehledný.
+\end{defbox}
+
+\noindent\textbf{Algoritmus AOI:}
+\begin{algorithmic}[1]
+\Require relace $W$ (výsledek dotazu na cílovou třídu), koncepční hierarchie, prahy
+\Ensure zobecněná (\emph{prime}) relace $P$
+\ForAll{atributy $A$ relace $W$}
+  \State urči počet různých hodnot $A$
+  \If{$A$ nemá hierarchii a~má mnoho hodnot}
+    \State odstraň $A$ \Comment{odstranění atributu}
+  \Else
+    \While{počet různých hodnot $A$ $>$ práh pro atribut}
+      \State nahraď hodnoty $A$ pojmy o~úroveň výš \Comment{zobecnění atributu}
+    \EndWhile
+  \EndIf
+\EndFor
+\State slouči shodné záznamy, akumuluj \texttt{count}
+\While{$|P| >$ práh pro relaci}
+  \State zobecni dál atribut s~nejvíce různými hodnotami a~znovu slouči
+\EndWhile
+\State \Return $P$
+\end{algorithmic}
+
+\medskip
+\noindent\textbf{Příklad.} Surová tabulka studentů má atributy
+\emph{jméno, rodné číslo, pohlaví, obor, země, věk, prospěch}.
+\emph{Jméno} a~\emph{rodné číslo} se odstraní (mnoho hodnot, žádná hierarchie);
+\emph{obor} se zobecní (fyzika, chemie, biologie $\to$ přírodní vědy),
+\emph{země} (Česko, Slovensko $\to$ domácí; jinak zahraniční),
+\emph{věk} (21, 22, 23 $\to$ 20--25) a~\emph{prospěch} (1, 2 $\to$ výborný).
+Ze stovek řádků zbude několik:
+
+\begin{center}\small
+\begin{tabular}{lllll r}
+\toprule
+\textbf{pohlaví} & \textbf{obor} & \textbf{země} & \textbf{věk} & \textbf{prospěch}
+  & \textbf{count} \\
+\midrule
+M & přírodní vědy & domácí     & 20--25 & výborný & 84 \\
+F & přírodní vědy & zahraniční & 25--30 & výborný & 36 \\
+M & humanitní     & domácí     & 20--25 & dobrý   & 30 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{poznbox}[Souvislosti, na které se ptají]
+\textbf{AOI vs.\ OLAP.} Zobecňování odpovídá agregační operaci \emph{roll-up} nad kostkou
+datového skladu (opačný směr je \emph{drill-down}). Rozdíl: OLAP pracuje nad
+\emph{předpočítanou} kostkou a~řídí ho uživatel ručně, kdežto AOI běží \emph{automaticky}
+nad relací a~sama volí, které atributy odstranit a~které zobecnit.
+
+\textbf{Charakterizace vs.\ diskriminace.} Pustí-li se AOI \emph{jen na cílovou třídu},
+výsledkem je \emph{charakterizace}; pustí-li se \emph{současně na cílovou i~kontrastní třídy}
+(se stejnou úrovní zobecnění, aby byly srovnatelné), výsledkem je \emph{diskriminace}.
+Nad výslednou relací se pak počítají váhy t-weight a~d-weight (odd.~\ref{ssec:char-diskr}).
+
+\textbf{Složitost.} Jde v~podstatě o~jeden průchod daty s~agregací, tedy lineární vůči počtu
+záznamů --- proto je AOI použitelná i~na velké databáze.
+
+\textbf{Formy prezentace výsledku:} zobecněná relace (tabulka výše), kontingenční tabulka
+(\emph{cross-tab}), kvantitativní pravidla s~vahami, nebo grafy (koláčové, sloupcové).
+\end{poznbox}
 
 \subsection{Charakteristická a~diskriminační pravidla: t-weight a~d-weight}
 \label{ssec:char-diskr}
@@ -2422,50 +2375,45 @@ a~doporučovací systémy vysvětlením zvyšují důvěru uživatele v~doporuč
 \mimo{} Oddíl je zpracován podle Han--Kamber --- okruh oba druhy pravidel jmenuje
 výslovně.
 
-\begin{defbox}[Charakterizace vs.\ diskriminace]
-\textbf{Charakterizace dat} (\emph{data characterization}) --- shrnutí obecných
-vlastností \emph{cílové třídy} (\uv{jak vypadá typický klient s~hypotékou?}); výsledkem
-jsou \emph{charakteristická pravidla}. \textbf{Diskriminace dat} (\emph{data
-discrimination}) --- porovnání cílové třídy s~jednou či více \emph{kontrastními třídami}
-(\uv{čím se liší od klienta bez hypotéky?}); výsledkem jsou \emph{diskriminační
-pravidla}. Vlastnost může být pro cílovou třídu \emph{typická}, a~přesto nemít žádnou
-\emph{rozlišovací} sílu --- je-li stejně typická i~pro třídu kontrastní.
+Oba druhy pravidel odpovídají na dvě různé otázky o~\emph{cílové třídě} (např.\ klienti
+s~hypotékou). \textbf{Charakterizace:} \uv{jak vypadá typický člen třídy?}
+\textbf{Diskriminace:} \uv{čím se liší od \emph{kontrastní třídy}?} (klienti bez
+hypotéky). Obě se čtou z~téže zobecněné relace, kterou vyrobí AOI (odd.~\ref{ssec:aoi}):
+řádky $q_1,\dots,q_N$ s~čítači \texttt{count}, u~diskriminace zvlášť pro cílovou
+a~kontrastní třídu. Každý řádek dostane jedno číslo na každou z~obou otázek.
+
+\begin{defbox}[t-weight --- typičnost (charakteristické pravidlo)]
+\textbf{K~čemu:} měří, jak velkou část cílové třídy řádek $q_a$ popisuje.
+\textbf{Vzorec:}
+\[ t\text{-}\mathrm{weight}(q_a)=\frac{\mathrm{count}(q_a)}
+   {\sum_{i=1}^{N}\mathrm{count}(q_i)}, \]
+tj.\ počet objektů cílové třídy v~řádku děleno velikostí celé cílové třídy; součet přes
+řádky je 100~\%. \textbf{Co znamená:} \uv{45~\% klientů s~hypotékou je 30--40 let,
+s~vysokým příjmem, z~Prahy.} Vystupuje v~\emph{charakteristickém pravidle}, které jde
+\emph{ze} třídy k~vlastnostem (nutná podmínka):
+\[ \mathrm{target}(X)\Rightarrow \mathrm{cond}_1(X)\,[t{:}\,w_1]\ \vee\ \cdots\ \vee\
+   \mathrm{cond}_N(X)\,[t{:}\,w_N]. \]
+O~tom, zda vlastnost třídu \emph{odlišuje} od ostatních, neříká nic.
 \end{defbox}
 
-Pravidla tohoto druhu se získávají \emph{generalizací dat}: \emph{indukce orientovaná na
-atributy} (\emph{attribute-oriented induction}, AOI) nahrazuje hodnoty atributů
-obecnějšími podle koncepčních hierarchií (město $\to$ kraj, datum narození $\to$ věková
-kategorie), atributy s~mnoha hodnotami bez hierarchie odstraňuje (jméno, telefon)
-a~shodné zobecněné záznamy slučuje s~čítačem \texttt{count}; totéž provádí operace
-\emph{roll-up} / \emph{drill-down} nad OLAP kostkou (kap.~\ref{sec:paradigmata}). Nad
-zobecněnými záznamy se pak definují dvě váhy:
-
-\begin{defbox}[t-weight, d-weight a~kvantitativní pravidla]
-Nechť $q_1,\dots,q_N$ jsou zobecněné záznamy cílové třídy.
-
-\textbf{Typičnost} (t-weight) záznamu $q_a$:
-\[ t\text{-}\mathrm{weight}(q_a)=\frac{\mathrm{count}(q_a)}
-   {\sum_{i=1}^{N}\mathrm{count}(q_i)}\in[0,1], \]
-tj.\ podíl objektů cílové třídy, které $q_a$ pokrývá (součet přes všechny záznamy je
-100~\%). Vystupuje v~\textbf{kvantitativním charakteristickém pravidle} (nutná podmínka
---- implikace \emph{z}~třídy):
-\[ \forall X\ \ \mathrm{target}(X)\Rightarrow \mathrm{cond}_1(X)\,[t{:}\,w_1]\ \vee\
-   \cdots\ \vee\ \mathrm{cond}_N(X)\,[t{:}\,w_N]. \]
-
-\textbf{Rozlišovací váha} (d-weight) záznamu $q_a$ vůči cílové třídě $C_t$ a~kontrastním
-třídám $C_1,\dots,C_m$:
+\begin{defbox}[d-weight --- rozlišovací síla (diskriminační pravidlo)]
+\textbf{K~čemu:} měří, jak spolehlivě řádek $q_a$ ukazuje na cílovou třídu, a~ne na
+kontrastní. \textbf{Vzorec:}
 \[ d\text{-}\mathrm{weight}(q_a)=\frac{\mathrm{count}(q_a\in C_t)}
-   {\mathrm{count}(q_a\in C_t)+\sum_{j=1}^{m}\mathrm{count}(q_a\in C_j)}\in[0,1], \]
-tj.\ podíl objektů pokrytých záznamem $q_a$, které patří do cílové třídy. Vystupuje
-v~\textbf{kvantitativním diskriminačním pravidle} (postačující podmínka --- implikace
-\emph{do} třídy):
-\[ \forall X\ \ \mathrm{target}(X)\Leftarrow \mathrm{cond}(X)\,[d{:}\,w]. \]
-\emph{Kvantitativní popisné pravidlo} kombinuje obojí ($\Leftrightarrow$,
+   {\mathrm{count}(q_a\in C_t)+\sum_{j=1}^{m}\mathrm{count}(q_a\in C_j)}, \]
+tj.\ ze všech objektů (cílových i~kontrastních), které řádek splňují, podíl těch
+z~cílové třídy --- přesnost řádku jako klasifikátoru. \textbf{Co znamená:} \uv{90~\% lidí
+30--40 let s~vysokým příjmem z~Prahy má hypotéku.} Vystupuje v~\emph{diskriminačním
+pravidle}, které jde od vlastností \emph{do} třídy (postačující podmínka):
+\[ \mathrm{target}(X)\Leftarrow \mathrm{cond}(X)\,[d{:}\,w]. \]
+Vždy se srovnává s~\emph{apriorním podílem} cílové třídy: d-weight rovný apriornímu
+podílu znamená nulovou rozlišovací sílu, d-weight pod ním třídu spíše vylučuje.
+\emph{Kvantitativní popisné pravidlo} uvádí obě váhy zároveň ($\Leftrightarrow$,
 $[t{:}\,w,\ d{:}\,w']$).
 \end{defbox}
 
 \begin{defbox}[Příklad --- klienti s~hypotékou (200) vs.\ bez hypotéky (800)]
-Primární relace po generalizaci:
+Zobecněná relace:
 \begin{center}
 \small
 \begin{tabular}{@{}lllrrrr@{}}
@@ -2480,13 +2428,11 @@ Věk & Příjem & Region & \multicolumn{2}{c}{počet} & $t$-weight & $d$-weight 
 \bottomrule
 \end{tabular}
 \end{center}
-Výpočet pro první záznam: $t=90/200=45\,\%$, $d=90/(90+10)=90\,\%$.
-
-\textbf{Klasická past:} 3.~řádek má $t=20\,\%$, ale $d=40/200=20\,\%$ je \emph{přesně}
-apriorní podíl cílové třídy ($200/1000=20\,\%$) --- rozlišovací síla je nulová;
-4.~řádek s~$d=4\,\%$ hluboko pod apriorním podílem hypotéku spíše \emph{vylučuje}.
-Vysoká typičnost tedy sama o~sobě neznamená rozlišovací sílu: d-weight je vždy třeba
-srovnávat s~apriorním podílem třídy.
+První řádek: $t=90/200=45\,\%$ (téměř polovina hypoték je tady),
+$d=90/(90+10)=90\,\%$ (kdo sem spadne, má hypotéku s~90~\%).
+\textbf{Past:} 3.~řádek má slušné $t=20\,\%$, ale $d=40/200=20\,\%$ je přesně apriorní
+podíl hypoték ($200/1000$) --- typický, ale nerozlišuje nic; 4.~řádek s~$d=4\,\%$
+hypotéku spíše vylučuje.
 \end{defbox}
 
 \subsection{Extrakce pravidel z~klasifikačních stromů}
@@ -2548,33 +2494,62 @@ pittsburghský & celý hledaný soubor pravidel & výsledkem rovnou konzistentn�
 \subsection{Observační pravidla: konfidence, podpora a~testy hypotéz}
 \label{ssec:observacni}
 
-Booleovská logika umí o~datech vypovědět jen dvojím způsobem: \uv{\emph{všechny} objekty
-splňují $\varphi\Rightarrow\psi$} (nastává zřídka), nebo \uv{\emph{existuje} objekt
-splňující $\varphi\wedge\psi$} (slabá informace). Pro užitečnější popis dat byl navržen
-\emph{observační kalkul} (Hájek--Havránek 1978, základ české metody GUHA).
+Klasická logika umí o~datech říct jen \uv{$\varphi\Rightarrow\psi$ platí pro
+\emph{všechny} objekty} (skoro nikdy) nebo \uv{platí aspoň pro \emph{jeden}} (skoro
+nic). \emph{Observační kalkul} (Hájek--Havránek 1978, základ české metody GUHA) proto
+nahradí kvantifikátory $\forall$ a~$\exists$ \emph{zobecněným kvantifikátorem} $\sim$,
+který znamená \uv{platí pro \emph{dost} objektů}, a~co je \uv{dost}, definuje
+statistikou. Observační pravidlo $\varphi\sim\psi$ je tedy věta \uv{v~datech se $\varphi$
+a~$\psi$ vyskytují spolu dostatečně často} a~jednotlivé kvantifikátory se liší jen tím,
+jak ono \uv{dostatečně} měří.
 
-\begin{defbox}[Observační pravidla a~zobecněné kvantifikátory]
-\emph{Observační pravidlo} má tvar $\varphi\sim\psi$, kde $\sim$ je \emph{zobecněný
-kvantifikátor}: pravdivost pravidla zachycuje výsledek statistické analýzy dat
-odpovídajících $\varphi$ a~$\psi$, shrnutých čtyřpolní tabulkou --- $a$ objektů splňuje
-$\varphi\wedge\psi$, $b$ objektů $\varphi\wedge\neg\psi$, $c$ objektů
-$\neg\varphi\wedge\psi$, $d$ objektů $\neg\varphi\wedge\neg\psi$, celkem $n=a+b+c+d$.
-
-Dva běžné typy observačních pravidel:
-\begin{itemize}
-\item \textbf{založená na odhadech pravděpodobností} (případně podmíněných) ---
-      nejběžnější jsou asociační pravidla (odd.~\ref{ssec:ar}) s~konfidencí
-      $c_0\in(0,1)$ a~podporou $s_0\in(0,1)$:
-      \[ (\varphi\sim\psi)=1\quad\text{právě když}\quad
-         \frac{a}{a+b}\ge c_0\ \wedge\ \frac{a}{n}\ge s_0, \]
-      kde $\tfrac{a}{a+b}$ je nestranný odhad $P(\psi\mid\varphi)$;
-\item \textbf{založená na testech hypotéz} ($H_0$ nulová, $H_1$ alternativní) --- např.\
-      $(\varphi\sim\psi)=1$, právě když jednostranný Fisherův test
-      (odd.~\ref{ssec:kontingencni}) na hladině $\alpha\in(0;0{,}5\rangle$ zamítá $H_0$:
-      nezávislost $\varphi$ a~$\psi$ ve prospěch $H_1$: pozitivní závislost $\varphi$
-      a~$\psi$.
-\end{itemize}
+\begin{defbox}[Čtyřpolní tabulka --- jediný vstup všech kvantifikátorů]
+Pro dvojici $\varphi,\psi$ se z~dat spočítají čtyři čísla:
+\begin{center}
+\begin{tabular}{@{}lcc@{}}
+\toprule
+ & $\psi$ & $\neg\psi$ \\
+\midrule
+$\varphi$ & $a$ & $b$ \\
+$\neg\varphi$ & $c$ & $d$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+$a$ = objekty splňující obojí, $b$ = jen $\varphi$, $c$ = jen $\psi$, $d$ = ani jedno,
+$n=a+b+c+d$. Každý zobecněný kvantifikátor je jen podmínka na $a,b,c,d$.
 \end{defbox}
+
+\begin{defbox}[Typ 1 --- konfidence a~podpora (asociační pravidla)]
+\textbf{K~čemu:} \uv{když $\varphi$, tak dost často i~$\psi$, a~týká se to dost velké
+části dat.} \textbf{Vzorec:}
+\[ \mathrm{conf}=\frac{a}{a+b}\ \ (\text{odhad } P(\psi\mid\varphi)),\qquad
+   \mathrm{sup}=\frac{a}{n}, \]
+\[ (\varphi\sim\psi)=1 \iff \mathrm{conf}\ge c_0\ \wedge\ \mathrm{sup}\ge s_0 . \]
+\textbf{Co znamená:} konfidence je \emph{spolehlivost} pravidla (z~nákupů s~houskami,
+kolik obsahuje i~máslo), podpora je jeho \emph{významnost} (kolika nákupů se to vůbec
+týká). Prahy $c_0, s_0$ volí uživatel. Slabina: konfidence 60~\% nic neznamená, když máslo
+kupuje 60~\% \emph{všech} zákazníků --- konfidenci je třeba srovnat s~$\tfrac{a+c}{n}$,
+což vede k~typu~2.
+\end{defbox}
+
+\begin{defbox}[Typ 2 --- test hypotézy]
+\textbf{K~čemu:} místo pevného prahu se ptáme, zda společný výskyt $\varphi$ a~$\psi$
+může být \emph{náhoda}. \textbf{Vzorec:} $H_0$: $\varphi$ a~$\psi$ jsou nezávislé,
+$P(\psi\mid\varphi)=P(\psi)$; $H_1$: pozitivní závislost, $P(\psi\mid\varphi)>P(\psi)$.
+Jednostranný Fisherův test (odd.~\ref{ssec:kontingencni}) spočítá $p$-hodnotu =
+pravděpodobnost, že by při nezávislosti a~daných okrajových součtech tabulky vyšlo $a$
+aspoň tak velké jako pozorované;
+\[ (\varphi\sim\psi)=1 \iff p\le\alpha \quad(\text{např.\ } \alpha=0{,}05). \]
+\textbf{Co znamená:} pravidlo platí, když se $\varphi$ a~$\psi$ vyskytují spolu
+\emph{průkazně} častěji, než by odpovídalo náhodě. Test automaticky zohlední sílu
+závislosti i~počet objektů: na malém $n$ ani vysoká konfidence nestačí.
+\end{defbox}
+
+\textbf{Příklad.} $n=1000$ nákupů, housky ve 100 z~nich, máslo ve 400; společně $a=60$,
+tedy $b=40$, $c=340$, $d=560$. Konfidence $60/100=60\,\%$, podpora $60/1000=6\,\%$; při
+prazích $c_0=0{,}5$, $s_0=0{,}05$ pravidlo platí. Máslo celkem kupuje $40\,\%$
+zákazníků, mezi kupci housek $60\,\%$ --- při nezávislosti bychom čekali $a\approx40$,
+pozorovali jsme 60, Fisherův test dá $p\ll0{,}05$ a~pravidlo platí i~podle typu~2.
 
 \subsection{Statistický pohled: regresní a~diskriminační analýza}
 \label{ssec:stat-pohled}
@@ -2709,6 +2684,16 @@ uživatele.
       Booleovská implikace pravdivá při $t(\varphi)=0$ nebo $t(\varphi)=t(\psi)=1$;
       fuzzy implikace $=$ reziduum t-normy, $t(\varphi)\le t(\psi)\Rightarrow$
       implikace pravdivá se stupněm 1.
+\item \textbf{AOI --- indukce orientovaná na atributy}: zvedne data na vyšší pojmovou
+      úroveň podle \emph{koncepčních hierarchií} a~teprve nad nimi hledá pravidelnosti.
+      Dvě operace: \emph{odstranění} atributu (mnoho hodnot a~žádná hierarchie --- jméno,
+      rodné číslo) a~\emph{zobecnění} atributu (hodnoty $\to$ pojmy o~úroveň výš), po
+      každém kroku sloučení shodných záznamů s~čítačem \texttt{count}. Kdy přestat: práh
+      na počet různých hodnot \emph{atributu} (2--8) a~práh na počet záznamů \emph{relace}
+      (10--30); příliš nízké prahy $\Rightarrow$ \textbf{přílišné zobecnění}
+      (\uv{všichni klienti jsou lidé}). Odpovídá operaci \emph{roll-up} v~OLAP, ale běží
+      automaticky nad relací. Puštěna na cílovou třídu dá \emph{charakterizaci}, na
+      cílovou i~kontrastní \emph{diskriminaci}.
 \item \textbf{Charakteristické vs.\ diskriminační pravidlo} (Han--Kamber):
       charakterizace popisuje cílovou třídu ($\Rightarrow$, nutná podmínka,
       \textbf{t-weight} $=\frac{\mathrm{count}(q_a)}{\sum_i\mathrm{count}(q_i)}$);
@@ -3287,47 +3272,32 @@ Přibližnou strukturní ekvivalenci lze použít pro hierarchické shlukování
 \subsection{Koheze: míry na úrovni sítě}
 
 \begin{defbox}[Reciprocita, hustota, klastrovací koeficient]
-\textbf{Reciprocita} (\emph{reciprocity}) --- míra vzájemnosti a~reciproční výměny v~síti,
-související se sociální kohezí: podíl počtu \emph{reciprokých} vztahů (hrana v~obou směrech)
-na celkovém počtu vztahů v~síti, kde dva vrcholy jsou \uv{ve vztahu}, existuje-li mezi nimi
-alespoň jedna hrana. \textbf{Má smysl jen v~orientovaných grafech.}
+\textbf{Reciprocita} (\emph{reciprocity}) --- podíl \emph{reciprokých} vztahů (hrana v~obou
+směrech) na všech vztazích v~síti; \textbf{má smysl jen v~orientovaných grafech}.
 
-\textbf{Hustota} (\emph{density}) --- podíl počtu hran v~síti na celkovém počtu \emph{možných}
-hran:
+\textbf{Hustota} (\emph{density}) --- podíl počtu hran na počtu \emph{možných} hran:
 \[ \text{density}=\frac{|E|}{|V|(|V|-1)/2}\quad\text{(neorientovaný graf)},\qquad
    \frac{|E|}{|V|(|V|-1)}\quad\text{(orientovaný)}. \]
-Běžná míra toho, jak dobře je síť propojená (jak \uv{těsně upletená} je). Perfektně propojená
-síť se nazývá \emph{klika} a~má hustotu 1. Orientované grafy mají poloviční hustotu než jejich
-neorientované protějšky, protože možných hran je dvakrát více.
+\emph{Klika} (perfektně propojená síť) má hustotu 1; orientované grafy mají poloviční
+hustotu, protože možných hran je dvakrát více.
 
-\textbf{Klastrovací koeficient} (\emph{clustering coefficient}) uzlu $i$ měří hustotu jeho
-\emph{sousedství} --- sítě tvořené pouze uzly přímo spojenými s~$i$. Pro $G=(V,E)$ je
-sousedství $N_i=\{v_j: e_{ij}\in E\ \vee\ e_{ji}\in E\}$, $k_i=|N_i|$, a
+\textbf{Klastrovací koeficient} (\emph{clustering coefficient}) uzlu $i$ --- hustota jeho
+\emph{sousedství} $N_i=\{v_j: e_{ij}\in E\ \vee\ e_{ji}\in E\}$, $k_i=|N_i|$:
 \[ C_i=\frac{2\,|\{e_{jk}: v_j,v_k\in N_i,\ e_{jk}\in E\}|}{k_i(k_i-1)}
    \ \text{(neorientovaný)},\qquad
    C_i=\frac{|\{e_{jk}\}|}{k_i(k_i-1)}\ \text{(orientovaný)}. \]
-\emph{Klastrovací koeficient sítě} $C$ je průměr koeficientů všech uzlů,
-$C=\frac{1}{|V|}\sum_{i=1}^{|V|}C_i$. Indikuje přítomnost (sub)komunit; shlukovací algoritmy
-se snaží maximalizovat počet hran padnoucích do téhož klastru.
+Koeficient sítě $C=\frac{1}{|V|}\sum_i C_i$ indikuje přítomnost (sub)komunit.
 \end{defbox}
 
 \begin{defbox}[Průměr, průměrná vzdálenost, excentricita, malé světy]
-\textbf{Průměr} sítě (\emph{diameter}) --- nejdelší nejkratší cesta (vzdálenost) mezi
-libovolnými dvěma uzly. Užitečná míra \emph{dosahu} sítě: udává, jak dlouho nejdéle trvá
-dosáhnout libovolného uzlu. Řidší sítě mají obecně větší průměr.
+\textbf{Průměr} sítě (\emph{diameter}) $=$ nejdelší nejkratší cesta mezi dvěma uzly;
+\textbf{průměrná vzdálenost} $=$ průměr všech nejkratších cest; \textbf{excentricita}
+vrcholu $=$ jeho největší geodetická vzdálenost od jiného vrcholu.
 
-\textbf{Průměrná vzdálenost} --- průměr všech nejkratších cest v~síti; udává, jak daleko od
-sebe budou dva uzly v~průměru.
-
-\textbf{Excentricita} vrcholu --- největší geodetická vzdálenost mezi daným vrcholem
-a~libovolným jiným vrcholem grafu.
-
-\textbf{Malý svět} (\emph{small world}) --- síť, která vypadá téměř náhodně, ale má
-\emph{významně vysoký klastrovací koeficient} a~\emph{relativně krátkou průměrnou délku
-cesty}: uzly se lokálně klastrují a~zároveň jsou dosažitelné v~několika krocích. V~sociálních
-sítích je to velmi častý jev, a~to kvůli \emph{tranzitivitě} silných vazeb a~\emph{schopnosti
-slabých vazeb dosáhnout přes klastry}. Sítě malého světa mají mnoho klastrů, ale i~mnoho mostů
-mezi nimi, které zkracují průměrnou vzdálenost.
+\textbf{Malý svět} (\emph{small world}) --- síť s~\emph{významně vysokým klastrovacím
+koeficientem} a~\emph{krátkou průměrnou cestou}: klastry vznikají tranzitivitou silných
+vazeb, krátké cesty zajišťují slabé vazby (mosty) mezi klastry. V~sociálních sítích velmi
+častý jev.
 \end{defbox}
 
 \subsection{Model reálných komplexních sítí a~jejich vlastnosti}
@@ -3360,42 +3330,23 @@ Reálné komplexní sítě (sociální, informační a~znalostní, technologick�
 \end{defbox}
 
 \begin{defbox}[Bezškálové sítě a~preferenční připojování]
-\textbf{Bezškálové sítě} (Barabási, Albert, 1999) mají rozdělení stupňů podle \emph{mocninného
-zákona} (WWW, citační a~biologické sítě, některé sociální). Mocninná rozdělení vznikají tehdy,
-\emph{závisí-li množství, které něčeho dostanete, na množství, které už máte}; topologicky to
-dá síť s~několika silně propojenými uzly (\emph{huby}) a~velkým počtem uzlů s~nízkým stupněm.
-
-Mechanismus se nazývá \emph{rich-get-richer / poor-get-poorer}, ekvivalentně \emph{Matoušův
-efekt}; Price jej nazval \emph{kumulativní výhoda}, Barabási a~Albert \textbf{preferenční
-připojování} (\emph{preferential attachment}). Nové uzly se připojují k~dobře propojeným uzlům,
-které bývají spojené s~centrálními a~prestižními pozicemi (více statusu, popularity, znalostí,
-peněz).
-
-Dva mechanismy vzniku SF sítě jsou tedy \textbf{růst} a~\textbf{preferenční připojování}.
-Výsledná síť má \emph{dlouhý chvost} rozdělení stupňů a~\emph{strukturu malého světa};
-tranzitivita a~vlastnosti silných/slabých vazeb ke struktuře malého světa vést mohou, nejsou
-k~jejímu vysvětlení ale \emph{nutné}.
-
-\textbf{Důvody preferenčního připojování:} \emph{popularita} (\uv{bohatí bohatnou}) --- chceme
-být spojeni s~populárními lidmi a~věcmi, což jejich popularitu dále zvyšuje, bez ohledu na
-objektivní charakteristiky; \emph{kvalita} (\uv{dobří se zlepšují}) --- hodnotíme podle
-objektivních kritérií, takže kvalitnější uzly přitáhnou pozornost rychleji; \emph{smíšený
-model} --- kdo se stane hvězdou, nelze předpovědět, i~když kvalita hraje roli: mezi uzly
-s~podobnými atributy se \uv{hvězdami} stanou ty, které první dosáhnou kritického množství
-(\emph{halo efekt}).
+\textbf{Bezškálové sítě} (Barabási, Albert, 1999) mají \emph{mocninné} rozdělení stupňů
+(WWW, citační a~biologické sítě): několik silně propojených \emph{hubů} a~velké množství
+uzlů s~nízkým stupněm. Vznikají dvěma mechanismy: \textbf{růst} $+$ \textbf{preferenční
+připojování} (\emph{preferential attachment}) --- nové uzly se připojují k~už dobře
+propojeným (\emph{rich-get-richer}, \emph{Matoušův efekt}, Priceova \emph{kumulativní
+výhoda}). Důvodem může být \emph{popularita} (bohatí bohatnou), \emph{kvalita} (dobří se
+zlepšují), nebo smíšený model --- mezi podobně kvalitními se hvězdou stane, kdo první
+dosáhne kritického množství (\emph{halo efekt}). Výsledná síť má dlouhý chvost rozdělení
+stupňů a~strukturu malého světa.
 \end{defbox}
 
 \begin{defbox}[Struktura jádro--periferie a~centralizace]
-\textbf{Centralizace} měří, jak je síť centralizovaná; vychází z~\emph{rozdílů ve stupních}
-mezi uzly a~normalizuje se do $[0,1]$. Síť závislá na 1--2 vysoce propojených uzlech (důsledek
-preferenčního připojování) má větší rozdíly ve stupňové centralitě. Centralizované struktury
-mohou být lepší v~úlohách vyžadujících koordinaci (týmové řešení problémů), ale jsou
-\emph{náchylnější k~selhání}, odpojí-li se klíčoví hráči.
-
-Mnoho velkých komunit má \emph{jádro} hustě propojených uživatelů, kritické pro propojení
-mnohem větší \emph{periferie}. Jádra lze identifikovat vizuálně, zkoumáním polohy uzlů
-s~vysokým stupněm a~jejich společných rozdělení stupňů, nebo \emph{bow-tie analýzou} (použitou
-pro analýzu struktury webu).
+\textbf{Centralizace} --- z~rozdílů ve stupních uzlů (normalizace do $[0,1]$) měří, jak síť
+závisí na několika hubech: centralizované sítě jsou lepší pro koordinaci, ale
+\emph{náchylnější k~selhání} při odpojení klíčových hráčů. Mnoho velkých komunit má hustě
+propojené \emph{jádro} kritické pro propojení mnohem větší \emph{periferie}; jádra se hledají
+vizuálně, podle polohy uzlů s~vysokým stupněm, nebo \emph{bow-tie analýzou} (struktura webu).
 \end{defbox}
 
 \subsection{Modelování vlivu}
@@ -3524,108 +3475,65 @@ o~důkaz homofilie.}
 jich mělo být $2pq=4/9$, tj.\ 8 z~18 $\Rightarrow$ \emph{důkaz homofilie}.
 \end{defbox}
 
-\textbf{Poznámky k~testu homofilie.} \uv{Významně nižší} --- vhodné je posuzovat odchylku pod
-střední hodnotou. Co když má síť \emph{významně více} než $2pq$ různorodých hran? Pak jde
-o~\emph{inverzní homofilii} (příklad: partnerské vztahy muž--žena). Test lze použít na
-libovolnou charakteristiku (rasa, věk, rodný jazyk, preference); pro charakteristiky s~více než
-dvěma hodnotami se počítá analogicky --- počet heterogenních hran se porovná s~tím, jak by
-vypadal náhodně generovaný graf s~reálnými daty jako pravděpodobnostmi.
+\textbf{Poznámky k~testu.} Významně \emph{více} než $2pq$ různorodých hran $=$
+\emph{inverzní homofilie} (partnerské vztahy muž--žena). Test funguje pro libovolnou
+charakteristiku i~pro více než dvě hodnoty --- počet heterogenních hran se porovná s~náhodně
+generovaným grafem s~reálnými podíly jako pravděpodobnostmi.
 
 \begin{defbox}[Výběr vs.\ sociální vliv]
 \textbf{Tranzitivní uzávěr} (\emph{triadic closure}): mají-li dva jednotlivci společného
-přítele, je přátelství mezi nimi pravděpodobnější. Homofilie naznačuje, že dva jednotlivci
-jsou si podobnější \emph{kvůli} společnému příteli, takže vazba může vzniknout, i~když ani
-jeden o~společném příteli neví. Obvykle je obtížné přisoudit vznik vazby jedinému faktoru.
+přítele, je přátelství mezi nimi pravděpodobnější --- vazba může vzniknout, i~když o~společném
+příteli ani nevědí. Vznik vazby zpravidla nelze přisoudit jedinému faktoru.
 
-\textbf{Výběr} (\emph{selection}) --- lidé mají tendenci vybírat si přátele, kteří jsou jim
-podobní. Působí na různých úrovních intencionality: aktivně si vybíráte podobné přátele
-v~malé skupině; \emph{nebo} je populace vaší školy relativně homogenní vůči celkové populaci,
-takže vás prostředí \emph{nutí} vybírat si podobné přátele.
+\textbf{Výběr} (\emph{selection}) --- lidé si vybírají podobné přátele; působí aktivně
+(výběr v~malé skupině) i~zprostředkovaně prostředím (homogenní populace školy).
 
-\textbf{Mutabilní vs.\ imutabilní charakteristiky:} \emph{imutabilní} se nemění (pohlaví, rasa)
-nebo se mění konzistentně s~populací (věk, generace); \emph{mutabilní} se mění v~čase (chování,
-přesvědčení, zájmy, názory).
+\textbf{Mutabilní vs.\ imutabilní charakteristiky:} \emph{imutabilní} se nemění (pohlaví,
+rasa) nebo se mění konzistentně s~populací (věk); \emph{mutabilní} se mění v~čase (chování,
+zájmy, názory).
 
-\textbf{Sociální vliv} je \emph{opakem} výběru: \emph{výběr} --- individuální charakteristiky
-řídí tvorbu vazeb; \emph{sociální vliv} --- existující vazby formují mutabilní charakteristiky
-lidí.
+\textbf{Sociální vliv} je \emph{opakem} výběru: výběr --- charakteristiky řídí tvorbu vazeb;
+vliv --- existující vazby formují mutabilní charakteristiky.
 \end{defbox}
 
-\textbf{Longitudinální studie} jsou nutné proto, že z~jediného snímku sítě nelze rozhodnout,
-zda působí výběr, nebo vliv: sledují spoje i~chování v~čase a~odpovídají na otázku \emph{mění se
-chování po změnách v~síti, nebo síť po změnách v~chování?} Na tom závisí návrh intervencí ---
-vykazuje-li užívání drog homofilii \emph{vlivem}, funguje program, v~němž přátelé přesvědčí
-ostatní přestat; vznikla-li homofilie \emph{výběrem}, vyberou si bývalí uživatelé nové přátele
-a~chování ostatních to neovlivní.
-
-\emph{Christakis a~Fowler} sledovali obezitu a~sociální síť 12\,000 lidí po 32 let a~našli
-homofilii podle obezity. Testovali tři vysvětlení --- \emph{výběr} (vybírají si lidé přátele
-s~podobným stavem?), \emph{zmatení} (korelují se stavem i~jiné faktory?) a~\emph{sociální vliv}
-(ovlivnila změna stavu přátel budoucí stav osoby?) --- a~\textbf{našli významný důkaz pro
-třetí}: obezita je typ \uv{nákazy}, který se může šířit sociálním vlivem.
+\textbf{Longitudinální studie:} z~jediného snímku sítě nelze výběr a~vliv rozlišit --- je
+třeba sledovat vazby i~chování v~čase (\emph{mění se chování po změnách v~síti, nebo síť po
+změnách v~chování?}). Na odpovědi závisí návrh intervencí: protidrogový program \uv{přátelé
+přesvědčí ostatní} funguje jen tehdy, vznikla-li homofilie \emph{vlivem}, ne výběrem.
+\emph{Christakis a~Fowler} (obezita, 12\,000 lidí, 32 let) testovali \emph{výběr},
+\emph{zmatení} i~\emph{sociální vliv} --- a~\textbf{našli významný důkaz pro vliv}: obezita
+je \uv{nákaza} šířící se sociálním vlivem.
 
 \subsection{Afiliační sítě a~uzávěrové procesy}
 
 \begin{defbox}[Afiliační a~sociálně-afiliační síť]
-\textbf{Afiliační síť} vkládá do sítě kontext tím, že zobrazuje spojení k~aktivitám,
-společnostem, organizacím, čtvrtím atd. Je to \emph{bipartitní graf}: každá hrana spojuje dva
-uzly patřící do \emph{různých} množin (osoby vs.\ \emph{afiliace} čili \emph{fokusy}).
-
-\textbf{Sociálně-afiliační síť} má \emph{dva typy hran}: \emph{osoba--osoba} (přátelství nebo
-jiný sociální vztah) a~\emph{osoba--fokus} (účast v~daném fokusu).
+\textbf{Afiliační síť} je \emph{bipartitní graf} osob a~\emph{afiliací} (\emph{fokusů}:
+aktivit, organizací, \dots). \textbf{Sociálně-afiliační síť} má \emph{dva typy hran}:
+\emph{osoba--osoba} (sociální vztah) a~\emph{osoba--fokus} (účast).
 \end{defbox}
 
 \begin{defbox}[Tři uzávěrové procesy]
 \begin{itemize}
-\item \textbf{Tranzitivní uzávěr} (\emph{triadic closure}) --- dva lidé se spojí, protože mají
-      společného přítele.
-\item \textbf{Fokální uzávěr} (\emph{focal closure}) --- dva lidé se spojí, protože mají
-      společný fokus; uzávěr \emph{výběrem}.
-\item \textbf{Členský uzávěr} (\emph{membership closure}) --- osoba se zapojí do fokusu,
-      protože je v~něm zapojen její přítel; uzávěr \emph{sociálním vlivem}.
+\item \textbf{Tranzitivní uzávěr} (\emph{triadic closure}) --- dva lidé se spojí, protože
+      mají společného přítele.
+\item \textbf{Fokální uzávěr} (\emph{focal closure}) --- spojí je společný fokus; uzávěr
+      \emph{výběrem}.
+\item \textbf{Členský uzávěr} (\emph{membership closure}) --- osoba se zapojí do fokusu, kde
+      už je její přítel; uzávěr \emph{sociálním vlivem}.
 \end{itemize}
 \end{defbox}
 
-\textbf{Otázky o~uzávěru.} \emph{Jaká je pravděpodobnost, že dva lidé vytvoří vazbu, jako funkce
-počtu společných přátel?} Analogicky pro fokální uzávěr (funkce počtu společných fokusů)
-a~členský uzávěr (funkce počtu přátel už v~daném fokusu zapojených).
+\textbf{Měření:} ze dvou snímků sítě ($t_1$, $t_2$) se pro každé $k$ určí $T(k)$ $=$ podíl
+párů, které měly v~$t_1$ přesně $k$ společných přátel (resp.\ fokusů) a~žádnou hranu
+a~do $t_2$ hranu vytvořily. Bázový model nezávislých příležitostí:
+$T_{\text{base}}(k)=1-(1-p)^{k}$.
 
-\begin{defbox}[Metodika měření tranzitivního uzávěru]
-\begin{enumerate}
-\item Pořiď dva snímky sítě v~časech $t_1$ a~$t_2$.
-\item Pro každé $k$ identifikuj všechny \emph{páry} uzlů, které mají v~$t_1$ přesně $k$
-      společných přátel, ale \emph{nejsou} přímo spojeny hranou.
-\item Definuj $T(k)$ jako \emph{podíl} těchto párů, které do $t_2$ vytvořily hranu. To je
-      pravděpodobnost, že mezi dvěma lidmi s~$k$ společnými přáteli vznikne vazba.
-\item Vynes $T(k)$ jako funkci $k$.
-\end{enumerate}
-
-\textbf{Bázový (nulový) model:} je-li pravděpodobnost vytvoření vazby s~jedním společným
-přítelem $p$ a~jednotlivé společné přátele považujeme za \emph{nezávislé} příležitosti, pak
-\[ T_{\text{base}}(k)=1-(1-p)^{k}\qquad\text{(resp.\ }1-(1-p)^{k-1}\text{ podle konvence).} \]
-\end{defbox}
-
-\textbf{Empirické výsledky.} \emph{Tranzitivní uzávěr --- e-mailová síť} (Kossinets, Watts,
-2006): komunikace 22\,000 studentů po jeden rok, vazba $=$ e-mail za posledních 60 dní, snímky
-den po dni, $T(k)$ zprůměrováno přes páry snímků. Při \emph{žádném} společném příteli se
-e-maily téměř nevyměňují; \emph{významný nárůst} z~1 na 2 společné přátele; další nárůst je
-významný, ale na menší subpopulaci --- tedy \emph{klesající výnosy}.
-\emph{Fokální uzávěr} tamtéž (fokusy $=$ vyučované předměty z~rozvrhů): \emph{sdílení předmětu
-má téměř stejný efekt jako sdílení přítele}, opět s~klesajícími výnosy.
-\emph{Členský uzávěr}: Backstrom et al.\ (2006) na LiveJournalu (fokusy $=$ členství
-v~komunitách) a~Crandall et al.\ (2008) na Wikipedii (vazba $=$ komunikace přes diskusní
-stránku, fokusy $=$ editované články) --- tentýž vzorec, nárůst od 1 ke 2 a~pak klesající
-výnosy.
-
-\textbf{Výběr a~sociální vliv na datech Wikipedie.} Podobnost dvou editorů se měřila jako
-\[ \frac{\text{počet článků editovaných oběma editory}}
-   {\text{počet článků editovaných alespoň jedním editorem}} \]
-(obdoba překryvu sousedství). Zjištění: \emph{páry editorů, které komunikovaly, jsou si
-v~chování významně podobnější než ty, které nekomunikovaly.} Vzniká homofilie tím, že editoři
-mluví s~editory téhož článku (\emph{výběr}), nebo tím, že je k~článkům dovedou ti, s~nimiž mluví
-(\emph{vliv})? Průměrováním historií interakcí (0 $=$ vznik vazby, jen editoři s~$\ge 100$
-akcemi před i~po první interakci, baseline $=$ náhodný pár) vyšlo, že podobnost roste
-\emph{už před} vznikem vazby (výběr) a~roste dál \emph{i~po} něm (vliv).
+\textbf{Empiricky} (e-maily 22\,000 studentů --- Kossinets a~Watts 2006; LiveJournal ---
+Backstrom et al.; Wikipedie --- Crandall et al.) vychází u~všech tří uzávěrů týž vzorec:
+\emph{významný nárůst z~1 na 2} společné přátele/fokusy a~dále \emph{klesající výnosy};
+sdílený předmět má přitom téměř stejný efekt jako sdílený přítel. Na Wikipedii se navíc
+měřila podobnost editorů (překryv editovaných článků) okolo první interakce: podobnost roste
+\emph{už před} vznikem vazby (\emph{výběr}) a~roste dál \emph{i~po} něm (\emph{vliv}).
 
 \subsection{Schellingův model segregace}
 
@@ -3800,18 +3708,6 @@ $a_0=x_1z_1+\cdots+x_nz_n$, pak
 Za předpokladu $c_1>c_2\ge\cdots$ jde pro $k\to\infty$ každý člen kromě prvního k~nule, takže
 $a_k/c_1^k$ konverguje k~$x_1z_1$ --- k~\emph{hlavnímu} vlastnímu vektoru. (Konvergenci
 nezávisle na počátečním vektoru a~uvolnění předpokladu $c_1>c_2$ zde nedokazujeme.)
-\end{defbox}
-
-\begin{defbox}[Vztah ke ko-citaci a~bibliografickému párování]
-\textbf{Ko-citace} stránek $i$ a~$j$ (např.\ počet článků, které citují \emph{oba} články $i$
-a~$j$):
-\[ C_{ij}=\sum_{k=1}^{n}L_{ki}L_{kj}=\big(L^{\!\top}L\big)_{ij}. \]
-Matice autorit $L^{\!\top}L$ algoritmu HITS je tedy \emph{ko-citační matice}.
-
-\textbf{Bibliografické párování} stránek $i$ a~$j$ (počet článků, které jsou citovány
-\emph{oběma} články $i$ a~$j$):
-\[ B_{ij}=\sum_{k=1}^{n}L_{ik}L_{jk}=\big(LL^{\!\top}\big)_{ij}. \]
-Matice hubů $LL^{\!\top}$ je tedy matice bibliografického párování.
 \end{defbox}
 
 \textbf{Silné a~slabé stránky HITS.} \emph{Silná:} řadí stránky \emph{podle tématu dotazu}, což
@@ -4131,6 +4027,9 @@ počátečním slučování.
 Upřesnění Louvainovy metody pro aglomerativní hierarchickou maximalizaci modularity. Tři fáze:
 \emph{(1)}~lokální přesuny uzlů (obdobně jako Louvain); \emph{(2)}~\textbf{upřesnění
 rozdělení}; \emph{(3)}~agregace sítě (obdobně jako Louvain).
+Upřesnění znamená, že se každá komunita z~fáze~1 zevnitř rozpadne na souvislé, dobře
+propojené podkomunity (uzly se slučují jen v~rámci své komunity) a~agregují se až ty,
+takže nesouvislé komunity známé z~Louvainu nemohou vzniknout.
 
 \textbf{Výhody:} efektivnější než Louvainova metoda, ale pro obrovské grafy může vést
 k~delším dobám zpracování; paralelní vícejádrové implementace mohou rychlost zvýšit.
@@ -4143,224 +4042,129 @@ velikosti a~hustoty.
 
 \subsubsection{Taxonomie metod detekce komunit}
 
-Metody lze rozdělit do čtyř kategorií (kritéria se mohou podle úlohy lišit):
-\emph{uzlově orientované} (každý uzel ve skupině splňuje určité vlastnosti),
-\emph{skupinově orientované} (spojení uvnitř skupiny jako celku splňují určité vlastnosti,
-bez zoomu na úroveň uzlů), \emph{síťově orientované} (rozdělení celé sítě do několika
-disjunktních množin) a~\emph{hierarchicky orientované} (konstrukce hierarchické struktury
-komunit).
+Čtyři kategorie podle toho, na jaké úrovni se klade kritérium: \emph{uzlově orientované}
+(vlastnost splňuje každý uzel skupiny), \emph{skupinově orientované} (vlastnost splňuje
+skupina jako celek), \emph{síťově orientované} (rozdělení celé sítě na disjunktní množiny)
+a~\emph{hierarchicky orientované} (hierarchie komunit).
 
 \begin{defbox}[Uzlově orientovaná detekce komunit]
-Uzly mohou být požadovány, aby splňovaly různé vlastnosti používané v~tradiční SNA:
-
-\textbf{Úplná vzájemnost --- kliky.} \emph{Klika} je maximální úplný podgraf tří a~více
-navzájem sousedních uzlů. Nalezení maximální kliky je \textbf{NP-těžké}. \emph{Rekurzivní
-prořezávání:} v~klice velikosti $k$ má každý uzel stupeň $\ge k-1$, takže uzly se stupněm
-$<k-1$ v~maximální klice nebudou --- opakovaně vzorkuj podsíť, najdi v~ní kliku (hladově),
-a~je-li velikosti $k$, odstraň všechny uzly se stupněm $\le k-1$; opakuj, dokud není síť dost
-malá. V~sociálních médiích se prořeže mnoho uzlů, protože stupně následují mocninné rozdělení.
-Kliky se obvykle používají jako \emph{jádro} či \emph{semeno} pro větší komunity.
-
-\textbf{Metoda perkolace klik} (\emph{clique percolation method}, CPM) --- klika je striktní
-a~v~praxi nestabilní definice; CPM hledá \emph{překrývající se} komunity. \emph{Vstup:} $k$
-a~síť. \emph{Postup:} najdi všechny kliky velikosti $k$; zkonstruuj \emph{graf klik} (dvě kliky
-jsou sousední, sdílejí-li $k-1$ uzlů); komponenty souvislosti grafu klik jsou komunity.
-\emph{Příklad:} kliky velikosti 3 jsou $\{1,2,3\}$, $\{1,3,4\}$, $\{4,5,6\}$, $\{5,6,7\}$,
-$\{5,6,8\}$, $\{5,7,8\}$, $\{6,7,8\}$ $\Rightarrow$ komunity $\{1,2,3,4\}$ a~$\{4,5,6,7,8\}$
-(uzel 4 je v~obou).
-
-\textbf{Dosažitelnost --- $k$-klika, $k$-klub, $k$-klan.} Každý uzel ve skupině má být
-dosažitelný v~$k$ skocích. \emph{$k$-klika} je maximální podgraf s~největší geodetickou
-vzdáleností dvou uzlů $\le k$ (pozor: \emph{uvnitř podgrafu} může mít průměr $\ge k$ --- 2-klika
-$\{12,4,10,1,6\}$ má $d(1,6)=3$). \emph{$k$-klub} má průměr $\le k$; \emph{$k$-klan} je
-$k$-klika s~průměrem $\le k$. \emph{Příklad:} kliky $\{1,2,3\}$; 2-kliky $\{1,2,3,4,5\}$,
-$\{2,3,4,5,6\}$; 2-kluby $\{1,2,3,4\}$, $\{1,2,3,5\}$, $\{2,3,4,5,6\}$.
-
-\textbf{Stupně uzlů --- $k$-jádro, $k$-plex.} Každý uzel má mít daný počet spojení \emph{uvnitř}
-skupiny. \emph{$k$-jádro} ($k$-core): každý uzel je spojen s~alespoň $k$ dalšími členy.
-\emph{$k$-plex}: ve skupině o~$n_s$ uzlech je každý uzel sousední s~ne méně než $n_s-k$ uzly.
-Definice jsou komplementární ($k$-jádro je $(n_s-k)$-plex), ale množina všech $k$-jader pro dané
-$k$ \emph{není} identická s~množinou všech $(n_s-k)$-plexů --- velikost $n_s$ se mezi $k$-jádry
-může lišit.
-
-\textbf{Vazby uvnitř vs.\ vně --- LS množiny.} \emph{LS množina} (Luccio--Sami): každá vlastní
-podmnožina má více vazeb \emph{ve} skupině než \emph{mimo} ni. Vznikla pro návrh obvodů na
-čipech, pro síťovou analýzu je \emph{příliš striktní}. Uvolněním je \emph{$k$-komponenta} ---
-maximální podgraf, který zůstává souvislý i~po odstranění méně než $k$ vrcholů či hran (vyžaduje
-výpočet hranové souvislosti algoritmem minimálního řezu / maximálního toku).
-
-\textbf{Omezení uzlově orientovaných definic:} příliš striktní (použitelné jako jádro komunity);
-neškálovatelné, jen pro malé sítě; někdy nekonzistentní s~vlastnostmi rozsáhlých sítí (stupně
-uzlů v~bezškálových sítích).
+\begin{itemize}
+\item \textbf{Úplná vzájemnost --- kliky.} \emph{Klika} $=$ maximální úplný podgraf;
+      nalezení maximální kliky je \textbf{NP-těžké}. \emph{Rekurzivní prořezávání:} v~klice
+      velikosti $k$ má každý uzel stupeň $\ge k-1$, uzly s~menším stupněm lze tedy opakovaně
+      odstraňovat (v~bezškálových sítích se prořeže většina). Kliky slouží spíš jako
+      \emph{jádra} (semena) větších komunit.
+\item \textbf{Perkolace klik} (\emph{clique percolation method}, CPM) --- hledá
+      \emph{překrývající se} komunity: najdi všechny kliky velikosti $k$, sestav \emph{graf
+      klik} (dvě kliky sousedí, sdílejí-li $k-1$ uzlů); komunity $=$ komponenty souvislosti
+      grafu klik.
+\item \textbf{Dosažitelnost.} \emph{$k$-klika} --- maximální podgraf s~geodetickou
+      vzdáleností dvojic $\le k$ (pozor: cesty mohou vést i~\emph{mimo} podgraf, průměr
+      uvnitř může být $>k$); \emph{$k$-klub} --- průměr $\le k$; \emph{$k$-klan} ---
+      $k$-klika, která je zároveň $k$-klubem.
+\item \textbf{Stupně uzlů.} \emph{$k$-jádro} ($k$-core) --- každý uzel spojen s~alespoň $k$
+      členy; \emph{$k$-plex} --- ve skupině o~$n_s$ uzlech každý uzel spojen s~alespoň
+      $n_s-k$ členy. Definice jsou komplementární, množiny všech $k$-jader
+      a~$(n_s-k)$-plexů se ale liší ($n_s$ není pevné).
+\item \textbf{Vazby uvnitř vs.\ vně.} \emph{LS množina} --- každá vlastní podmnožina má víc
+      vazeb ve skupině než mimo ni; pro praxi příliš striktní. Uvolněním je
+      \emph{$k$-komponenta} --- podgraf souvislý i~po odstranění méně než $k$ vrcholů či
+      hran (výpočet přes minimální řez / maximální tok).
+\end{itemize}
+\textbf{Omezení:} definice jsou striktní, neškálují a~nemusí odpovídat vlastnostem
+bezškálových sítí --- hodí se hlavně jako jádra komunit.
 \end{defbox}
 
 \begin{defbox}[Skupinově orientovaná detekce: kvazikliky]
-Skupinově orientovaná kritéria vyžadují, aby \emph{celá skupina} splňovala určitou podmínku ---
-např.\ aby hustota skupiny byla dostatečně velká ($\ge$ daný prah). Podgraf
-$G_S=(V_S,E_S)$ je \emph{$\gamma$-hustá kvaziklika}, je-li
-\[ |E_S|\ \ge\ \gamma\cdot\frac{|V_S|\,(|V_S|-1)}{2}. \]
-Lze použít strategii podobnou klikám: \emph{lokální prohledávání} --- vzorkuj podgraf a~najdi
-maximální $\gamma$-hustou kvazikliku (velikosti $k$); \emph{heuristické prořezávání} ---
-odstraň uzly se stupněm menším než průměrný stupeň ($<\gamma(k-1)$).
+Podmínku splňuje skupina jako celek, typicky hustota: podgraf $G_S=(V_S,E_S)$ je
+\emph{$\gamma$-hustá kvaziklika}, je-li $|E_S|\ge\gamma\cdot\frac{|V_S|(|V_S|-1)}{2}$.
+Hledá se lokálním prohledáváním nad vzorkem s~heuristickým prořezáváním (odstraň uzly se
+stupněm $<\gamma(k-1)$, tj.\ pod průměrným stupněm).
 \end{defbox}
 
 \begin{defbox}[Síťově orientovaná detekce komunit]
-Kritéria uvažují spojení v~síti \emph{globálně}; cílem je rozdělit uzly sítě do
-\emph{disjunktních} množin. Přístupy: shlukování podle podobnosti vrcholů; modely latentního
-prostoru; aproximace blokovým modelem; spektrální shlukování; maximalizace modularity.
-
-\textbf{Shlukování podle podobnosti vrcholů.} Na uzly se aplikuje $k$-means, kde podobnost
-vrcholů je dána podobností jejich \emph{sousedství} (spojení se chápou jako příznaky).
-\emph{Strukturní ekvivalence} (spojení s~\emph{touž} množinou aktérů) je pro praxi příliš
-restriktivní, používají se míry
-\[ \mathrm{Jaccard}(v_i,v_j)=\frac{|N_i\cap N_j|}{|N_i\cup N_j|},\qquad
-   \cos(v_i,v_j)=\frac{|N_i\cap N_j|}{\sqrt{|N_i|\,|N_j|}}. \]
-
-\textbf{Modely latentního prostoru.} Zobrazí uzly do \emph{nízkorozměrného} prostoru se
-zachováním jejich blízkosti a~pak aplikují $k$-means. \emph{Vícerozměrné škálování} (MDS):
-z~párových (např.\ geodetických) vzdáleností se sestaví matice blízkosti; souřadnice
-$S\in\mathbb R^{n\times l}$ vyjdou jako $S=V\Lambda^{1/2}$, kde $V$ je $l$ hlavních vlastních
-vektorů a~$\Lambda$ diagonální matice jejich vlastních čísel (z~dvojitě centrované matice
-blízkosti).
-
-\textbf{Blokové modely.} $A\approx S\,\Sigma\,S^{\!\top}$, kde $\Sigma$ je \emph{míchací matice}
-a~$S$ \emph{indikátorová matice komunit}; při uvolnění $S$ na reálné hodnoty jsou optimem hlavní
-vlastní vektory $A$.
-
-\textbf{Spektrální shlukování.} Poměrový i~normalizovaný řez lze přeformulovat jako minimalizaci
-$\mathrm{tr}(S^{\!\top}LS)$ s~\emph{grafovým laplaciánem} $L=D-A$ (poměrový řez), resp.\
-\emph{normalizovaným} $L=D^{-1/2}(D-A)D^{-1/2}$; $D$ je diagonální matice stupňů. Po
-\emph{spektrální relaxaci} je optimem matice vlastních vektorů s~\emph{nejmenšími} vlastními
-čísly (první je nepoužitelný --- říká, že všechny uzly patří do téhož klastru).
-
-\textbf{Maximalizace modularity.} \emph{Síla komunity} je
-$\sum_{i,j\in C}\big(A_{ij}-\frac{d_id_j}{2m}\big)$, modularita
-$Q=\frac{1}{2m}\sum_{C}\sum_{i,j\in C}\big(A_{ij}-\frac{d_id_j}{2m}\big)$. Analogicky ke
-spektrálnímu shlukování se použije \emph{matice modularity} $B=A-\frac{dd^{\!\top}}{2m}$;
-optimem jsou její \emph{hlavní} vlastní vektory, na něž se postprocessingem pustí $k$-means.
-
-\textbf{Jednotný pohled: maticová faktorizace.} Modely latentního prostoru, blokové modely,
-spektrální shlukování a~maximalizace modularity lze všechny zapsat jako faktorizaci
-$X\approx S\,\Sigma\,S^{\!\top}$, kde
-\[ X=\begin{cases}
-\text{(dvojitě centrovaná) matice blízkosti} & \text{modely latentního prostoru},\\
-\text{sociomatice }A & \text{aproximace blokovým modelem},\\
-\text{grafový laplacián} & \text{minimalizace řezu},\\
-\text{matice modularity} & \text{maximalizace modularity}.
-\end{cases} \]
-\textbf{Omezení:} všechny vyžadují, aby uživatel zadal \emph{počet komunit} předem.
+Spojení se uvažují \emph{globálně}, cílem je rozdělit celou síť na \emph{disjunktní} množiny:
+\begin{itemize}
+\item \textbf{podobnost vrcholů} --- $k$-means nad podobností \emph{sousedství}
+      ($\mathrm{Jaccard}=\frac{|N_i\cap N_j|}{|N_i\cup N_j|}$,
+      $\cos=\frac{|N_i\cap N_j|}{\sqrt{|N_i||N_j|}}$); strukturní ekvivalence je příliš
+      restriktivní;
+\item \textbf{modely latentního prostoru} --- MDS: uzly do nízkorozměrného prostoru
+      ($S=V\Lambda^{1/2}$ z~dvojitě centrované matice blízkosti), pak $k$-means;
+\item \textbf{blokové modely} --- $A\approx S\,\Sigma\,S^{\!\top}$ ($S$ indikátorová matice
+      komunit, $\Sigma$ míchací matice); po relaxaci $S$ jsou optimem hlavní vlastní
+      vektory $A$;
+\item \textbf{spektrální shlukování} --- poměrový i~normalizovaný řez $=$ minimalizace
+      $\mathrm{tr}(S^{\!\top}LS)$ s~\emph{grafovým laplaciánem} $L=D-A$, resp.\
+      $D^{-1/2}(D-A)D^{-1/2}$; po relaxaci optimem vlastní vektory s~\emph{nejmenšími}
+      vlastními čísly (první je nepoužitelný);
+\item \textbf{maximalizace modularity} --- $Q=\frac{1}{2m}\sum_C\sum_{i,j\in C}
+      \big(A_{ij}-\frac{d_id_j}{2m}\big)$; optimem \emph{hlavní} vlastní vektory
+      \emph{matice modularity} $B=A-\frac{dd^{\!\top}}{2m}$, pak $k$-means.
+\end{itemize}
+\textbf{Jednotný pohled:} všechny čtyři maticové přístupy jsou faktorizace
+$X\approx S\,\Sigma\,S^{\!\top}$, kde $X$ je po řadě matice blízkosti, sociomatice $A$,
+grafový laplacián a~matice modularity. \textbf{Omezení:} počet komunit je třeba zadat předem.
 \end{defbox}
 
 \begin{defbox}[Hierarchicky orientovaná detekce komunit]
-\textbf{Cíl:} vybudovat hierarchickou strukturu komunit na základě topologie sítě; umožňuje
-analýzu sítě v~různých \emph{rozlišeních}. Dva reprezentativní přístupy:
-
-\textbf{Divizivní hierarchické shlukování} --- např.\ Girvanové--Newman ($O(m^2n)$, resp.\
-$O(n^3)$ pro řídké sítě): rozděl uzly do několika množin a~každou dále dělej na menší (na
-rozdělení lze aplikovat síťově orientované metody). Konkrétně: rekurzivně odstraňuj
-\uv{nejslabší} vazbu --- najdi hranu s~nejmenší silou, odstraň ji, aktualizuj síly hran
-a~opakuj, dokud se síť nerozpadne na požadovaný počet komponent souvislosti; každá komponenta
-je komunita. Sílu vazby lze měřit \emph{mezilehlostí hrany} --- vyšší mezilehlost značí most.
-
-\textbf{Aglomerativní hierarchické shlukování} --- např.\ Louvain, $O(n\log n)$: inicializuj
-každý uzel jako komunitu; postupně slučuj komunity do větších podle konkrétního kritéria (např.\
-na základě \emph{přírůstku modularity}). Dalším příkladem je \emph{Walktrap} --- spouští krátké
-náhodné procházky a~podle jejich výsledků slučuje komunity zdola nahoru.
+Buduje hierarchii komunit (analýza v~různých \emph{rozlišeních}). \textbf{Divizivní} ---
+např.\ Girvanové--Newman ($O(m^2n)$, u~řídkých $O(n^3)$): opakovaně odstraňuj
+\uv{nejslabší} hranu (nejvyšší \emph{mezilehlost} $=$ most), dokud se síť nerozpadne na
+požadovaný počet komponent. \textbf{Aglomerativní} --- např.\ Louvain ($O(n\log n)$):
+začni s~uzly jako komunitami a~slučuj podle \emph{přírůstku modularity}; \emph{Walktrap}
+slučuje podle výsledků krátkých náhodných procházek.
 \end{defbox}
 
 \subsection{Predikce vazeb}
 
 \begin{defbox}[Úloha predikce vazeb]
-\textbf{Cíl:} predikovat \emph{budoucí} vazby mezi páry uzlů v~síti. V~komerčních sociálních
-sítích (Facebook, LinkedIn) se uživatelům doporučují potenciální přátelé. Použít lze podobnost
-obsahu i~strukturu:
-\begin{itemize}
-\item \textbf{Míry založené na obsahu} využívají princip \emph{homofilie} --- uzly s~podobným
-      obsahem se spíše propojí. Zlepšují predikci vazeb, ale jsou citlivé na konkrétní síť
-      (např.\ krátké a~šumivé tweety s~nestandardními akronymy na Twitteru). \emph{Obsahová
-      homofilie nutně neimplikuje strukturní propojenost!}
-\item \textbf{Strukturní míry} využívají princip \emph{tranzitivního uzávěru} --- dva uzly, které
-      sdílejí sousedství, se spíše propojí. Tranzitivní uzávěr je velmi častý napříč doménami,
-      míry jsou účinné v~různých typech sítí a~přímo aplikovatelné. Patří k~nim
-      \emph{sousedské} míry, \emph{Katzova} míra, míry založené na \emph{náhodných procházkách}.
-      \emph{Strukturní propojenost obvykle implikuje i~obsahovou homofilii.}
-\end{itemize}
+\textbf{Cíl:} predikovat \emph{budoucí} vazby mezi páry uzlů (doporučování přátel na
+Facebooku či LinkedIn). \textbf{Obsahové míry} stavějí na \emph{homofilii} (podobný obsah
+$\to$ vazba); jsou ale citlivé na povahu sítě (šumivé tweety) a~obsahová homofilie strukturní
+propojenost \emph{nezaručuje}. \textbf{Strukturní míry} stavějí na \emph{tranzitivním
+uzávěru} (sdílené sousedství $\to$ vazba); fungují napříč doménami a~jsou \emph{výrazně
+silnější} --- strukturní propojenost obvykle obsahovou homofilii implikuje. Patří k~nim míry
+\emph{sousedské}, \emph{Katzova} a~míry založené na \emph{náhodných procházkách}.
 \end{defbox}
 
 \begin{defbox}[Sousedské míry predikce vazeb]
-Využívají počet \emph{společných sousedů} mezi párem uzlů $i$ a~$j$ ke kvantifikaci
-pravděpodobnosti budoucí vazby. Nechť $S_i$ je množina sousedů uzlu $i$.
-
-\textbf{Míra společných sousedů:} $\mathrm{CN}(i,j)=|S_i\cap S_j|$.
-\emph{Slabina:} nezohledňuje \emph{relativní} počet společných sousedů --- dvě velmi populární
-osobnosti spojené s~mnoha aktéry mohou mít mnoho společných sousedů \emph{jen náhodou}.
-
-\textbf{Jaccardova míra:} $\mathrm{Jaccard}(i,j)=\dfrac{|S_i\cap S_j|}{|S_i\cup S_j|}$ ---
-podobnost sousedství \emph{normalizovaná} vůči stupňům uzlů, které se kvůli mocninnému
-rozdělení silně liší; vyšší stupně obou uzlů koeficient sníží. \emph{Slabina:} nepřizpůsobuje se
-\emph{prostředním} sousedům --- je-li společný soused velmi populární, vyskytuje se jako
-společný soused i~u~mnoha jiných párů, a~je tedy pro predikci \emph{méně důležitý}.
-
-\textbf{Adamicova--Adarova míra} --- vážená verze míry společných sousedů zohledňující jejich
-různou důležitost: váha souseda je \emph{klesající} funkcí jeho stupně, např.\ $1/\log|S_k|$:
-\[ \mathrm{AA}(i,j)=\sum_{k\in S_i\cap S_j}\frac{1}{\log|S_k|}. \]
-\emph{Příklad:} pro čtyři společné sousedy se stupni 4, 2, 2, 4 je
-$\frac{1}{\log 4}+\frac{1}{\log 2}+\frac{1}{\log 2}+\frac{1}{\log 4}=\frac{3}{\log 2}$.
+$S_i$ $=$ množina sousedů uzlu $i$; každá míra opravuje slabinu předchozí:
+\begin{itemize}
+\item \textbf{společní sousedé} $\mathrm{CN}(i,j)=|S_i\cap S_j|$ --- nezohledňuje stupně:
+      dvě populární osobnosti mají mnoho společných sousedů \emph{jen náhodou};
+\item \textbf{Jaccard} $\frac{|S_i\cap S_j|}{|S_i\cup S_j|}$ --- normalizuje vůči stupňům
+      koncových uzlů, ne však \emph{prostředních} sousedů: velmi populární společný soused
+      je společný mnoha párům, a~je tedy pro predikci méně důležitý;
+\item \textbf{Adamic--Adar} $\mathrm{AA}(i,j)=\sum_{k\in S_i\cap S_j}\frac{1}{\log|S_k|}$
+      --- váha společného souseda klesá s~jeho stupněm.
+\end{itemize}
 \end{defbox}
 
 \begin{defbox}[Katzova míra]
-Sousedské míry \emph{nejsou účinné} při malém počtu společných sousedů: sdílejí-li Alice a~Bob
-jediného společného souseda a~Alice a~Jim také, sousedské míry mezi těmito případy nerozliší ---
-existuje ale \emph{nepřímá} propojenost přes delší cesty. Pak jsou vhodnější míry založené na
-\emph{procházkách}, jako Katzova.
-
-Nechť $W_{ij}^{(t)}$ je počet procházek délky $t$ mezi uzly $i$ a~$j$. Pro předem zvolený
-parametr $\beta<1$:
-\[ \mathrm{Katz}(i,j)=\sum_{t=1}^{\infty}\beta^{t}\,W_{ij}^{(t)}, \]
-kde $\beta$ je \emph{diskontní faktor}, který potlačuje význam delších procházek; pro malá
-$\beta$ nekonečná suma konverguje. Je-li $A$ symetrická matice sousednosti neorientované sítě,
-lze matici Katzových koeficientů $K$ rozměru $n\times n$ spočítat jako
-\[ K=\sum_{t=1}^{\infty}\beta^{t}A^{t}=(I-\beta A)^{-1}-I \]
-(vlastní čísla $A^t$ jsou $t$-té mocniny vlastních čísel $A$). Silně centrální uzly mají
-tendenci tvořit vazby s~mnoha uzly $\Rightarrow$ součet Katzových koeficientů uzlu $i$ vůči
-ostatním uzlům se nazývá jeho \textbf{Katzova centralita}.
+Při malém počtu společných sousedů sousedské míry nerozlišují; Katzova míra měří
+\emph{nepřímou} propojenost přes procházky všech délek. Je-li $W_{ij}^{(t)}$ počet procházek
+délky $t$ mezi $i$ a~$j$ a~$\beta<1$ \emph{diskontní faktor} potlačující dlouhé procházky:
+\[ \mathrm{Katz}(i,j)=\sum_{t=1}^{\infty}\beta^{t}\,W_{ij}^{(t)},\qquad
+   K=\sum_{t=1}^{\infty}\beta^{t}A^{t}=(I-\beta A)^{-1}-I. \]
+Součet Katzových koeficientů uzlu vůči ostatním uzlům je jeho \textbf{Katzova centralita}.
 \end{defbox}
 
 \begin{defbox}[Predikce vazeb jako klasifikační úloha]
-Přítomnost či absence vazby mezi párem uzlů se chápe jako \emph{binární} indikátor třídy;
-pro každý pár uzlů se zkonstruuje vícerozměrný datový záznam:
-\begin{itemize}
-\item \emph{příznaky} zahrnují všechny různé podobnosti mezi uzly --- sousedské, Katzovy,
-      založené na procházkách --- plus řadu příznaků preferenčního připojování, např.\ stupně
-      obou uzlů v~páru;
-\item výsledkem je \emph{pozitivně-neoznačkovaná} klasifikační úloha: páry uzlů s~hranou jsou
-      pozitivní příklady a~zbývající páry jsou neoznačkované;
-\item neoznačkované příklady lze při trénování přibližně považovat za negativní;
-\item protože je negativních párů v~rozsáhlých a~řídkých sítích příliš mnoho, použije se jen
-      \emph{vzorek} negativních příkladů.
-\end{itemize}
-
-\textbf{Algoritmus.} \emph{Trénovací fáze:} vygeneruj data s~jedním záznamem pro každý pár uzlů
-s~hranou a~vzorek záznamů z~párů bez hrany; příznaky odpovídají extrahovaným podobnostním
-a~strukturním rysům; označení třídy je přítomnost či absence hrany; postav a~natrénuj model
-klasifikátoru. \emph{Testovací fáze:} převeď každý testovaný pár uzlů na vícerozměrný záznam
-a~použij natrénovaný klasifikátor k~predikci označení. Běžnou volbou bázového klasifikátoru je
-\emph{logistická regrese}; kvůli nevyváženosti dat se často používají \emph{cenově citlivé}
-verze klasifikátorů.
-
-\textbf{Výhody supervizovaného přístupu:} obsahové příznaky lze snadno přidat; klasifikátor se
-\emph{sám} naučí relevanci příznaků; pro orientované sítě lze příznaky extrahovat
-\emph{asymetricky} (vstupní a~výstupní stupně, personalizovaný PageRank); vyšší flexibilita
-díky schopnosti učit se vztahy mezi vazbami a~příznaky různých typů.
+Přítomnost hrany $=$ binární třída; příznaky páru $=$ podobnostní míry (sousedské, Katzova,
+procházkové) $+$ příznaky preferenčního připojování (stupně uzlů). Jde
+o~\emph{pozitivně-neoznačkovanou} úlohu: páry s~hranou jsou pozitivní, z~neoznačkovaných
+(v~řídké síti je jich příliš mnoho) se vzorkují přibližné \uv{negativní} příklady. Bázovým
+klasifikátorem bývá \emph{logistická regrese}, kvůli nevyváženosti v~cenově citlivé verzi.
+\textbf{Výhody:} snadné přidání obsahových příznaků; klasifikátor se relevanci příznaků naučí
+\emph{sám}; u~orientovaných sítí lze příznaky extrahovat \emph{asymetricky} (vstupní
+a~výstupní stupně, personalizovaný PageRank).
 \end{defbox}
 
-\textbf{Souhrn predikce vazeb.} Účinnost se liší podle datové sady: \emph{sousedské} míry se
-efektivně spočítají i~pro rozsáhlá data a~fungují téměř tak dobře jako ostatní nesupervizované;
-\emph{Katzova} míra a~míry na \emph{náhodných procházkách} jsou pro \emph{velmi řídké} sítě,
-kde nelze počet společných sousedů robustně změřit; \emph{supervize} dá lepší přesnost
-a~adaptabilitu napříč doménami, ale je drahá; obsah predikci vylepšuje, strukturní míry jsou
-však \emph{výrazně silnější} (kvůli tranzitivitě reálných sítí). Obsahové míry stavějí na
-\uv{obrácené homofilii} --- podobný či s~vazbami korelovaný obsah se využívá k~predikci vazeb.
+\textbf{Souhrn:} \emph{sousedské} míry jsou levné i~pro rozsáhlá data a~fungují téměř jako
+ostatní nesupervizované; \emph{Katzova} a~\emph{procházkové} míry pomáhají ve \emph{velmi
+řídkých} sítích, kde je společných sousedů málo; \emph{supervize} je přesnější
+a~adaptabilnější, ale drahá; obsah predikci vylepšuje, strukturní míry ale dominují.
 
 \subsection{Shrnutí ke~zkoušce}
 
@@ -4430,9 +4234,8 @@ však \emph{výrazně silnější} (kvůli tranzitivitě reálných sítí). Obs
       evropské aliance 1872--1907, Bangladéš 1972.
 \item \textbf{HITS}: dotazově \emph{závislý}; kořenová množina $S$ ($t=200$) $\to$ bázová
       množina $B$; $a=L^{\!\top}h$, $h=La$, mocninná iterace s~\textbf{nutnou normalizací};
-      $a_k=(L^{\!\top}L)^{k-1}a_0$ konverguje k~hlavnímu vlastnímu vektoru $L^{\!\top}L$
-      $=$ \emph{ko-citační} matice ($LL^{\!\top}$ $=$ bibliografické párování). Slabiny: snadné
-      spamování, drift tématu, neefektivnost v~době dotazu.
+      $a_k=(L^{\!\top}L)^{k-1}a_0$ konverguje k~hlavnímu vlastnímu vektoru $L^{\!\top}L$.
+      Slabiny: snadné spamování, drift tématu, neefektivnost v~době dotazu.
 \item \textbf{PageRank}: dotazově \emph{nezávislý}, $P(i)=\sum_{(j,i)\in E}P(j)/O_j$,
       \emph{nepotřebuje normalizaci} (celkový PageRank je konstantní --- \uv{kapalina}).
       Problém \uv{pomalého úniku} $\Rightarrow$ \emph{škálované} pravidlo s~tlumicím faktorem

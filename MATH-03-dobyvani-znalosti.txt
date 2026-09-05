@@ -1,0 +1,1743 @@
+###### FILE: 03-dobyvani-znalosti.tex   (89 display blocks)
+
+
+============================================================
+SEC: 
+SUB: 
+SUBSUB: 
+============================================================
+
+--- ctx ---
+\floatname{algorithm}{Algoritmus}
+\renewcommand{\algorithmicrequire}{\textbf{Vstup:}}
+\renewcommand{\algorithmicensure}{\textbf{Výstup:}}
+
+% Značka pro látku, která není ve slidech NDBI023 / NAIL116.
+\newcommand{\mimo}{\textcolor{markcol}{\textsf{\footnotesize[$\blacklozenge$~nad rámec slidů]}}}
+\newcommand{\mimoq}[1]{\textcolor{markcol}{\textsf{\footnotesize[$\blacklozenge$~nad rámec slidů: #1]}}}
+--- MATH ---
+\title{\textbf{Dobývání znalostí}\\[2mm]
+\large Učební text k~okruhu státní závěrečné zkoušky}
+\author{SZZ Umělá inteligence, MFF UK}
+\date{srpen 2026}
+
+\begin{document}
+\maketitle
+
+\begin{center}
+\begin{minipage}{0.92\textwidth}
+\small
+Text pokrývá okruh \emph{Dobývání znalostí} magisterské SZZ oboru Umělá inteligence.
+Kapitoly odpovídají \textbf{jedna ku jedné} větám oficiálního znění okruhu (viz mapovací
+tabulka níže). Vychází ze slidů přednášek \textbf{NDBI023 Dobývání znalostí}
+a~\textbf{NAIL116 Sociální sítě a~jejich analýza} (I.~Mrázová, MFF UK) a~je doplněn
+o~standardní látku z~učebnic Han, Kamber, Pei: \emph{Data Mining --- Concepts and
+Techniques}, Tan, Steinbach, Kumar: \emph{Introduction to Data Mining}, Aggarwal:
+\emph{Data Mining --- The Textbook} a~pro sítě Easley, Kleinberg: \emph{Networks, Crowds
+and Markets}, Newman: \emph{Networks} a~Zafarani, Abbasi, Liu: \emph{Social Media Mining}.
+Obsahuje definice, pseudokódy, odvození, číselné příklady a~srovnávací tabulky; každá
+kapitola končí shrnutím pro ústní zkoušku.
+\end{minipage}
+\end{center}
+
+\begin{center}
+\begin{minipage}{0.92\textwidth}
+\begin{poznbox}[Rozsah textu a~značení]
+\small
+Rozsah kapitol odpovídá váze látky: nejvíce prostoru dostávají metody dobývání znalostí
+(kap.~\ref{sec:metody}) a~analýza sociálních sítí (kap.~\ref{sec:sna}) --- tedy to, čemu
+se obě přednášky věnují nejpodrobněji a~co okruh jmenuje nejkonkrétněji.
+
+Značkou \mimo{} je označena látka, která \textbf{není ve slidech} ani jednoho z~obou kurzů
+(slidy jsou k~dispozici kompletní), ale je v~textu ponechána --- buď proto, že ji
+\emph{jmenuje oficiální znění okruhu}, nebo proto, že bez ní nedává okolní výklad smysl.
+Slouží jako nabídka ke~škrtnutí: co označeno není, je ve slidech doloženo. Následuje-li za
+značkou dvojtečka, upřesňuje, čeho přesně se výhrada týká --- typicky že souhrnná tabulka
+nebo rámec jsou moje, ale jednotlivé položky v~nich ze slidů pocházejí.
+
+Slidy pokrývají: analýzu dat a~shlukování, asociační pravidla, rozhodovací stromy
+a~ensembly, SVM s~vyhodnocováním klasifikátorů, bayesovské modely a~ELM (NDBI023);
+základní pojmy, modelování vlivu, homofilii a~afiliaci, analýzu vazeb a~komplexní sítě
+s~detekcí komunit a~predikcí vazeb (NAIL116). Nejnápadnější mezera je
+\textbf{proces KDD a~metodologie} (kap.~\ref{sec:paradigmata}). Kapitola
+o~\textbf{charakteristických a~diskriminačních pravidlech} (kap.~\ref{sec:pravidla}) je
+postavena především na slidech kurzu \emph{Internet a~klasifikační metody} (Holeňa,
+přednášky \texttt{ikm1}--\texttt{ikm6}, zejména \texttt{ikm5}); podle Han--Kamber v~ní
+zůstává jen vymezení obou druhů pravidel s~mírami t-weight/d-weight. Slidy
+\texttt{nmr1}--\texttt{nmr5} z~téže složky patří jinému kurzu a~látku kapitoly
+nepokrývají (viz poznámka na jejím začátku).
+\end{poznbox}
+\end{minipage}
+\end{center}
+
+\vspace{2mm}
+
+\section*{Mapování okruhu na kapitoly}
+\addcontentsline{toc}{section}{Mapování okruhu na kapitoly}
+
+\begin{center}
+\small
+--- after ---
+\toprule
+\textbf{Věta oficiálního znění okruhu} & \textbf{Kapitola v~tomto textu} \\
+
+
+============================================================
+SEC: \section{Příprava dat, výběr atributů a~analýza jejich relevance}
+SUB: \subsection{Čištění dat: šum a~odlehlé hodnoty}
+SUBSUB: 
+============================================================
+
+--- ctx ---
+\emph{Rozpětí} (\emph{range}) množiny dat je rozdíl nejvyšší a~nejnižší hodnoty.
+
+\emph{Kvartily} $Q_1,Q_2,Q_3$ dělí data na čtyři části: 25~\% pozorování má hodnotu menší
+než dolní kvartil $Q_1$, 50~\% pod mediánem $Q_2$ a~75~\% pod horním kvartilem $Q_3$.
+
+\emph{Mezikvartilové rozpětí} (\emph{interquartile range}): $\mathrm{IQR}=Q_3-Q_1$.
+
+\emph{Odlehlá hodnota} (\emph{outlier}) je extrémní hodnota ležící mimo celkový vzorec dat.
+Běžné pravidlo: odlehlá je každá hodnota
+--- MATH ---
+\[ x > Q_3 + 1{,}5\cdot \mathrm{IQR} \qquad\text{nebo}\qquad x < Q_1 - 1{,}5\cdot \mathrm{IQR}. \]
+--- after ---
+\end{defbox}
+
+
+============================================================
+SEC: \section{Příprava dat, výběr atributů a~analýza jejich relevance}
+SUB: \subsection{Transformace a~standardizace atributů}
+SUBSUB: 
+============================================================
+
+--- ctx ---
+12$\times$měsíční; detekuje se korelační analýzou u~numerických a~$\chi^2$ testem
+u~kategoriálních atributů, viz odd.~\ref{ssec:filtr}); \textbf{konflikty hodnot} (různé
+jednotky, škály, kódování); \textbf{duplicity} (tentýž objekt vícekrát s~drobně odlišnými
+hodnotami).
+
+\subsection{Transformace a~standardizace atributů}
+
+Standardizace dává všem atributům \emph{stejný vliv} na výpočet vzdáleností (nutí je do
+společného rozsahu). Pro $x_i=(0{,}1;\,20)$ a~$x_j=(0{,}9;\,720)$ je
+--- MATH ---
+\[ \mathrm{dist}(x_i,x_j)=\sqrt{(0{,}9-0{,}1)^2+(720-20)^2}=700{,}000457, \]
+--- after ---
+tedy vzdálenost je zcela ovládnuta druhým atributem; první nemá prakticky žádný vliv.
+
+--- ctx ---
+tedy vzdálenost je zcela ovládnuta druhým atributem; první nemá prakticky žádný vliv.
+
+\begin{defbox}[Základní standardizační transformace]
+Nechť $f$ je atribut a~$x_{if}$ jeho hodnota u~$i$-tého objektu.
+
+\textbf{Desítkové škálování} (\emph{decimal scaling}) do $[-1,1]$: dělíme hodnoty nejmenší
+mocninou 10, která udrží všechny transformované hodnoty v~$[-1,1]$.
+
+\textbf{Min-max normalizace} (\emph{range standardization}) do $[0,1]$:
+--- MATH ---
+\[ \mathrm{range}(x_{if})=\frac{x_{if}-\min(f)}{\max(f)-\min(f)}, \]
+--- after ---
+do $[-1,1]$ pak $\mathrm{range}_{[-1,1]}(x_{if})=2\cdot \mathrm{range}(x_{if})-1$.
+
+--- ctx ---
+\textbf{Desítkové škálování} (\emph{decimal scaling}) do $[-1,1]$: dělíme hodnoty nejmenší
+mocninou 10, která udrží všechny transformované hodnoty v~$[-1,1]$.
+
+\textbf{Min-max normalizace} (\emph{range standardization}) do $[0,1]$:
+\[ \mathrm{range}(x_{if})=\frac{x_{if}-\min(f)}{\max(f)-\min(f)}, \]
+do $[-1,1]$ pak $\mathrm{range}_{[-1,1]}(x_{if})=2\cdot \mathrm{range}(x_{if})-1$.
+
+\textbf{Standardizace podle průměrné absolutní odchylky} --- nulový průměr a~jednotková
+střední absolutní odchylka:
+--- MATH ---
+\[ m_f=\tfrac1n\big(x_{1f}+\cdots+x_{nf}\big),\qquad
+s_f=\tfrac1n\big(|x_{1f}-m_f|+\cdots+|x_{nf}-m_f|\big),\qquad
+z(x_{if})=\frac{x_{if}-m_f}{s_f}. \]
+--- after ---
+\end{defbox}
+
+
+============================================================
+SEC: \section{Příprava dat, výběr atributů a~analýza jejich relevance}
+SUB: \subsection{Diskretizace numerických atributů}
+SUBSUB: \subsubsection{Fuzzy diskretizace}
+============================================================
+
+--- ctx ---
+přes přechodovou zónu. Vhodné intervaly hledá procedura \textbf{Interval}: hodnoty
+atributu se vzestupně seřadí a~maximální posloupnosti hodnot se stejnou třídou se spojí do
+intervalů s~$\mu=1$; úseky s~promíchanými třídami (a~mezery mezi intervaly) dostanou třídu
+\uv{?}. Každý interval $Int_i$ třídy \uv{?} se pak vyřeší podle sousedů: patří-li
+$Int_{i-1}$ i~$Int_{i+1}$ téže třídě, spojí se všechny tři v~jeden ostrý interval
+s~$\mu=1$; jinak vzniknou \emph{dva překrývající se fuzzy intervaly}
+$Int_{i-1}\cup Int_i$ a~$Int_i\cup Int_{i+1}$ --- na své původní ostré části má každý
+$\mu=1$ a~přes zónu \uv{?} (mezi horní mezí $x_{i-1}$ intervalu $Int_{i-1}$ a~dolní mezí
+$x_{i+1}$ intervalu $Int_{i+1}$) charakteristické funkce lineárně klesají, resp. rostou:
+--- MATH ---
+\[ \mu_{i-1}(x)=\frac{x_{i+1}-x}{x_{i+1}-x_{i-1}},\qquad
+   \mu_{i+1}(x)=\frac{x-x_{i-1}}{x_{i+1}-x_{i-1}},\qquad x\in[x_{i-1},x_{i+1}]. \]
+--- after ---
+Jedné numerické hodnotě tak mohou odpovídat \emph{dvě} sousední kategorie se součtem
+
+--- ctx ---
+$Int_{i-1}\cup Int_i$ a~$Int_i\cup Int_{i+1}$ --- na své původní ostré části má každý
+$\mu=1$ a~přes zónu \uv{?} (mezi horní mezí $x_{i-1}$ intervalu $Int_{i-1}$ a~dolní mezí
+$x_{i+1}$ intervalu $Int_{i+1}$) charakteristické funkce lineárně klesají, resp. rostou:
+\[ \mu_{i-1}(x)=\frac{x_{i+1}-x}{x_{i+1}-x_{i-1}},\qquad
+   \mu_{i+1}(x)=\frac{x-x_{i-1}}{x_{i+1}-x_{i-1}},\qquad x\in[x_{i-1},x_{i+1}]. \]
+
+Jedné numerické hodnotě tak mohou odpovídat \emph{dvě} sousední kategorie se součtem
+charakteristických funkcí 1. Objekt s~hodnotou v~přechodové zóně vstupuje do dat jako
+\uv{fuzzy objekt} s~vahou danou součinem charakteristických funkcí všech atributů,
+--- MATH ---
+\[ w = \prod_j \mu_j < 1. \]
+--- after ---
+Diskretizace obecně může ztratit informaci a~zavést \emph{kontradikce} --- objekty se
+stejnými diskretizovanými hodnotami vstupů, které patří do různých tříd.
+
+
+============================================================
+SEC: \section{Příprava dat, výběr atributů a~analýza jejich relevance}
+SUB: \subsection{Analýza relevance atributů: filtry a~wrappery}
+SUBSUB: \subsubsection{Kritéria na kontingenčních tabulkách}
+============================================================
+
+--- ctx ---
+\mimo{} Filtr tak propustí dvojici silně korelovaných atributů a~zahodí atribut užitečný jen
+\emph{v~kombinaci} s~jiným (XOR-vztah).
+
+\subsubsection{Kritéria na kontingenčních tabulkách}
+\label{ssec:kontingencni}
+
+Vztah vstupního atributu $A$ (hodnoty $v_1,\dots,v_R$) a~cílového atributu $C$ (třídy
+$v_1,\dots,v_S$) se popíše kontingenční tabulkou o~četnostech $a_{kl}$ kombinace
+$A(v_k)\wedge C(v_l)$, s~marginály
+--- MATH ---
+\[ r_k=\sum_{l=1}^{S}a_{kl},\qquad s_l=\sum_{k=1}^{R}a_{kl},\qquad
+n=\sum_{k=1}^{R}\sum_{l=1}^{S}a_{kl}. \]
+--- after ---
+Odhady pravděpodobností: $P(A(v_k)\wedge C(v_l))=a_{kl}/n$, $P(A(v_k))=r_k/n$,
+$P(C(v_l))=s_l/n$. Očekávaná četnost při nezávislosti je $e_{kl}=r_k s_l/n$.
+
+--- ctx ---
+Vztah vstupního atributu $A$ (hodnoty $v_1,\dots,v_R$) a~cílového atributu $C$ (třídy
+$v_1,\dots,v_S$) se popíše kontingenční tabulkou o~četnostech $a_{kl}$ kombinace
+$A(v_k)\wedge C(v_l)$, s~marginály
+\[ r_k=\sum_{l=1}^{S}a_{kl},\qquad s_l=\sum_{k=1}^{R}a_{kl},\qquad
+n=\sum_{k=1}^{R}\sum_{l=1}^{S}a_{kl}. \]
+Odhady pravděpodobností: $P(A(v_k)\wedge C(v_l))=a_{kl}/n$, $P(A(v_k))=r_k/n$,
+$P(C(v_l))=s_l/n$. Očekávaná četnost při nezávislosti je $e_{kl}=r_k s_l/n$.
+
+\begin{defbox}[$\chi^2$ jako kritérium relevance]
+--- MATH ---
+\[ \chi^2=\sum_{k=1}^{R}\sum_{l=1}^{S}\frac{(a_{kl}-e_{kl})^2}{e_{kl}}
+   = n\sum_{k=1}^{R}\sum_{l=1}^{S}\frac{\big(a_{kl}-\tfrac{r_ks_l}{n}\big)^2}{r_ks_l}
+   \qquad\text{(čím větší, tím lepší).}\]
+--- after ---
+Alternativní tvar pro ruční výpočet: $\chi^2=\sum_k\sum_l \frac{a_{kl}^2}{e_{kl}}-n$.
+
+--- ctx ---
+$P(C(v_l))=s_l/n$. Očekávaná četnost při nezávislosti je $e_{kl}=r_k s_l/n$.
+
+\begin{defbox}[$\chi^2$ jako kritérium relevance]
+\[ \chi^2=\sum_{k=1}^{R}\sum_{l=1}^{S}\frac{(a_{kl}-e_{kl})^2}{e_{kl}}
+   = n\sum_{k=1}^{R}\sum_{l=1}^{S}\frac{\big(a_{kl}-\tfrac{r_ks_l}{n}\big)^2}{r_ks_l}
+   \qquad\text{(čím větší, tím lepší).}\]
+Alternativní tvar pro ruční výpočet: $\chi^2=\sum_k\sum_l \frac{a_{kl}^2}{e_{kl}}-n$.
+
+\textbf{Jako statistický test:} při platnosti nulové hypotézy o~nezávislosti
+--- MATH ---
+\[ H_0:\ P(A=v_k\wedge C=v_l)=P(A=v_k)\,P(C=v_l)\quad \forall k,l \]
+--- after ---
+má statistika $\chi^2$ rozdělení s~$(R-1)(S-1)$ stupni volnosti. Je-li
+$\chi^2\ge\chi^2_{(R-1)(S-1)}(\alpha)$, nulovou hypotézu na hladině významnosti $\alpha$
+
+--- ctx ---
+Na hladině významnosti $\alpha=0{,}05$ je kritická hodnota $\chi^2_{(1)}(0{,}05)=3{,}84$.
+Protože $42{,}857>3{,}84$, \textbf{mezi výší příjmu a~poskytnutím úvěru je závislost}.
+\end{defbox}
+
+\begin{defbox}[Fisherův exaktní test]
+$\chi^2$ test lze použít jen pro dostatečně velké četnosti --- musí platit
+$(r_k s_l)/n\ge 5$ pro všechna $k,l$. Pro čtyřpolní tabulky s~malými četnostmi se používá
+\emph{Fisherův test}. Pravděpodobnost, že čtyřpolní tabulka má při daných marginálech
+$r_1,r_2,s_1,s_2$ právě četnosti $a_{kl}$:
+--- MATH ---
+\[ p=\frac{r_1!\,r_2!\,s_1!\,s_2!}{n!\,a_{11}!\,a_{12}!\,a_{21}!\,a_{22}!}
+     =\frac{\binom{s_1}{a_{11}}\binom{s_2}{a_{12}}}{\binom{n}{r_1}}. \]
+--- after ---
+Pravděpodobnosti se sečtou přes všechny uvažované hodnoty skutečných četností při daných
+marginálech (nechť $m=\min(r_1,s_1)$):
+
+--- ctx ---
+\begin{defbox}[Fisherův exaktní test]
+$\chi^2$ test lze použít jen pro dostatečně velké četnosti --- musí platit
+$(r_k s_l)/n\ge 5$ pro všechna $k,l$. Pro čtyřpolní tabulky s~malými četnostmi se používá
+\emph{Fisherův test}. Pravděpodobnost, že čtyřpolní tabulka má při daných marginálech
+$r_1,r_2,s_1,s_2$ právě četnosti $a_{kl}$:
+\[ p=\frac{r_1!\,r_2!\,s_1!\,s_2!}{n!\,a_{11}!\,a_{12}!\,a_{21}!\,a_{22}!}
+     =\frac{\binom{s_1}{a_{11}}\binom{s_2}{a_{12}}}{\binom{n}{r_1}}. \]
+Pravděpodobnosti se sečtou přes všechny uvažované hodnoty skutečných četností při daných
+marginálech (nechť $m=\min(r_1,s_1)$):
+--- MATH ---
+\[ P=\sum_{i=0}^{m}\frac{r_1!\,r_2!\,s_1!\,s_2!}{n!\,(a_{11}-i)!\,(a_{12}+i)!\,(a_{21}+i)!\,(a_{22}-i)!}. \]
+--- after ---
+Je-li $P\le\alpha$, nulová hypotéza se na hladině $\alpha$ zamítá.
+
+
+============================================================
+SEC: \section{Příprava dat, výběr atributů a~analýza jejich relevance}
+SUB: \subsection{Analýza relevance atributů: filtry a~wrappery}
+SUBSUB: \subsubsection{Kritéria založená na entropii}
+============================================================
+
+--- ctx ---
+\textbf{nulovou hypotézu o~nezávislosti přijímáme}. (Kontrola: součet $P_0,\dots,P_6$
+$=0{,}031+0{,}173+0{,}340+0{,}302+0{,}128+0{,}024+0{,}002=1{,}000$.)
+\end{defbox}
+
+\subsubsection{Kritéria založená na entropii}
+
+\begin{defbox}[Entropie, vzájemná informace, informační míra závislosti]
+\textbf{Entropie} atributu $A$ jako vážený průměr entropií jeho hodnot
+(čím \emph{menší}, tím lepší):
+--- MATH ---
+\[ H(A)=\sum_{k=1}^{R}\frac{r_k}{n}\,H\big(A(v_k)\big),\qquad
+   H\big(A(v_k)\big)=-\sum_{l=1}^{S}\frac{a_{kl}}{r_k}\log_2\frac{a_{kl}}{r_k}. \]
+--- after ---
+\textbf{Vzájemná informace} (\emph{mutual information}):
+
+--- ctx ---
+\subsubsection{Kritéria založená na entropii}
+
+\begin{defbox}[Entropie, vzájemná informace, informační míra závislosti]
+\textbf{Entropie} atributu $A$ jako vážený průměr entropií jeho hodnot
+(čím \emph{menší}, tím lepší):
+\[ H(A)=\sum_{k=1}^{R}\frac{r_k}{n}\,H\big(A(v_k)\big),\qquad
+   H\big(A(v_k)\big)=-\sum_{l=1}^{S}\frac{a_{kl}}{r_k}\log_2\frac{a_{kl}}{r_k}. \]
+
+\textbf{Vzájemná informace} (\emph{mutual information}):
+--- MATH ---
+\[ \mathrm{MI}(A,C)=\sum_{k=1}^{R}\sum_{l=1}^{S}\frac{a_{kl}}{n}
+   \log_2\frac{n\,a_{kl}}{r_k s_l}. \]
+--- after ---
+\textbf{Informační míra závislosti} (\emph{information measure of dependence}) ---
+
+--- ctx ---
+\[ H(A)=\sum_{k=1}^{R}\frac{r_k}{n}\,H\big(A(v_k)\big),\qquad
+   H\big(A(v_k)\big)=-\sum_{l=1}^{S}\frac{a_{kl}}{r_k}\log_2\frac{a_{kl}}{r_k}. \]
+
+\textbf{Vzájemná informace} (\emph{mutual information}):
+\[ \mathrm{MI}(A,C)=\sum_{k=1}^{R}\sum_{l=1}^{S}\frac{a_{kl}}{n}
+   \log_2\frac{n\,a_{kl}}{r_k s_l}. \]
+
+\textbf{Informační míra závislosti} (\emph{information measure of dependence}) ---
+normalizovaná vzájemná informace (čím \emph{větší}, tím lepší):
+--- MATH ---
+\[ \mathrm{ID}(A,C)=\frac{\mathrm{MI}(A,C)}{H(C)}
+   =\frac{\mathrm{MI}(A,C)}{-\sum_{l=1}^{S}\frac{s_l}{n}\log_2\frac{s_l}{n}}. \]
+--- after ---
+\end{defbox}
+
+
+============================================================
+SEC: \section{Příprava dat, výběr atributů a~analýza jejich relevance}
+SUB: \subsection{Vztahy mezi atributy: regrese}
+SUBSUB: 
+============================================================
+
+--- ctx ---
+používá regresní analýza: \emph{lineární regrese} určuje \emph{parametry} lineárního vztahu
+mezi dvěma numerickými veličinami.
+
+\textbf{Důvody pro regresní analýzu:} nákladné měření výstupu (predikovat jej z~dostupných
+vstupů); vstupy známé dříve než výstup (odhad); řízené vstupy pomohou najít chování výstupu;
+hledaný kauzální vztah mezi vstupem a~výstupem.
+
+\begin{defbox}[Lineární regrese jedné proměnné metodou nejmenších kvadrátů]
+Vzory $[x_1,y_1],\dots,[x_p,y_p]$, regresní rovnice $y=\beta x+\alpha$, kvadratická chyba
+--- MATH ---
+\[ E=\sum_{i=1}^{p}\varepsilon_i^2=\sum_{i=1}^{p}\big(y_i-\hat y_i\big)^2
+   =\sum_{i=1}^{p}\big(y_i-\beta x_i-\alpha\big)^2. \]
+--- after ---
+Položíme parciální derivace nule:
+\[ \frac{\partial E}{\partial\alpha}=-2\sum_i\big(y_i-\beta x_i-\alpha\big)=0,\qquad
+
+--- ctx ---
+\textbf{Důvody pro regresní analýzu:} nákladné měření výstupu (predikovat jej z~dostupných
+vstupů); vstupy známé dříve než výstup (odhad); řízené vstupy pomohou najít chování výstupu;
+hledaný kauzální vztah mezi vstupem a~výstupem.
+
+\begin{defbox}[Lineární regrese jedné proměnné metodou nejmenších kvadrátů]
+Vzory $[x_1,y_1],\dots,[x_p,y_p]$, regresní rovnice $y=\beta x+\alpha$, kvadratická chyba
+\[ E=\sum_{i=1}^{p}\varepsilon_i^2=\sum_{i=1}^{p}\big(y_i-\hat y_i\big)^2
+   =\sum_{i=1}^{p}\big(y_i-\beta x_i-\alpha\big)^2. \]
+Položíme parciální derivace nule:
+--- MATH ---
+\[ \frac{\partial E}{\partial\alpha}=-2\sum_i\big(y_i-\beta x_i-\alpha\big)=0,\qquad
+   \frac{\partial E}{\partial\beta}=-2\sum_i\big(y_i-\beta x_i-\alpha\big)x_i=0, \]
+--- after ---
+odkud po úpravě $\alpha=\bar y-\beta\bar x$ a
+\[ \beta=\frac{\sum_{i=1}^{p}(x_i-\bar x)(y_i-\bar y)}{\sum_{i=1}^{p}(x_i-\bar x)^2}
+
+--- ctx ---
+\begin{defbox}[Lineární regrese jedné proměnné metodou nejmenších kvadrátů]
+Vzory $[x_1,y_1],\dots,[x_p,y_p]$, regresní rovnice $y=\beta x+\alpha$, kvadratická chyba
+\[ E=\sum_{i=1}^{p}\varepsilon_i^2=\sum_{i=1}^{p}\big(y_i-\hat y_i\big)^2
+   =\sum_{i=1}^{p}\big(y_i-\beta x_i-\alpha\big)^2. \]
+Položíme parciální derivace nule:
+\[ \frac{\partial E}{\partial\alpha}=-2\sum_i\big(y_i-\beta x_i-\alpha\big)=0,\qquad
+   \frac{\partial E}{\partial\beta}=-2\sum_i\big(y_i-\beta x_i-\alpha\big)x_i=0, \]
+odkud po úpravě $\alpha=\bar y-\beta\bar x$ a
+--- MATH ---
+\[ \beta=\frac{\sum_{i=1}^{p}(x_i-\bar x)(y_i-\bar y)}{\sum_{i=1}^{p}(x_i-\bar x)^2}
+   \qquad(\text{tj.\ výběrová kovariance dělená výběrovým rozptylem }x). \]
+--- after ---
+Predikce: $\hat y=\beta x+\alpha$.
+\end{defbox}
+
+--- ctx ---
+Predikce: $\hat y=\beta x+\alpha$.
+\end{defbox}
+
+\textbf{Vícerozměrná lineární regrese.} Předpokládáme lineární závislost vysvětlované
+veličiny $Y$ na několika vysvětlujících veličinách $X_1,\dots,X_m$:
+$\hat y=\beta_0+\beta_1x_1+\cdots+\beta_mx_m$, maticově $\hat Y=X\beta$, kde $X$ je
+rozšířená matice vstupních vzorů (první sloupec jedničky) a~$\beta=(\beta_0,\dots,\beta_m)$.
+Kvadratická odchylka $E=(Y-X\beta)^{\!\top}(Y-X\beta)$; z~$\partial E/\partial\beta=0$
+dostáváme normální rovnice $X^{\!\top}\!X\beta=X^{\!\top}Y$, tedy
+--- MATH ---
+\[ \beta=\big(X^{\!\top}\!X\big)^{-1}X^{\!\top}Y. \]
+--- after ---
+Pro složité praktické úlohy je tento výpočet nákladný $\Rightarrow$ používají se aproximativní
+(iterativní) řešení.
+
+
+============================================================
+SEC: \section{Metody pro dobývání znalostí}
+SUB: \subsection{Asociační pravidla a~frekventované vzory}
+SUBSUB: \subsubsection{Support, confidence a~lift}
+============================================================
+
+--- ctx ---
+Pravidla mají formu \texttt{IF} \emph{podmínka} \texttt{THEN} \emph{závěr}. Mají být
+\textbf{snadno pochopitelná} (vztah lze ověřit) a~\textbf{použitelná} (vedou k~zásahu),
+naopak nemají být \textbf{triviální} (každý to zná) ani \textbf{nevysvětlitelná} (nemají
+vysvětlení a~nevedou k~akci).
+
+\subsubsection{Support, confidence a~lift}
+
+\begin{defbox}[Support, confidence, lift]
+\textbf{Support} (podpora) --- jak často lze pravidlo použít:
+--- MATH ---
+\[ \mathrm{sup}(R)=\frac{\text{počet transakcí obsahujících } i \text{ a } j}
+   {\text{počet všech transakcí}}\cdot 100\,\%. \]
+--- after ---
+\textbf{Confidence} (spolehlivost) --- jak spolehlivé jsou výsledky pravidla:
+
+--- ctx ---
+\subsubsection{Support, confidence a~lift}
+
+\begin{defbox}[Support, confidence, lift]
+\textbf{Support} (podpora) --- jak často lze pravidlo použít:
+\[ \mathrm{sup}(R)=\frac{\text{počet transakcí obsahujících } i \text{ a } j}
+   {\text{počet všech transakcí}}\cdot 100\,\%. \]
+
+\textbf{Confidence} (spolehlivost) --- jak spolehlivé jsou výsledky pravidla:
+--- MATH ---
+\[ \mathrm{conf}(R)=\frac{\text{počet transakcí obsahujících } i \text{ a } j}
+   {\text{počet transakcí obsahujících } i}\cdot 100\,\%. \]
+--- after ---
+\textbf{Lift} (zdvih) --- kolikrát je lepší použít pravidlo pro predikci než jen předpokládat
+
+--- ctx ---
+\[ \mathrm{sup}(R)=\frac{\text{počet transakcí obsahujících } i \text{ a } j}
+   {\text{počet všech transakcí}}\cdot 100\,\%. \]
+
+\textbf{Confidence} (spolehlivost) --- jak spolehlivé jsou výsledky pravidla:
+\[ \mathrm{conf}(R)=\frac{\text{počet transakcí obsahujících } i \text{ a } j}
+   {\text{počet transakcí obsahujících } i}\cdot 100\,\%. \]
+
+\textbf{Lift} (zdvih) --- kolikrát je lepší použít pravidlo pro predikci než jen předpokládat
+jeho výsledek:
+--- MATH ---
+\[ \mathrm{lift}(R)=\frac{p(i\wedge j)}{p(i)\,p(j)}. \]
+--- after ---
+Je-li $\mathrm{lift}<1$, je pravidlo pro predikci \emph{horší než náhodná volba}
+a~\textbf{negace závěru} může dát lepší pravidlo (\texttt{IF} \emph{podmínka} \texttt{THEN
+
+
+============================================================
+SEC: \section{Metody pro dobývání znalostí}
+SUB: \subsection{Asociační pravidla a~frekventované vzory}
+SUBSUB: \subsubsection{Algoritmus Apriori}
+============================================================
+
+--- ctx ---
+\EndIf
+\EndFor
+\end{algorithmic}
+\end{defbox}
+
+\textbf{Generování pravidel.} Po nalezení kombinací s~vyhovující frekvencí se vytvoří
+asociační pravidla (platí \emph{frekvence nadkombinace} $\le$ \emph{frekvence kombinace}).
+Každá kombinace $\mathit{Comb}$ se rozdělí na všechny možné dvojice podkombinací
+$\mathit{Ant}$ a~$\mathit{Suc}$ tak, že
+--- MATH ---
+\[ \mathit{Suc}=\mathit{Comb}\setminus \mathit{Ant},\qquad
+   \mathit{Ant}\cap \mathit{Suc}=\emptyset,\quad \mathit{Ant}\cup \mathit{Suc}=\mathit{Comb}. \]
+--- after ---
+Pro pravidlo $\mathit{Ant}\Rightarrow \mathit{Suc}$ pak \emph{support} odpovídá frekvenci
+kombinace $\mathit{Comb}$ a~\emph{confidence} poměru frekvencí kombinací $\mathit{Comb}$
+
+
+============================================================
+SEC: \section{Metody pro dobývání znalostí}
+SUB: \subsection{Přístupy založené na principu učení s~učitelem}
+SUBSUB: \subsubsection{Rozhodovací stromy}
+============================================================
+
+--- ctx ---
+a~přidej uzel pro každou podmnožinu.
+\item Existuje-li uzel takový, že vzory do něj přicházející nepatří všechny do téže třídy,
+      zopakuj proces pro něj od kroku 1; jinak skonči.
+\end{enumerate}
+\end{defbox}
+
+\begin{defbox}[Entropie a~volba dělicího atributu]
+Cílem je vybrat takový atribut, který nejlépe rozdělí vzory z~různých tříd. \emph{Entropie}
+jako míra neuspořádanosti (\uv{překvapení}) v~systému:
+--- MATH ---
+\[ H=-\sum_{j=1}^{m}p_j\log_2 p_j, \]
+--- after ---
+kde $p_j$ je pravděpodobnost výskytu třídy $j$ (relativní frekvence na uvažované množině
+vzorů) a~$m$ počet tříd. Konvence: $0\log_2 0=0$; přepočet
+
+--- ctx ---
+Cílem je vybrat takový atribut, který nejlépe rozdělí vzory z~různých tříd. \emph{Entropie}
+jako míra neuspořádanosti (\uv{překvapení}) v~systému:
+\[ H=-\sum_{j=1}^{m}p_j\log_2 p_j, \]
+kde $p_j$ je pravděpodobnost výskytu třídy $j$ (relativní frekvence na uvažované množině
+vzorů) a~$m$ počet tříd. Konvence: $0\log_2 0=0$; přepočet
+$\log_2 x=\log_{10}x/0{,}301$.
+
+Pro atribut $A$: pro každou jeho možnou hodnotu $v$ se spočítá entropie $H(A(v))$ na množině
+příkladů pokrytých kategorií $A(v)$,
+--- MATH ---
+\[ H\big(A(v)\big)=-\sum_{j=1}^{m}p_j^{A(v)}\log_2 p_j^{A(v)}, \]
+--- after ---
+a~\emph{vážená průměrná entropie} atributu jako vážený součet
+\[ H(A)=\sum_{v}\frac{|A(v)|}{|D|}\,H\big(A(v)\big). \]
+
+--- ctx ---
+\[ H=-\sum_{j=1}^{m}p_j\log_2 p_j, \]
+kde $p_j$ je pravděpodobnost výskytu třídy $j$ (relativní frekvence na uvažované množině
+vzorů) a~$m$ počet tříd. Konvence: $0\log_2 0=0$; přepočet
+$\log_2 x=\log_{10}x/0{,}301$.
+
+Pro atribut $A$: pro každou jeho možnou hodnotu $v$ se spočítá entropie $H(A(v))$ na množině
+příkladů pokrytých kategorií $A(v)$,
+\[ H\big(A(v)\big)=-\sum_{j=1}^{m}p_j^{A(v)}\log_2 p_j^{A(v)}, \]
+a~\emph{vážená průměrná entropie} atributu jako vážený součet
+--- MATH ---
+\[ H(A)=\sum_{v}\frac{|A(v)|}{|D|}\,H\big(A(v)\big). \]
+--- after ---
+Vybírá se atribut s~\emph{minimální} $H(A)$.
+\end{defbox}
+
+--- ctx ---
+C10 & vysoký & střední & žena & ne & ano \\
+C11 & nízký & střední & žena & ano & ne \\
+C12 & nízký & střední & muž & ne & ano \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Krok 1 --- výběr atributu podle minimální entropie.} Čtyřpolní tabulka pro
+\emph{příjem} a~\emph{úvěr}: vysoký příjem 5 ano / 0 ne, nízký příjem 3 ano / 4 ne.
+--- MATH ---
+\begin{align*}
+H(\text{příjem}(\text{vysoký}))&=-\tfrac55\log_2\tfrac55-\tfrac05\log_2\tfrac05=0,\\
+H(\text{příjem}(\text{nízký}))&=-\tfrac37\log_2\tfrac37-\tfrac47\log_2\tfrac47=0{,}9852,\\
+H(\text{příjem})&=\tfrac{5}{12}\cdot 0+\tfrac{7}{12}\cdot 0{,}9852=0{,}5747.
+\end{align*}
+--- after ---
+Obdobně $H(\text{konto})=\tfrac13\cdot 0+\tfrac13\cdot 1+\tfrac13\cdot 1=0{,}6667$,
+$H(\text{pohlaví})=\tfrac12\cdot 0{,}9183+\tfrac12\cdot 0{,}9183=0{,}9183$
+
+--- ctx ---
+\State připoj podstrom \textsc{ID3}$(\mathit{EXAMPLES}_{v_i},
+             \mathit{TARGET\_ATTRIBUTE}, \mathit{ATTRIBUTES}\setminus\{A\})$
+   \EndIf
+\EndFor
+\State \Return $\mathit{ROOT}$
+\end{algorithmic}
+
+\textbf{Informační zisk} (\emph{information gain}) --- očekávané snížení entropie po rozdělení
+dat podle uvažovaného atributu:
+--- MATH ---
+\[ \mathrm{GAIN}(D,A)=H(D)-\sum_{v\in \mathrm{VALUES}(A)}\frac{|D_v|}{|D|}H(D_v). \]
+--- after ---
+Protože $H(D)$ je pro všechny atributy stejná, je maximalizace informačního zisku ekvivalentní
+minimalizaci vážené entropie $H(A)$.
+
+--- ctx ---
+když nový strom není na validační množině horší. \emph{Subtree raising}: podstrom se
+      nahradí svým nejčastěji používaným podstromem zvednutým výš; testuje se přesnost.
+\item \textbf{Prořezávání pravidel} (\emph{rule post-pruning}) --- strom (přeučení dovoleno)
+      $\to$ pravidla (jedno na cestu kořen--list) $\to$ vypouštěj předpoklady, dokud to
+      nezhorší odhadovanou přesnost $\to$ seřaď podle očekávané přesnosti a~v~tom pořadí
+      klasifikuj. Snazší a~radikálnější než prořezávání stromů, výsledek je průhledný.
+\item \textbf{Odhad přesnosti pravidel} --- standardně validační množinou; C4.5 hodnotí
+      \emph{na trénovacích datech} $\mathit{acc}=k/n$ (správně klasifikované ku pokrytým).
+      Charakteristikou pravidla je \emph{dolní mez} z~binomického rozdělení, na 95\% hladině
+--- MATH ---
+      \[ \mathit{acc}-1{,}96\sqrt{\frac{\mathit{acc}(1-\mathit{acc})}{n}}. \]
+--- after ---
+\item \textbf{Poměrný informační zisk} (\emph{information gain ratio}) jako kritérium dělení
+      (bere se \emph{největší}):
+
+--- ctx ---
+$\to$ pravidla (jedno na cestu kořen--list) $\to$ vypouštěj předpoklady, dokud to
+      nezhorší odhadovanou přesnost $\to$ seřaď podle očekávané přesnosti a~v~tom pořadí
+      klasifikuj. Snazší a~radikálnější než prořezávání stromů, výsledek je průhledný.
+\item \textbf{Odhad přesnosti pravidel} --- standardně validační množinou; C4.5 hodnotí
+      \emph{na trénovacích datech} $\mathit{acc}=k/n$ (správně klasifikované ku pokrytým).
+      Charakteristikou pravidla je \emph{dolní mez} z~binomického rozdělení, na 95\% hladině
+      \[ \mathit{acc}-1{,}96\sqrt{\frac{\mathit{acc}(1-\mathit{acc})}{n}}. \]
+\item \textbf{Poměrný informační zisk} (\emph{information gain ratio}) jako kritérium dělení
+      (bere se \emph{největší}):
+--- MATH ---
+      \[ \mathrm{GAIN\_RATIO}(D,A)=\frac{\mathrm{GAIN}(D,A)}
+         {-\sum_{v}\frac{|D_v|}{|D|}\log_2\frac{|D_v|}{|D|}}, \]
+--- after ---
+jmenovatel penalizuje \emph{nadměrné větvení} (atributy s~mnoha hodnotami).
+\end{itemize}
+
+--- ctx ---
+\end{itemize}
+
+\textbf{Algoritmus C5.0} --- komerční nástupce C4.5 pro velké databáze: efektivnější
+generování pravidel a~vyšší přesnost díky \emph{boostingu} (viz ensemble metody níže).
+
+\begin{defbox}[CART --- \emph{Classification And Regression Trees}]
+Generuje \emph{binární} stromy --- při každém dělení dat se tvoří právě dvě hrany. Volba
+nejlepšího rozhodovacího atributu podle entropie nebo \textbf{Gini indexu}: pro atribut
+o~$r$ hodnotách $v_1,\dots,v_r$, $n$ vzorů a~$m$ tříd
+--- MATH ---
+\[ G=\sum_{i=1}^{r}\frac{n_i}{n}G(v_i),\qquad G(v_i)=1-\sum_{j=1}^{m}p_j^2,
+   \qquad \sum_{i=1}^{r}n_i=n, \]
+--- after ---
+kde $n_i$ je počet vzorů s~hodnotou $v_i$ a~$p_j$ pravděpodobnost třídy $j$ v~těchto $n_i$
+vzorech. \emph{Nižší} hodnoty $G$ znamenají lepší diskriminaci.
+
+--- ctx ---
+\qquad \sum_{i=1}^{r}n_i=n, \]
+kde $n_i$ je počet vzorů s~hodnotou $v_i$ a~$p_j$ pravděpodobnost třídy $j$ v~těchto $n_i$
+vzorech. \emph{Nižší} hodnoty $G$ znamenají lepší diskriminaci.
+
+Dělení se provádí podle \uv{nejlepšího} nalezeného bodu pro daný uzel $t$; procházejí se
+všechny možné hodnoty $v$ rozhodovacího atributu $A$ (při rovnosti se použije pravý
+podstrom). Označme $P_L,P_R$ pravděpodobnosti zpracování levým, resp.\ pravým podstromem
+a~$P(C_j\mid t_L),P(C_j\mid t_R)$ pravděpodobnosti, že vzor patří do třídy $C_j$ a~je v~levém,
+resp.\ pravém podstromu uzlu $t$. Kritérium dělení:
+--- MATH ---
+\[ \Phi=2P_LP_R\sum_{j=1}^{m}\big|P(C_j\mid t_L)-P(C_j\mid t_R)\big|, \]
+--- after ---
+které nabývá maxima, jsou-li všechny vzory dané třídy seskupeny v~témže podstromu.
+
+
+============================================================
+SEC: \section{Metody pro dobývání znalostí}
+SUB: \subsection{Přístupy založené na principu učení s~učitelem}
+SUBSUB: \subsubsection{Bayesovská klasifikace}
+============================================================
+
+--- ctx ---
+klasifikaci; chybějící data jsou ignorována a~nezapočítávají se do vyhodnocení rozhodovacích
+kritérií; zastavovací kritérium --- žádné další dělení už nezlepší klasifikační přesnost;
+vysoká přesnost na trénovací množině nemusí odrážet přesnost na testovacích datech.
+\end{defbox}
+
+\subsubsection{Bayesovská klasifikace}
+
+\begin{defbox}[Bayesova formule a~hypotéza MAP]
+Pravděpodobnost, že hypotéza $H$ platí, pozorujeme-li $E$:
+--- MATH ---
+\[ P(H\mid E)=\frac{P(E\mid H)\,P(H)}{P(E)}, \]
+--- after ---
+kde $P(H)$ je \emph{apriorní} pravděpodobnost hypotézy, $P(H\mid E)$ \emph{aposteriorní}
+(podmíněná) pravděpodobnost a~$P(E)$ pravděpodobnost jevu $E$.
+
+--- ctx ---
+\begin{defbox}[Bayesova formule a~hypotéza MAP]
+Pravděpodobnost, že hypotéza $H$ platí, pozorujeme-li $E$:
+\[ P(H\mid E)=\frac{P(E\mid H)\,P(H)}{P(E)}, \]
+kde $P(H)$ je \emph{apriorní} pravděpodobnost hypotézy, $P(H\mid E)$ \emph{aposteriorní}
+(podmíněná) pravděpodobnost a~$P(E)$ pravděpodobnost jevu $E$.
+
+\emph{Nejpravděpodobnější hypotéza} $H_{MAP}$ (\emph{maximum a~posteriori}) má největší
+aposteriorní pravděpodobnost. Protože jmenovatel $P(E)$ je pro všechny hypotézy stejný, lze
+jej zanedbat:
+--- MATH ---
+\[ H_{MAP}=\arg\max_{H\in\mathcal H} P(H\mid E)=\arg\max_{H\in\mathcal H} P(E\mid H)\,P(H). \]
+--- after ---
+\end{defbox}
+
+--- ctx ---
+aposteriorní pravděpodobnost. Protože jmenovatel $P(E)$ je pro všechny hypotézy stejný, lze
+jej zanedbat:
+\[ H_{MAP}=\arg\max_{H\in\mathcal H} P(H\mid E)=\arg\max_{H\in\mathcal H} P(E\mid H)\,P(H). \]
+\end{defbox}
+
+\begin{defbox}[Naivní bayesovský klasifikátor]
+\textbf{Předpoklad:} jevy $E_1,\dots,E_k$ jsou \emph{podmíněně nezávislé} při platnosti
+hypotézy $H$. V~reálných úlohách je tento předpoklad splněn jen zřídka --- odtud označení
+\uv{naivní}. Pak
+--- MATH ---
+\[ P(H\mid E_1,\dots,E_k)=\frac{P(E_1,\dots,E_k\mid H)P(H)}{P(E_1,\dots,E_k)}
+   =\frac{P(H)}{P(E_1,\dots,E_k)}\prod_{i=1}^{k}P(E_i\mid H), \]
+--- after ---
+a~klasifikujeme hypotézou s~největší aposteriorní pravděpodobností
+\[ H_{MAP}=\arg\max_{H_t} P(H_t)\prod_{i=1}^{k}P(E_i\mid H_t). \]
+
+--- ctx ---
+\end{defbox}
+
+\begin{defbox}[Naivní bayesovský klasifikátor]
+\textbf{Předpoklad:} jevy $E_1,\dots,E_k$ jsou \emph{podmíněně nezávislé} při platnosti
+hypotézy $H$. V~reálných úlohách je tento předpoklad splněn jen zřídka --- odtud označení
+\uv{naivní}. Pak
+\[ P(H\mid E_1,\dots,E_k)=\frac{P(E_1,\dots,E_k\mid H)P(H)}{P(E_1,\dots,E_k)}
+   =\frac{P(H)}{P(E_1,\dots,E_k)}\prod_{i=1}^{k}P(E_i\mid H), \]
+a~klasifikujeme hypotézou s~největší aposteriorní pravděpodobností
+--- MATH ---
+\[ H_{MAP}=\arg\max_{H_t} P(H_t)\prod_{i=1}^{k}P(E_i\mid H_t). \]
+--- after ---
+Odhady z~dat: $P(H_t)=P(\text{třída }t)=\frac{\text{počet vzorů z~}t}{\text{počet všech
+vzorů}}$ a~$P(E_k\mid H_t)=\frac{\text{počet vzorů z~}t\text{ splňujících }E_k}
+
+--- ctx ---
+\emph{Naivní klasifikátor} nad daty z~příkladu o~úvěru (12 klientů):
+$P(\text{úvěr(ano)})=8/12=0{,}667$, $P(\text{úvěr(ne)})=4/12=0{,}333$;
+$P(\text{konto(střední)}\mid\text{ano})=2/8=0{,}25$,
+$P(\text{konto(střední)}\mid\text{ne})=2/4=0{,}5$;
+$P(\text{nezam.(ne)}\mid\text{ano})=5/8=0{,}625$,
+$P(\text{nezam.(ne)}\mid\text{ne})=1/4=0{,}25$.
+
+Pro klienta se středním kontem, který není nezaměstnaný:
+--- MATH ---
+\[ 0{,}667\cdot 0{,}25\cdot 0{,}625=0{,}1042 \quad\text{vs.}\quad
+   0{,}333\cdot 0{,}5\cdot 0{,}25=0{,}0416, \]
+--- after ---
+klient se tedy zařadí do třídy \textbf{úvěr(ano)}.
+\end{defbox}
+
+
+============================================================
+SEC: \section{Metody pro dobývání znalostí}
+SUB: \subsection{Přístupy založené na principu učení s~učitelem}
+SUBSUB: \subsubsection{Support Vector Machines}
+============================================================
+
+--- ctx ---
+SVM (V.~Vapnik, 70.~léta v~Rusku; na Západě známé od roku 1992) jsou \emph{lineární}
+klasifikátory hledající hyperrovinu, která oddělí pozitivní a~negativní třídu; pro nelineární
+separaci se používají \emph{kernelové} funkce. Mají důkladný teoretický základ i~vyšší přesnost
+než většina metod, zejména pro vysokorozměrná data --- patří k~nejlepším klasifikátorům textu.
+
+\begin{defbox}[Lineární SVM, separabilní případ]
+Trénovací množina $D=\{(x_1,y_1),\dots,(x_r,y_r)\}$, $x_i\in X\subseteq\mathbb R^n$,
+$y_i\in\{1,-1\}$. SVM hledá lineární funkci $f(x)=\langle w\cdot x\rangle+b$ tak, že
+--- MATH ---
+\[ y_i=\begin{cases}1 & \text{pro }\langle w\cdot x_i\rangle+b\ge 0,\\
+-1 & \text{pro }\langle w\cdot x_i\rangle+b<0.\end{cases} \]
+--- after ---
+Hyperrovina $\langle w\cdot x\rangle+b=0$ se nazývá \emph{rozhodovací hranice}
+(\emph{decision boundary}). Takových hyperrovin je mnoho --- SVM hledá tu s~\emph{největším
+
+--- ctx ---
+\[ y_i=\begin{cases}1 & \text{pro }\langle w\cdot x_i\rangle+b\ge 0,\\
+-1 & \text{pro }\langle w\cdot x_i\rangle+b<0.\end{cases} \]
+Hyperrovina $\langle w\cdot x\rangle+b=0$ se nazývá \emph{rozhodovací hranice}
+(\emph{decision boundary}). Takových hyperrovin je mnoho --- SVM hledá tu s~\emph{největším
+okrajem} (\emph{margin}); teorie strojového učení říká, že tato hyperrovina minimalizuje
+mez chyby.
+
+Vzdálenost bodu $x_i$ od hyperroviny je $\dfrac{|\langle w\cdot x_i\rangle+b|}{\|w\|}$, kde
+$\|w\|=\sqrt{\langle w\cdot w\rangle}$. Pro okrajové hyperroviny $H_+$ a~$H_-$ platí
+--- MATH ---
+\[ d_+=d_-=\frac{1}{\|w\|},\qquad \text{margin}=d_++d_-=\frac{2}{\|w\|}. \]
+--- after ---
+\textbf{Optimalizační úloha:}
+
+--- ctx ---
+(\emph{decision boundary}). Takových hyperrovin je mnoho --- SVM hledá tu s~\emph{největším
+okrajem} (\emph{margin}); teorie strojového učení říká, že tato hyperrovina minimalizuje
+mez chyby.
+
+Vzdálenost bodu $x_i$ od hyperroviny je $\dfrac{|\langle w\cdot x_i\rangle+b|}{\|w\|}$, kde
+$\|w\|=\sqrt{\langle w\cdot w\rangle}$. Pro okrajové hyperroviny $H_+$ a~$H_-$ platí
+\[ d_+=d_-=\frac{1}{\|w\|},\qquad \text{margin}=d_++d_-=\frac{2}{\|w\|}. \]
+
+\textbf{Optimalizační úloha:}
+--- MATH ---
+\[ \text{minimalizuj }\ \frac{\langle w\cdot w\rangle}{2}
+   \quad\text{za podmínek}\quad y_i\big(\langle w\cdot x_i\rangle+b\big)\ge 1,\
+   i=1,\dots,r, \]
+--- after ---
+což je souhrnný zápis podmínek $\langle w\cdot x_i\rangle+b\ge 1$ pro $y_i=1$
+a~$\langle w\cdot x_i\rangle+b\le -1$ pro $y_i=-1$.
+
+--- ctx ---
+\[ \text{minimalizuj }\ \frac{\langle w\cdot w\rangle}{2}
+   \quad\text{za podmínek}\quad y_i\big(\langle w\cdot x_i\rangle+b\big)\ge 1,\
+   i=1,\dots,r, \]
+což je souhrnný zápis podmínek $\langle w\cdot x_i\rangle+b\ge 1$ pro $y_i=1$
+a~$\langle w\cdot x_i\rangle+b\le -1$ pro $y_i=-1$.
+\end{defbox}
+
+\begin{defbox}[Duální formulace a~podpůrné vektory]
+Úloha se řeší standardní \emph{Lagrangeovou} metodou:
+--- MATH ---
+\[ L_P=\frac{\langle w\cdot w\rangle}{2}-\sum_{i=1}^{r}\alpha_i
+   \big[y_i(\langle w\cdot x_i\rangle+b)-1\big],\qquad \alpha_i\ge 0. \]
+--- after ---
+Optimální řešení musí splňovat \emph{Kuhn--Tuckerovy podmínky}, které jsou pro \emph{konvexní}
+účelovou funkci s~\emph{lineárními} omezeními nejen nutné, ale i~postačující. Podmínka
+
+--- ctx ---
+\big[y_i(\langle w\cdot x_i\rangle+b)-1\big],\qquad \alpha_i\ge 0. \]
+Optimální řešení musí splňovat \emph{Kuhn--Tuckerovy podmínky}, které jsou pro \emph{konvexní}
+účelovou funkci s~\emph{lineárními} omezeními nejen nutné, ale i~postačující. Podmínka
+komplementarity ukazuje, že $\alpha_i>0$ mohou mít jen body \emph{na} okrajových
+hyperrovinách (pro ně $y_i(\langle w\cdot x_i\rangle+b)-1=0$) --- to jsou
+\textbf{podpůrné vektory} (\emph{support vectors}); pro všechny ostatní je $\alpha_i=0$.
+
+Vynulováním parciálních derivací $L_P$ podle $w$ a~$b$ a~substitucí zpět dostaneme
+\emph{Wolfeho duální} úlohu
+--- MATH ---
+\[ L_D=\sum_{i=1}^{r}\alpha_i-\frac12\sum_{i,j}y_iy_j\alpha_i\alpha_j
+   \langle x_i\cdot x_j\rangle\ \longrightarrow\ \max, \]
+--- after ---
+jejíž maximum se nabývá pro tytéž hodnoty $w,b,\alpha_i$ jako minimum $L_P$. Duální úloha se
+řeší snáz než primární (numerické techniky).
+
+--- ctx ---
+Vynulováním parciálních derivací $L_P$ podle $w$ a~$b$ a~substitucí zpět dostaneme
+\emph{Wolfeho duální} úlohu
+\[ L_D=\sum_{i=1}^{r}\alpha_i-\frac12\sum_{i,j}y_iy_j\alpha_i\alpha_j
+   \langle x_i\cdot x_j\rangle\ \longrightarrow\ \max, \]
+jejíž maximum se nabývá pro tytéž hodnoty $w,b,\alpha_i$ jako minimum $L_P$. Duální úloha se
+řeší snáz než primární (numerické techniky).
+
+\textbf{Rozhodovací hranice} a~\textbf{testování} vzoru $z$:
+--- MATH ---
+\[ \langle w\cdot x\rangle+b=\sum_{i\in \mathit{sv}}y_i\alpha_i\langle x_i\cdot x\rangle+b=0,
+\qquad
+\mathrm{sign}\Big(\sum_{i\in \mathit{sv}}\alpha_iy_i\langle x_i\cdot z\rangle+b\Big). \]
+--- after ---
+Vrátí-li výraz 1, je $z$ klasifikován jako pozitivní, jinak jako negativní.
+\end{defbox}
+
+--- ctx ---
+\textbf{Problém explicitní transformace:} dimenze $F$ může být pro užitečné transformace enormní
+i~při rozumném počtu vstupních atributů --- \emph{prokletí dimenzionality} činí explicitní
+výpočet nezvládnutelným.
+
+\textbf{Klíčové pozorování:} duál potřebuje ke konstrukci optimální hyperroviny i~k~vyhodnocení
+rozhodovací funkce \emph{pouze skalární součiny} $\langle\phi(x)\cdot\phi(z)\rangle$, nikdy
+$\phi(x)$ samotné. Umíme-li tedy počítat skalární součin přímo ze vstupních vektorů, $\phi$ znát
+nemusíme --- \emph{kernelová funkce}
+--- MATH ---
+\[ K(x,z)=\langle\phi(x)\cdot\phi(z)\rangle \]
+--- after ---
+nahradí skalární součin ve všech výrazech (\textbf{kernelový trik}).
+
+--- ctx ---
+\textbf{Klíčové pozorování:} duál potřebuje ke konstrukci optimální hyperroviny i~k~vyhodnocení
+rozhodovací funkce \emph{pouze skalární součiny} $\langle\phi(x)\cdot\phi(z)\rangle$, nikdy
+$\phi(x)$ samotné. Umíme-li tedy počítat skalární součin přímo ze vstupních vektorů, $\phi$ znát
+nemusíme --- \emph{kernelová funkce}
+\[ K(x,z)=\langle\phi(x)\cdot\phi(z)\rangle \]
+nahradí skalární součin ve všech výrazech (\textbf{kernelový trik}).
+
+\emph{Příklad (polynomiální kernel $d=2$, 2-D vstup):}
+--- MATH ---
+\begin{align*}
+\langle x\cdot z\rangle^2&=(x_1z_1+x_2z_2)^2=x_1^2z_1^2+2x_1z_1x_2z_2+x_2^2z_2^2\\
+&=\big\langle (x_1^2,x_2^2,\sqrt2 x_1x_2)\cdot(z_1^2,z_2^2,\sqrt2 z_1z_2)\big\rangle
+ =\langle\phi(x)\cdot\phi(z)\rangle.
+\end{align*}
+--- after ---
+Kernel $\langle x\cdot z\rangle^d$ je tedy skalární součin v~transformovaném prostoru, aniž
+bychom $\phi$ kdy vyčíslili. Zda je daná funkce kernelem, říká \emph{Mercerova věta}. Běžné
+
+
+============================================================
+SEC: \section{Metody pro dobývání znalostí}
+SUB: \subsection{Přístupy založené na principu učení s~učitelem}
+SUBSUB: \subsubsection{Logistická regrese}
+============================================================
+
+--- ctx ---
+Logistická regrese je nejdůležitější případ nelineární regrese (odd.~\ref{sec:priprava}) a~zároveň
+klasifikátor: závislá proměnná $y$ je kategoriální, typicky dvouhodnotová, a~modeluje se
+\emph{pravděpodobnost}, že $y$ nabude určité hodnoty, v~závislosti na kombinaci hodnot
+nezávislých veličin.
+
+\begin{defbox}[Logistická regrese]
+Pro binární $y\in\{0,1\}$ se modeluje logaritmus \uv{podmíněné šance}
+(\emph{conditional odds}):
+--- MATH ---
+\[ \ln\frac{P(y=1\mid x_1,\dots,x_m)}{1-P(y=1\mid x_1,\dots,x_m)}
+   =\beta_0+\beta_1x_1+\cdots+\beta_mx_m=z, \]
+--- after ---
+odkud
+\[ P(y=1\mid x)=\frac{e^{z}}{1+e^{z}}=\frac{1}{1+e^{-z}}=\sigma(z)
+
+--- ctx ---
+\emph{pravděpodobnost}, že $y$ nabude určité hodnoty, v~závislosti na kombinaci hodnot
+nezávislých veličin.
+
+\begin{defbox}[Logistická regrese]
+Pro binární $y\in\{0,1\}$ se modeluje logaritmus \uv{podmíněné šance}
+(\emph{conditional odds}):
+\[ \ln\frac{P(y=1\mid x_1,\dots,x_m)}{1-P(y=1\mid x_1,\dots,x_m)}
+   =\beta_0+\beta_1x_1+\cdots+\beta_mx_m=z, \]
+odkud
+--- MATH ---
+\[ P(y=1\mid x)=\frac{e^{z}}{1+e^{z}}=\frac{1}{1+e^{-z}}=\sigma(z)
+   \qquad\text{(sigmoida).} \]
+--- after ---
+\textbf{Učení} maximalizací věrohodnosti (\emph{maximum likelihood}):
+
+--- ctx ---
+Pro binární $y\in\{0,1\}$ se modeluje logaritmus \uv{podmíněné šance}
+(\emph{conditional odds}):
+\[ \ln\frac{P(y=1\mid x_1,\dots,x_m)}{1-P(y=1\mid x_1,\dots,x_m)}
+   =\beta_0+\beta_1x_1+\cdots+\beta_mx_m=z, \]
+odkud
+\[ P(y=1\mid x)=\frac{e^{z}}{1+e^{z}}=\frac{1}{1+e^{-z}}=\sigma(z)
+   \qquad\text{(sigmoida).} \]
+
+\textbf{Učení} maximalizací věrohodnosti (\emph{maximum likelihood}):
+--- MATH ---
+\[ L=\prod_{i=1}^{p}P\big(y_i\mid x_{i,1},\dots,x_{i,m}\big)
+   =\prod_{i=1}^{p}\Big(\frac{1}{1+e^{-z_i}}\Big)^{y_i}
+     \Big(\frac{1}{1+e^{z_i}}\Big)^{1-y_i}. \]
+--- after ---
+Místo maximalizace $L$ se minimalizuje \emph{křížová entropie} $E=-\log L$:
+\[ E=-\sum_i\Big[y_i\log\sigma(z_i)+(1-y_i)\log\big(1-\sigma(z_i)\big)\Big]. \]
+
+--- ctx ---
+odkud
+\[ P(y=1\mid x)=\frac{e^{z}}{1+e^{z}}=\frac{1}{1+e^{-z}}=\sigma(z)
+   \qquad\text{(sigmoida).} \]
+
+\textbf{Učení} maximalizací věrohodnosti (\emph{maximum likelihood}):
+\[ L=\prod_{i=1}^{p}P\big(y_i\mid x_{i,1},\dots,x_{i,m}\big)
+   =\prod_{i=1}^{p}\Big(\frac{1}{1+e^{-z_i}}\Big)^{y_i}
+     \Big(\frac{1}{1+e^{z_i}}\Big)^{1-y_i}. \]
+Místo maximalizace $L$ se minimalizuje \emph{křížová entropie} $E=-\log L$:
+--- MATH ---
+\[ E=-\sum_i\Big[y_i\log\sigma(z_i)+(1-y_i)\log\big(1-\sigma(z_i)\big)\Big]. \]
+--- after ---
+Protože derivace sigmoidy je $\sigma'=\sigma(1-\sigma)$, dostaneme po zjednodušení velmi
+jednoduchá adaptační pravidla
+
+--- ctx ---
+\textbf{Učení} maximalizací věrohodnosti (\emph{maximum likelihood}):
+\[ L=\prod_{i=1}^{p}P\big(y_i\mid x_{i,1},\dots,x_{i,m}\big)
+   =\prod_{i=1}^{p}\Big(\frac{1}{1+e^{-z_i}}\Big)^{y_i}
+     \Big(\frac{1}{1+e^{z_i}}\Big)^{1-y_i}. \]
+Místo maximalizace $L$ se minimalizuje \emph{křížová entropie} $E=-\log L$:
+\[ E=-\sum_i\Big[y_i\log\sigma(z_i)+(1-y_i)\log\big(1-\sigma(z_i)\big)\Big]. \]
+Protože derivace sigmoidy je $\sigma'=\sigma(1-\sigma)$, dostaneme po zjednodušení velmi
+jednoduchá adaptační pravidla
+--- MATH ---
+\[ \Delta\beta_j=-\eta\frac{\partial E}{\partial\beta_j}
+   =\eta\sum_i\big(y_i-\sigma(z_i)\big)x_{i,j},\qquad
+   \Delta\beta_0=\eta\sum_i\big(y_i-\sigma(z_i)\big), \]
+--- after ---
+kde $\eta$ je rychlost učení. Chyba tedy vstupuje do úpravy vah přímo jako rozdíl
+\emph{pozorované} a~\emph{predikované} hodnoty.
+
+
+============================================================
+SEC: \section{Metody pro dobývání znalostí}
+SUB: \subsection{Přístupy založené na principu učení s~učitelem}
+SUBSUB: \subsubsection{Diskriminační analýza}
+============================================================
+
+--- ctx ---
+\subsubsection{Diskriminační analýza}
+\label{ssec:da}
+
+\begin{defbox}[Diskriminační analýza]
+\emph{Klasifikace vzorů do známých tříd}: hledá se závislost nominální veličiny (určující
+příslušnost ke třídě) na ostatních numerických veličinách. Předpokládáme, že ke každé třídě
+$C_j$, $j=1,\dots,m$ existuje \emph{diskriminační funkce} $g_j$; vzor
+$x=(x_1,\dots,x_m)$ patří do třídy $C_j$, právě když
+--- MATH ---
+\[ g_j(x)=\max_{k} g_k(x). \]
+--- after ---
+\textbf{Lineární diskriminační analýza:} $g_j(x)=\beta_{j0}+\beta_{j1}x_1+\cdots+\beta_{jm}x_m$.
+
+--- ctx ---
+\textbf{Optimální klasifikace ve smyslu minimální chyby} nastane, jsou-li diskriminační
+funkce $\propto$ aposteriorní (podmíněné) pravděpodobnosti zařazení pozorování $x$ do
+třídy $C_j$: $g_j(x)=P(C_j\mid x)=\dfrac{p(x\mid C_j)P(C_j)}{p(x)}$; pro dvě třídy
+$g(x)=p(x\mid C_1)P(C_1)-p(x\mid C_2)P(C_2)$.
+\end{defbox}
+
+Pro \emph{normální rozdělení} s~různými středními hodnotami $\mu_1,\mu_2$ a~obecnými
+kovariančními maticemi $S_1,S_2$ vychází \emph{kvadratická} diskriminační funkce. Jsou-li
+kovarianční matice \emph{shodné} ($S_1=S_2=S$), redukuje se na \emph{lineární}
+--- MATH ---
+\[ g(x)=(\mu_1-\mu_2)^{\!\top}S^{-1}x-\tfrac12(\mu_1-\mu_2)^{\!\top}S^{-1}(\mu_1+\mu_2)
+   -\ln\frac{P(C_2)}{P(C_1)}, \]
+--- after ---
+a~jsou-li navíc obě třídy stejně pravděpodobné a~$S=I$, jde o~jednoduché srovnávání
+vzdáleností od středních hodnot. Pro normální rozdělení se tedy hledání diskriminačních
+
+
+============================================================
+SEC: \section{Metody pro dobývání znalostí}
+SUB: \subsection{Přístupy založené na principu učení s~učitelem}
+SUBSUB: \subsubsection{Ensemble metody}
+============================================================
+
+--- ctx ---
+\begin{defbox}[Bagging (\emph{bootstrapped aggregating})]
+Snaží se snížit \emph{rozptyl} klasifikátoru: je-li rozptyl klasifikátoru $\sigma^2$, pak
+rozptyl průměru $k$ nezávislých a~stejně rozdělených (i.i.d.) klasifikátorů klesne na
+$\sigma^2/k$.
+
+\textbf{Bootstrapping} aproximuje i.i.d.\ klasifikátory: body se vybírají \emph{s~opakováním}
+uniformně z~původních dat; vzorek má přibližně stejnou velikost jako původní data, může
+obsahovat duplikáty a~obsahuje podíl
+--- MATH ---
+\[ 1-\Big(1-\frac1n\Big)^{\!n}\approx 1-\frac1e=63{,}2\,\% \]
+--- after ---
+různých bodů z~původních dat (pravděpodobnost, že bod ve vzorku \emph{není}, je
+$(1-1/n)^n$). Nakreslí se $k$ nezávislých bootstrapových vzorků velikosti $n$, na každém se
+
+--- ctx ---
+zkreslení} a~\emph{vysoký rozptyl} (jsou-li dostatečně hluboké).
+\textbf{Omezení:} bagging \emph{nesnižuje zkreslení} modelu; je-li zkreslení hlavním zdrojem
+chyby, může přesnost i~mírně zhoršit kvůli korelacím mezi komponentami (a~tedy porušenému
+i.i.d.\ předpokladu).
+\end{defbox}
+
+\begin{defbox}[Náhodné lesy (\emph{random forests})]
+Mají-li $k$ klasifikátorů s~rozptylem $\sigma^2$ vzájemnou \emph{pozitivní korelaci} $\rho$,
+je rozptyl zprůměrované predikce
+--- MATH ---
+\[ \rho\sigma^2+\frac{(1-\rho)\sigma^2}{k}. \]
+--- after ---
+Člen $\rho\sigma^2$ je \emph{nezávislý} na počtu komponent $k$ --- právě on omezuje přínos
+baggingu. Bootstrapované stromy přitom bývají pozitivně korelované.
+
+
+============================================================
+SEC: \section{Metody pro dobývání znalostí}
+SUB: \subsection{Klastrová analýza}
+SUBSUB: \subsubsection{Formulace úlohy a~míry vzdálenosti}
+============================================================
+
+--- ctx ---
+jednotkové vzdálenosti dávají všechny tři metriky hodnotu 1.
+\end{defbox}
+
+Volba metriky závisí na zúčastněných veličinách a~jejich rozsahu $\Rightarrow$ veličiny je
+třeba \textbf{normalizovat} (dělením průměrem, směrodatnou odchylkou, rozsahem
+$\max-\min$, \dots; viz kap.~\ref{sec:priprava}). Uvedené metriky předpokládají \emph{stejný
+rozptyl} všech veličin. Mají-li veličiny \emph{různý} rozptyl, používá se
+
+\begin{defbox}[Mahalanobisova vzdálenost]
+--- MATH ---
+\[ d_M^2(x_1,x_2)=(x_1-x_2)^{\!\top}S^{-1}(x_1-x_2), \]
+--- after ---
+kde $S$ je kovarianční matice. Zohledňuje jak různé rozptyly, tak korelace mezi veličinami
+(pro $S=I$ se redukuje na kvadrát euklidovské vzdálenosti).
+
+--- ctx ---
+\textbf{Metoda nejbližšího souseda} (\emph{single linkage}) --- minimum ze vzdáleností jejich
+prvků:
+$D(C_k,C_l)=\min_{x_i,x_j} d(x_i,x_j)$, $x_i\in C_k$, $x_j\in C_l$.
+
+\textbf{Metoda nejvzdálenějšího souseda} (\emph{complete linkage}) --- maximum:
+$D(C_k,C_l)=\max_{x_i,x_j} d(x_i,x_j)$.
+
+\textbf{Metoda průměrné vzdálenosti} (\emph{average linkage}) --- průměr vzdáleností mezi
+vzory ($n_k$, $n_l$ jsou počty vzorů v~klastrech):
+--- MATH ---
+\[ D(C_k,C_l)=\frac{1}{n_kn_l}\sum_{i=1}^{n_k}\sum_{j=1}^{n_l} d(x_i,x_j). \]
+--- after ---
+\textbf{Centroidní metoda} --- vzdálenost středů klastrů: $D(C_k,C_l)=d(c_k,c_l)$, kde $c_k$,
+
+
+============================================================
+SEC: \section{Metody pro dobývání znalostí}
+SUB: \subsection{Klastrová analýza}
+SUBSUB: \subsubsection{Metoda $k$-medoids, CLARA a~CLARANS}
+============================================================
+
+--- ctx ---
+citlivý na odlehlé hodnoty jako průměr.
+
+\subsubsection{Metoda $k$-medoids, CLARA a~CLARANS}
+
+\begin{defbox}[Algoritmus $k$-medoids]
+Pro datovou množinu $D$ o~$n$ $d$-rozměrných bodech $x_1,\dots,x_n$ se hledá $k$
+reprezentantů $y_1,\dots,y_k$ \emph{z~původní databáze} $D$ (počet $k$ zadává uživatel), které
+minimalizují účelovou funkci danou součtem vzdáleností bodů k~jejich nejbližším
+reprezentantům:
+--- MATH ---
+\[ O=\sum_{i=1}^{n}\min_{j} d(x_i,y_j). \]
+--- after ---
+Časová složitost jedné iterace je $O(k\,n\,d)$; obvykle stačí malý konstantní počet iterací.
+
+
+============================================================
+SEC: \section{Charakteristická a~diskriminační pravidla a~jejich zajímavost}
+SUB: \subsection{Pravidla jako srozumitelná forma klasifikace}
+SUBSUB: 
+============================================================
+
+--- ctx ---
+\begin{defbox}[Booleovská a~fuzzy pravidla]
+\textbf{Booleovská} pravidla pracují s~pravdivostními hodnotami $t(\varphi)\in\{0,1\}$:
+\emph{ekvivalence} $\varphi\Leftrightarrow\psi$ je pravdivá, právě když
+$t(\varphi)=t(\psi)$; \emph{implikace} $\varphi\Rightarrow\psi$ je pravdivá, právě když
+$t(\varphi)=0$, nebo $t(\varphi)=t(\psi)=1$. Pravidla se typicky uplatňují na objektech,
+kde antecedent platí ($t(\varphi)=1$) --- tam implikace splývá s~ekvivalencí.
+
+\textbf{Fuzzy} pravidla připouštějí stupně pravdivosti $t(\varphi)\in[0,1]$. Fuzzy
+implikace je \emph{reziduum} t-normy $T$:
+--- MATH ---
+\[ t(\varphi\Rightarrow\psi)=\sup\{\,c\in[0,1]: T(t(\varphi),c)\le t(\psi)\,\}, \]
+--- after ---
+fuzzy ekvivalence $t(\varphi\Leftrightarrow\psi)
+=T\big(t(\varphi\Rightarrow\psi),\,t(\psi\Rightarrow\varphi)\big)$. Důležité speciální
+
+
+============================================================
+SEC: \section{Charakteristická a~diskriminační pravidla a~jejich zajímavost}
+SUB: \subsection{Charakteristická a~diskriminační pravidla: t-weight a~d-weight}
+SUBSUB: 
+============================================================
+
+--- ctx ---
+kategorie), atributy s~mnoha hodnotami bez hierarchie odstraňuje (jméno, telefon)
+a~shodné zobecněné záznamy slučuje s~čítačem \texttt{count}; totéž provádějí agregační
+operace \emph{roll-up} / \emph{drill-down} v~OLAP nad kostkou datového skladu. Nad
+zobecněnými záznamy se pak definují dvě váhy:
+
+\begin{defbox}[t-weight, d-weight a~kvantitativní pravidla]
+Nechť $q_1,\dots,q_N$ jsou zobecněné záznamy cílové třídy.
+
+\textbf{Typičnost} (t-weight) záznamu $q_a$:
+--- MATH ---
+\[ t\text{-}\mathrm{weight}(q_a)=\frac{\mathrm{count}(q_a)}
+   {\sum_{i=1}^{N}\mathrm{count}(q_i)}\in[0,1], \]
+--- after ---
+tj.\ podíl objektů cílové třídy, které $q_a$ pokrývá (součet přes všechny záznamy je
+100~\%). Vystupuje v~\textbf{kvantitativním charakteristickém pravidle} (nutná podmínka
+
+--- ctx ---
+\begin{defbox}[t-weight, d-weight a~kvantitativní pravidla]
+Nechť $q_1,\dots,q_N$ jsou zobecněné záznamy cílové třídy.
+
+\textbf{Typičnost} (t-weight) záznamu $q_a$:
+\[ t\text{-}\mathrm{weight}(q_a)=\frac{\mathrm{count}(q_a)}
+   {\sum_{i=1}^{N}\mathrm{count}(q_i)}\in[0,1], \]
+tj.\ podíl objektů cílové třídy, které $q_a$ pokrývá (součet přes všechny záznamy je
+100~\%). Vystupuje v~\textbf{kvantitativním charakteristickém pravidle} (nutná podmínka
+--- implikace \emph{z}~třídy):
+--- MATH ---
+\[ \forall X\ \ \mathrm{target}(X)\Rightarrow \mathrm{cond}_1(X)\,[t{:}\,w_1]\ \vee\
+   \cdots\ \vee\ \mathrm{cond}_N(X)\,[t{:}\,w_N]. \]
+--- after ---
+\textbf{Rozlišovací váha} (d-weight) záznamu $q_a$ vůči cílové třídě $C_t$ a~kontrastním
+
+--- ctx ---
+{\sum_{i=1}^{N}\mathrm{count}(q_i)}\in[0,1], \]
+tj.\ podíl objektů cílové třídy, které $q_a$ pokrývá (součet přes všechny záznamy je
+100~\%). Vystupuje v~\textbf{kvantitativním charakteristickém pravidle} (nutná podmínka
+--- implikace \emph{z}~třídy):
+\[ \forall X\ \ \mathrm{target}(X)\Rightarrow \mathrm{cond}_1(X)\,[t{:}\,w_1]\ \vee\
+   \cdots\ \vee\ \mathrm{cond}_N(X)\,[t{:}\,w_N]. \]
+
+\textbf{Rozlišovací váha} (d-weight) záznamu $q_a$ vůči cílové třídě $C_t$ a~kontrastním
+třídám $C_1,\dots,C_m$:
+--- MATH ---
+\[ d\text{-}\mathrm{weight}(q_a)=\frac{\mathrm{count}(q_a\in C_t)}
+   {\mathrm{count}(q_a\in C_t)+\sum_{j=1}^{m}\mathrm{count}(q_a\in C_j)}\in[0,1], \]
+--- after ---
+tj.\ podíl objektů pokrytých záznamem $q_a$, které patří do cílové třídy. Vystupuje
+v~\textbf{kvantitativním diskriminačním pravidle} (postačující podmínka --- implikace
+
+--- ctx ---
+\cdots\ \vee\ \mathrm{cond}_N(X)\,[t{:}\,w_N]. \]
+
+\textbf{Rozlišovací váha} (d-weight) záznamu $q_a$ vůči cílové třídě $C_t$ a~kontrastním
+třídám $C_1,\dots,C_m$:
+\[ d\text{-}\mathrm{weight}(q_a)=\frac{\mathrm{count}(q_a\in C_t)}
+   {\mathrm{count}(q_a\in C_t)+\sum_{j=1}^{m}\mathrm{count}(q_a\in C_j)}\in[0,1], \]
+tj.\ podíl objektů pokrytých záznamem $q_a$, které patří do cílové třídy. Vystupuje
+v~\textbf{kvantitativním diskriminačním pravidle} (postačující podmínka --- implikace
+\emph{do} třídy):
+--- MATH ---
+\[ \forall X\ \ \mathrm{target}(X)\Leftarrow \mathrm{cond}(X)\,[d{:}\,w]. \]
+--- after ---
+\emph{Kvantitativní popisné pravidlo} kombinuje obojí ($\Leftrightarrow$,
+$[t{:}\,w,\ d{:}\,w']$).
+
+
+============================================================
+SEC: \section{Charakteristická a~diskriminační pravidla a~jejich zajímavost}
+SUB: \subsection{Observační pravidla: konfidence, podpora a~testy hypotéz}
+SUBSUB: 
+============================================================
+
+--- ctx ---
+odpovídajících $\varphi$ a~$\psi$, shrnutých čtyřpolní tabulkou --- $a$ objektů splňuje
+$\varphi\wedge\psi$, $b$ objektů $\varphi\wedge\neg\psi$, $c$ objektů
+$\neg\varphi\wedge\psi$, $d$ objektů $\neg\varphi\wedge\neg\psi$, celkem $n=a+b+c+d$.
+
+Dva běžné typy observačních pravidel:
+\begin{itemize}
+\item \textbf{založená na odhadech pravděpodobností} (případně podmíněných) ---
+      nejběžnější jsou asociační pravidla (odd.~\ref{ssec:ar}) s~konfidencí
+      $c_0\in(0,1)$ a~podporou $s_0\in(0,1)$:
+--- MATH ---
+      \[ (\varphi\sim\psi)=1\quad\text{právě když}\quad
+         \frac{a}{a+b}\ge c_0\ \wedge\ \frac{a}{n}\ge s_0, \]
+--- after ---
+kde $\tfrac{a}{a+b}$ je nestranný odhad $P(\psi\mid\varphi)$;
+\item \textbf{založená na testech hypotéz} ($H_0$ nulová, $H_1$ alternativní) --- např.\
+
+
+============================================================
+SEC: \section{Charakteristická a~diskriminační pravidla a~jejich zajímavost}
+SUB: \subsection{Statistický pohled: regresní a~diskriminační analýza}
+SUBSUB: 
+============================================================
+
+--- ctx ---
+nehledá: každé třídě $C_j$ \emph{prokládá} pravděpodobnostní rozdělení z~předem zvolené
+rodiny hustot $F=\{f(\cdot\mid\theta):\theta\in\Theta\}$ --- v~původní Fisherově DA
+vícerozměrné normální rozdělení. Učení je maximálně věrohodný odhad parametrů $\theta_j$
+z~učicích dat třídy $C_j$; nový vzor $x$ se klasifikuje podle
+$\arg\max_j p_j\,f(x\mid\theta_j)$, kde $p_j$ je apriorní pravděpodobnost třídy.
+
+\begin{defbox}[Lineární vs.\ kvadratická diskriminační analýza]
+\textbf{LDA}: kovarianční matice $\Sigma$ je dána předem a~společná všem třídám;
+diskriminační funkce
+--- MATH ---
+\[ g_j(x)=\ln p_j-\tfrac12\,(x-\mu_j)^{\!\top}\Sigma^{-1}(x-\mu_j), \]
+--- after ---
+odhaduje se jen $\mu_j$ ($q$ parametrů na třídu pro $x\in\mathbb{R}^q$); množina
+$\{x: g_j(x)=g_k(x)\}$ mezi dvěma třídami je \emph{nadrovina}.
+
+
+============================================================
+SEC: \section{Reprezentace, vyhodnocování a~vizualizace znalostí}
+SUB: \subsection{Vyhodnocování modelů}
+SUBSUB: \subsubsection{Kritéria hodnocení klasifikačních metod}
+============================================================
+
+--- ctx ---
+\end{defbox}
+
+\subsection{Vyhodnocování modelů}
+\label{ssec:eval}
+
+\subsubsection{Kritéria hodnocení klasifikačních metod}
+
+\begin{itemize}
+\item \textbf{Prediktivní přesnost} (\emph{accuracy}) --- podíl správně klasifikovaných vzorů:
+--- MATH ---
+      \[ \mathit{Accuracy}=\frac{\text{počet správných klasifikací}}
+         {\text{počet všech testovaných případů}}. \]
+--- after ---
+\item \textbf{Efektivita} --- čas potřebný pro konstrukci modelu a~čas pro jeho použití.
+\item \textbf{Robustnost} --- zacházení se šumem a~chybějícími hodnotami.
+
+
+============================================================
+SEC: \section{Reprezentace, vyhodnocování a~vizualizace znalostí}
+SUB: \subsection{Vyhodnocování modelů}
+SUBSUB: \subsubsection{Metody odhadu chyby}
+============================================================
+
+--- ctx ---
+\begin{defbox}[Holdout, křížová validace, leave-one-out, validační množina]
+\textbf{Holdout}: $D$ se rozdělí na disjunktní \emph{trénovací} $D_{train}$ a~\emph{testovací}
+$D_{test}$. \textbf{Zásadní pravidlo:} trénovací množina se nesmí použít při testování
+a~testovací při učení --- jen neviděná testovací množina dá \emph{nezkreslený} odhad. Vhodné pro
+\emph{velká} $D$.
+
+\textbf{$k$-násobná křížová validace} (\emph{$k$-fold cross-validation}): data se uniformně
+rozdělí na $k$ stejně velkých disjunktních podmnožin, každá se jednou použije jako testovací
+a~zbylých $k-1$ jako trénovací. Z~$k$ přesností $\mathit{Accuracy}_i$ je výsledkem průměr
+--- MATH ---
+\[ \mathit{Accuracy}_{CV}=\frac1k\sum_{i=1}^{k}\mathit{Accuracy}_i. \]
+--- after ---
+Běžné je 5 a~10; metoda se používá spíše pro \emph{menší} data.
+
+--- ctx ---
+vzorů $m$-násobná CV. Pro \emph{velmi malá} data.
+
+\textbf{Validační množina}: data se rozdělí na \emph{tři} části --- trénovací, validační
+a~testovací. Validační slouží k~odhadu \emph{parametrů} učicích algoritmů (vezmou se hodnoty
+s~nejlepší přesností na ní); místo ní lze použít i~křížovou validaci.
+\end{defbox}
+
+\begin{defbox}[Interval spolehlivosti pro křížovou validaci]
+Přibližný $N\%$ interval spolehlivosti:
+--- MATH ---
+\[ \mathit{Accuracy}_{CV}\pm t_{N,k-1}\cdot s_{\mathit{Accuracy}},\qquad
+   s_{\mathit{Accuracy}}=\sqrt{\frac{1}{k(k-1)}\sum_{i=1}^{k}
+   \big(\mathit{Accuracy}_i-\mathit{Accuracy}_{CV}\big)^2}. \]
+--- after ---
+Hodnoty $t_{N,k-1}$ pro dvoustranné intervaly:
+\begin{center}
+
+
+============================================================
+SEC: \section{Reprezentace, vyhodnocování a~vizualizace znalostí}
+SUB: \subsection{Vyhodnocování modelů}
+SUBSUB: \subsubsection{Matice záměn a~odvozené míry}
+============================================================
+
+--- ctx ---
+\textbf{skutečnost} & pozitivní & TP & FN \\
+                    & negativní & FP & TN \\
+\bottomrule
+\end{tabular}
+\end{center}
+$TP$ --- správné klasifikace pozitivních vzorů (\emph{true positive}); $FN$ --- nesprávné
+klasifikace pozitivních vzorů (\emph{false negative}); $FP$ --- nesprávné klasifikace
+negativních vzorů (\emph{false positive}); $TN$ --- správné klasifikace negativních vzorů.
+--- MATH ---
+\[ p=\mathit{precision}=\frac{TP}{TP+FP},\qquad r=\mathit{recall}=\frac{TP}{TP+FN}. \]
+--- after ---
+\emph{Precision} je podíl správných mezi vzory \emph{označenými} za pozitivní, \emph{recall}
+podíl nalezených mezi \emph{skutečně} pozitivními. \textbf{Obě míry hodnotí klasifikaci pouze na
+
+--- ctx ---
+klasifikace pozitivních vzorů (\emph{false negative}); $FP$ --- nesprávné klasifikace
+negativních vzorů (\emph{false positive}); $TN$ --- správné klasifikace negativních vzorů.
+
+\[ p=\mathit{precision}=\frac{TP}{TP+FP},\qquad r=\mathit{recall}=\frac{TP}{TP+FN}. \]
+\emph{Precision} je podíl správných mezi vzory \emph{označenými} za pozitivní, \emph{recall}
+podíl nalezených mezi \emph{skutečně} pozitivními. \textbf{Obě míry hodnotí klasifikaci pouze na
+pozitivní třídě.}
+
+\textbf{$F_1$-míra} kombinuje obě do jedné --- je jejich \emph{harmonickým průměrem}:
+--- MATH ---
+\[ F_1=\frac{2pr}{p+r}=\frac{2}{\frac1p+\frac1r}. \]
+--- after ---
+Harmonický průměr dvou čísel je blíž tomu \emph{menšímu} z~nich, takže $F_1$ je velká jen
+tehdy, jsou-li \emph{obě} míry velké.
+
+
+============================================================
+SEC: \section{Reprezentace, vyhodnocování a~vizualizace znalostí}
+SUB: \subsection{Vyhodnocování modelů}
+SUBSUB: \subsubsection{ROC křivka a~AUC}
+============================================================
+
+--- ctx ---
+modelu. Rozhodnutí \uv{kolik zásilek} pak vychází z~ekonomiky: zásilkou do první přihrádky
+získáme $210\cdot\$5-1000\cdot\$0{,}50=\$550$, do desáté
+$5\cdot\$5-1000\cdot\$0{,}50=-\$475$.
+\end{defbox}
+
+\subsubsection{ROC křivka a~AUC}
+
+\begin{defbox}[ROC křivka (\emph{Receiver Operating Characteristic})]
+Graf \emph{míry správně pozitivních} (TPR) proti \emph{míře falešně pozitivních} (FPR):
+--- MATH ---
+\[ \mathit{TPR}=\frac{TP}{TP+FN},\qquad \mathit{FPR}=\frac{FP}{FP+TN},\qquad
+   \mathit{TNR}=\frac{TN}{FP+TN}. \]
+--- after ---
+$\mathit{TPR}$ je \emph{recall} pozitivní třídy, nazývaný též \emph{senzitivita};
+$\mathit{FPR}$ je podíl skutečně negativních případů klasifikovaných jako pozitivní;
+
+
+============================================================
+SEC: \section{Modely pro analýzu sociálních sítí, centralita a~detekce komunit}
+SUB: \subsection{Síla vazeb}
+SUBSUB: 
+============================================================
+
+--- ctx ---
+vazby; hrana je \emph{most}, jestliže její odstranění rozpojí její koncové uzly. Mosty jsou
+v~reálných sítích poměrně vzácné $\Rightarrow$ definice se \emph{uvolní} na \textbf{zkratkový
+most} (\emph{shortcut bridge}): kontroluje se, zda se po odstranění hrany \emph{zvětší}
+vzdálenost jejích koncových uzlů (na více než 2). Čím větší vzdálenost, tím \emph{slabší}
+vazba. Např.\ $d(2,5)=4$ po odstranění hrany $(2,5)$, ale $d(5,6)=2$ po odstranění $(5,6)$
+$\Rightarrow$ $(5,6)$ je silnější vazba než $(2,5)$.
+
+\begin{defbox}[Překryv sousedství (\emph{neighborhood overlap})]
+Pro dva uzly $i,j$ spojené vazbou --- čím větší překryv, tím \emph{silnější} vazba:
+--- MATH ---
+\[ O(i,j)=\frac{\text{počet společných přátel } i \text{ a } j}
+   {\text{počet přátel, kteří jsou sousedy alespoň }i\text{ nebo }j}
+   =\frac{|N_i\cap N_j|}{|N_i\cup N_j|-2}, \]
+--- after ---
+kde $-2$ ve jmenovateli vylučuje $i$ a~$j$ samotné.
+
+
+============================================================
+SEC: \section{Modely pro analýzu sociálních sítí, centralita a~detekce komunit}
+SUB: \subsection{Klíčoví hráči: míry centrality}
+SUBSUB: 
+============================================================
+
+--- ctx ---
+znamenají vyšší blízkost (jsou \uv{lepší}). Užitečná, jde-li především o~rychlost šíření.
+\end{defbox}
+
+\begin{defbox}[Vlastní centralita (\emph{eigenvector centrality})]
+Je proporcionální součtu vlastních centralit přímých sousedů: moc a~status aktéra jsou
+\emph{rekurzivně} definovány mocí a~statusem jeho sousedů. Měří tedy, jak dobře je aktér spojen
+s~jinými \emph{dobře propojenými} aktéry.
+
+Formálně: pro $G=(V,E)$ s~maticí sousednosti $A=(a_{i,j})$
+--- MATH ---
+\[ x_i=\frac1\lambda\sum_{j\in M(i)}x_j=\frac1\lambda\sum_{j\in V}a_{i,j}x_j
+   \quad\Longleftrightarrow\quad Ax=\lambda x, \]
+--- after ---
+kde $M(i)$ je množina sousedů $i$. Existuje mnoho vlastních čísel $\lambda$, pro něž
+nenulové řešení existuje; \emph{požadavek nezápornosti} všech složek vlastního vektoru však
+
+
+============================================================
+SEC: \section{Modely pro analýzu sociálních sítí, centralita a~detekce komunit}
+SUB: \subsection{Koheze: míry na úrovni sítě}
+SUBSUB: 
+============================================================
+
+--- ctx ---
+\end{defbox}
+
+\subsection{Koheze: míry na úrovni sítě}
+
+\begin{defbox}[Reciprocita, hustota, klastrovací koeficient]
+\textbf{Reciprocita} (\emph{reciprocity}) --- podíl \emph{reciprokých} vztahů (hrana v~obou
+směrech) na všech vztazích v~síti; \textbf{má smysl jen v~orientovaných grafech}.
+
+\textbf{Hustota} (\emph{density}) --- podíl počtu hran na počtu \emph{možných} hran:
+--- MATH ---
+\[ \text{density}=\frac{|E|}{|V|(|V|-1)/2}\quad\text{(neorientovaný graf)},\qquad
+   \frac{|E|}{|V|(|V|-1)}\quad\text{(orientovaný)}. \]
+--- after ---
+\emph{Klika} (perfektně propojená síť) má hustotu 1; orientované grafy mají poloviční
+hustotu, protože možných hran je dvakrát více.
+
+--- ctx ---
+\textbf{Hustota} (\emph{density}) --- podíl počtu hran na počtu \emph{možných} hran:
+\[ \text{density}=\frac{|E|}{|V|(|V|-1)/2}\quad\text{(neorientovaný graf)},\qquad
+   \frac{|E|}{|V|(|V|-1)}\quad\text{(orientovaný)}. \]
+\emph{Klika} (perfektně propojená síť) má hustotu 1; orientované grafy mají poloviční
+hustotu, protože možných hran je dvakrát více.
+
+\textbf{Klastrovací koeficient} (\emph{clustering coefficient}) uzlu $i$ --- hustota jeho
+\emph{sousedství} $N_i=\{v_j: e_{ij}\in E\ \vee\ e_{ji}\in E\}$, $k_i=|N_i|$:
+--- MATH ---
+\[ C_i=\frac{2\,|\{e_{jk}: v_j,v_k\in N_i,\ e_{jk}\in E\}|}{k_i(k_i-1)}
+   \ \text{(neorientovaný)},\qquad
+   C_i=\frac{|\{e_{jk}\}|}{k_i(k_i-1)}\ \text{(orientovaný)}. \]
+--- after ---
+Koeficient sítě $C=\frac{1}{|V|}\sum_i C_i$ indikuje přítomnost (sub)komunit.
+\end{defbox}
+
+
+============================================================
+SEC: \section{Modely pro analýzu sociálních sítí, centralita a~detekce komunit}
+SUB: \subsection{Modelování vlivu}
+SUBSUB: 
+============================================================
+
+--- ctx ---
+\begin{defbox}[Model lineárního prahu (LTM)]
+Aktér (uzel) podnikne akci, pokud počet jeho přátel, kteří akci podnikli, překročí určitý
+\emph{prah}.
+\begin{itemize}
+\item Každý uzel $v$ si zvolí prah $\theta_v$ \emph{náhodně} z~uniformního rozdělení na
+      $[0,1]$.
+\item V~každém diskrétním kroku zůstávají všechny uzly aktivní z~předchozího kroku aktivní.
+\item Aktivují se uzly splňující
+--- MATH ---
+      \[ \sum_{u\in N_v^{\text{aktivní}}} w_{u,v}\ \ge\ \theta_v
+         \sum_{u\in N_v} w_{u,v}. \]
+--- after ---
+\end{itemize}
+LTM se soustředí na \emph{příjemce} vlivu.
+
+--- ctx ---
+\item Difuze začíná počáteční aktivovanou množinou uzlů a~pokračuje, dokud není možná žádná
+      další aktivace.
+\end{itemize}
+\end{defbox}
+
+\begin{defbox}[Maximalizace vlivu]
+\textbf{Úloha:} pro danou síť a~parametr $k$ vybrat $k$ uzlů do aktivační množiny $B$ tak, aby
+se maximalizoval vliv ve smyslu počtu aktivních uzlů na konci. Označme $\sigma(B)$ očekávaný
+počet uzlů ovlivněných množinou $B$:
+--- MATH ---
+\[ \max_{|B|\le k}\ \sigma(B). \]
+--- after ---
+Úloha je \textbf{NP-těžká}, ale lze dokázat, že \emph{hladový} přístup dává řešení na úrovni
+\textbf{63~\%} optima.
+
+
+============================================================
+SEC: \section{Modely pro analýzu sociálních sítí, centralita a~detekce komunit}
+SUB: \subsection{Vliv versus korelace}
+SUBSUB: 
+============================================================
+
+--- ctx ---
+systému --- zda se nová norma chování, technologie nebo idea může šířit jako epidemie.
+\emph{Návrh:} konstrukce systému vyvolávajícího konkrétní chování, např.\ vakcinační strategie
+(náhodné, cílené na demografickou skupinu, náhodní známí) nebo virální marketingové kampaně.
+\end{defbox}
+
+\begin{defbox}[Logistický model vlivu a~shuffle test]
+Vliv se určuje \emph{časovými značkami}: v~diskrétních krocích $t=0,1,2,\dots$ se každý neaktivní
+uzel stane aktivním s~pravděpodobností $p(a)$, kde $a$ je počet aktivních kontaktů. $p$ se
+modeluje \emph{logistickou} funkcí počtu aktivních přátel:
+--- MATH ---
+\[ p(a)=\frac{e^{\alpha\ln(a+1)+\beta}}{1+e^{\alpha\ln(a+1)+\beta}},\qquad\text{ekvivalentně}\quad
+   \ln\frac{p(a)}{1-p(a)}=\alpha\ln(a+1)+\beta, \]
+--- after ---
+kde $\alpha$ je \emph{koeficient sociální korelace}, $\beta$ vrozená tendence k~aktivaci
+a~$\ln(a+1)$ vysvětlující proměnná.
+
+
+============================================================
+SEC: \section{Modely pro analýzu sociálních sítí, centralita a~detekce komunit}
+SUB: \subsection{Analýza vazeb: huby, autority a~algoritmus HITS}
+SUBSUB: 
+============================================================
+
+--- ctx ---
+\textbf{Sběr stránek.} Pro obecný dotaz $q$: pošli $q$ vyhledávači; posbírej $t$
+nejvýše hodnocených stránek (v~původním článku $t=200$) --- tato množina se nazývá
+\emph{kořenová množina} $S$; rozšiř $S$ o~každou stránku, na kterou odkazuje nějaká stránka
+z~$S$, a~o~každou stránku, která odkazuje na stránku z~$S$ --- vznikne větší
+\emph{bázová množina} $B$.
+
+\textbf{Skóre.} Nechť $G=(V,E)$ je hypertextový graf $B$ o~$n$ stránkách s~maticí sousednosti
+$L$ ($L_{ij}=1$, existuje-li hrana $(i,j)$, jinak 0). Označme $a(i)$ skóre autority a~$h(i)$
+skóre hubu stránky $i$. Vzájemné zesilování:
+--- MATH ---
+\[ a(i)=\sum_{(j,i)\in E}h(j),\qquad h(i)=\sum_{(i,j)\in E}a(j), \]
+--- after ---
+maticově, s~$a=(a(1),\dots,a(n))^{\!\top}$ a~$h=(h(1),\dots,h(n))^{\!\top}$:
+\[ a=L^{\!\top}h,\qquad h=La. \]
+
+--- ctx ---
+\emph{kořenová množina} $S$; rozšiř $S$ o~každou stránku, na kterou odkazuje nějaká stránka
+z~$S$, a~o~každou stránku, která odkazuje na stránku z~$S$ --- vznikne větší
+\emph{bázová množina} $B$.
+
+\textbf{Skóre.} Nechť $G=(V,E)$ je hypertextový graf $B$ o~$n$ stránkách s~maticí sousednosti
+$L$ ($L_{ij}=1$, existuje-li hrana $(i,j)$, jinak 0). Označme $a(i)$ skóre autority a~$h(i)$
+skóre hubu stránky $i$. Vzájemné zesilování:
+\[ a(i)=\sum_{(j,i)\in E}h(j),\qquad h(i)=\sum_{(i,j)\in E}a(j), \]
+maticově, s~$a=(a(1),\dots,a(n))^{\!\top}$ a~$h=(h(1),\dots,h(n))^{\!\top}$:
+--- MATH ---
+\[ a=L^{\!\top}h,\qquad h=La. \]
+--- after ---
+\textbf{Výpočet mocninnou iterací:}
+
+--- ctx ---
+\Until{$\|a_k-a_{k-1}\|_1<\varepsilon$ \textbf{a} $\|h_k-h_{k-1}\|_1<\varepsilon$}
+\State \Return $a$ a~$h$
+\end{algorithmic}
+\textbf{Normalizace je nezbytná}, protože velikost hodnot autorit a~hubů s~každou aktualizací
+roste; konvergence nastane jen s~normalizací (dělí se součtem všech skóre).
+\end{defbox}
+
+\begin{defbox}[Spektrální analýza HITS]
+Po $k$ krocích platí (spektrum matice $=$ množina jejích vlastních čísel)
+--- MATH ---
+\[ a_k=\big(L^{\!\top}L\big)^{k-1}a_0,\qquad h_k=\big(LL^{\!\top}\big)^{k}h_0. \]
+--- after ---
+Vektor $a_k$ tedy musí konvergovat k~\emph{vlastnímu vektoru} matice $L^{\!\top}L$: existují
+normalizační konstanty $c_k$ takové, že $a_k/c_k$ konverguje k~limitě, a~směr se při násobení
+
+--- ctx ---
+Po $k$ krocích platí (spektrum matice $=$ množina jejích vlastních čísel)
+\[ a_k=\big(L^{\!\top}L\big)^{k-1}a_0,\qquad h_k=\big(LL^{\!\top}\big)^{k}h_0. \]
+Vektor $a_k$ tedy musí konvergovat k~\emph{vlastnímu vektoru} matice $L^{\!\top}L$: existují
+normalizační konstanty $c_k$ takové, že $a_k/c_k$ konverguje k~limitě, a~směr se při násobení
+maticí nezmění právě tehdy, je-li vektor vlastním vektorem.
+
+Matice $L^{\!\top}L$ je \emph{symetrická}, má tedy $n$ vlastních vektorů $z_1,\dots,z_n$
+s~vlastními čísly $c_1,\dots,c_n$, $|c_1|\ge|c_2|\ge\cdots\ge|c_n|$. Rozvineme-li
+$a_0=x_1z_1+\cdots+x_nz_n$, pak
+--- MATH ---
+\[ a_k=c_1^{k}x_1z_1+\cdots+c_n^{k}x_nz_n,\qquad
+   \frac{a_k}{c_1^{k}}=x_1z_1+x_2\Big(\frac{c_2}{c_1}\Big)^{\!k}z_2+\cdots \]
+--- after ---
+Za předpokladu $c_1>c_2\ge\cdots$ jde pro $k\to\infty$ každý člen kromě prvního k~nule, takže
+$a_k/c_1^k$ konverguje k~$x_1z_1$ --- k~\emph{hlavnímu} vlastnímu vektoru. (Konvergenci
+
+
+============================================================
+SEC: \section{Modely pro analýzu sociálních sítí, centralita a~detekce komunit}
+SUB: \subsection{PageRank}
+SUBSUB: 
+============================================================
+
+--- ctx ---
+\subsection{PageRank}
+\label{ssec:pagerank}
+
+\begin{defbox}[Prestiž pořadí (\emph{rank prestige})]
+Míry prestiže uvažují \emph{prominenci aktérů, kteří \uv{hlasují}}: osoba vybraná důležitou
+osobou je prestižnější než osoba vybraná méně důležitou (hlas ředitele váží více než hlas
+zaměstnance). Je-li váš okruh vlivu plný prestižních aktérů, je vysoká i~vaše prestiž.
+
+Prestiž pořadí $P(i)$ je definována jako lineární kombinace pořadí těch, kteří odkazují na $i$:
+--- MATH ---
+\[ P(i)=A_{1i}P(1)+A_{2i}P(2)+\cdots+A_{ni}P(n),\qquad\text{maticově}\quad P=A^{\!\top}P, \]
+--- after ---
+kde $A_{ji}=1$, odkazuje-li $j$ na $i$, jinak 0. To je \emph{charakteristická rovnice}
+vlastního systému matice $A^{\!\top}$; $P$ je vlastní vektor $A^{\!\top}$.
+
+--- ctx ---
+\end{defbox}
+
+\begin{defbox}[Základní PageRank]
+PageRank interpretuje hyperodkaz ze stránky $u$ na stránku $v$ jako \emph{hlas} stránky $u$ pro
+stránku $v$. Nezajímá jej ale pouhý počet hlasů --- analyzuje i~stránku, která hlas dává:
+\emph{hlasy důležitých stránek váží více a~pomáhají činit ostatní stránky důležitějšími}.
+Protože stránka může odkazovat na mnoho jiných, musí své skóre \emph{rozdělit}.
+
+Web jako orientovaný graf $G=(V,E)$, $n=|V|$. PageRank stránky $i$:
+--- MATH ---
+\[ P(i)=\sum_{(j,i)\in E}\frac{P(j)}{O_j}, \]
+--- after ---
+kde $O_j$ je počet výstupních odkazů $j$. Maticově: nechť $A_{ij}=1/O_i$ pro $(i,j)\in E$
+a~0 jinak; pak $P=A^{\!\top}P$.
+
+--- ctx ---
+\end{itemize}
+\textbf{Poslední dvě se řeší jedinou strategií:} přidat odkaz z~každé stránky na každou s~malou
+přechodovou pravděpodobností řízenou parametrem $d$ --- rozšířená matice je pak ireducibilní
+i~aperiodická.
+\end{defbox}
+
+\begin{defbox}[Finální PageRank]
+Po augmentaci má náhodný surfař na stránce dvě možnosti: s~pravděpodobností $d$ zvolí náhodně
+odkaz, který bude následovat, a~s~pravděpodobností $1-d$ skočí na náhodnou stránku:
+--- MATH ---
+\[ P=\Big(\frac{1-d}{n}\Big)\,\mathbf{E}+d\,A^{\!\top}P, \]
+--- after ---
+kde $\mathbf E=\mathbf{ee}^{\!\top}$ ($\mathbf e$ je sloupcový vektor jedniček), tj.\
+$\mathbf E$ je matice $n\times n$ samých jedniček. Matice
+
+--- ctx ---
+\begin{defbox}[Finální PageRank]
+Po augmentaci má náhodný surfař na stránce dvě možnosti: s~pravděpodobností $d$ zvolí náhodně
+odkaz, který bude následovat, a~s~pravděpodobností $1-d$ skočí na náhodnou stránku:
+\[ P=\Big(\frac{1-d}{n}\Big)\,\mathbf{E}+d\,A^{\!\top}P, \]
+kde $\mathbf E=\mathbf{ee}^{\!\top}$ ($\mathbf e$ je sloupcový vektor jedniček), tj.\
+$\mathbf E$ je matice $n\times n$ samých jedniček. Matice
+$\big(\frac{1-d}{n}\big)\mathbf E+dA^{\!\top}$ je stochastická (transponovaná), ireducibilní
+i~aperiodická. Po přeškálování tak, aby $\mathbf e^{\!\top}P=n$:
+--- MATH ---
+\[ P=(1-d)\,\mathbf e+d\,A^{\!\top}P,\qquad\text{tj.\ pro každou stránku } i: \quad
+   P(i)=(1-d)+d\sum_{j=1}^{n}A_{ji}P(j), \]
+--- after ---
+což je ekvivalentní formuli z~původního článku o~PageRanku
+\[ P(i)=(1-d)+d\sum_{(j,i)\in E}\frac{P(j)}{O_j}. \]
+
+--- ctx ---
+odkaz, který bude následovat, a~s~pravděpodobností $1-d$ skočí na náhodnou stránku:
+\[ P=\Big(\frac{1-d}{n}\Big)\,\mathbf{E}+d\,A^{\!\top}P, \]
+kde $\mathbf E=\mathbf{ee}^{\!\top}$ ($\mathbf e$ je sloupcový vektor jedniček), tj.\
+$\mathbf E$ je matice $n\times n$ samých jedniček. Matice
+$\big(\frac{1-d}{n}\big)\mathbf E+dA^{\!\top}$ je stochastická (transponovaná), ireducibilní
+i~aperiodická. Po přeškálování tak, aby $\mathbf e^{\!\top}P=n$:
+\[ P=(1-d)\,\mathbf e+d\,A^{\!\top}P,\qquad\text{tj.\ pro každou stránku } i: \quad
+   P(i)=(1-d)+d\sum_{j=1}^{n}A_{ji}P(j), \]
+což je ekvivalentní formuli z~původního článku o~PageRanku
+--- MATH ---
+\[ P(i)=(1-d)+d\sum_{(j,i)\in E}\frac{P(j)}{O_j}. \]
+--- after ---
+\textbf{Výpočet mocninnou iterací:}
+
+
+============================================================
+SEC: \section{Modely pro analýzu sociálních sítí, centralita a~detekce komunit}
+SUB: \subsection{Detekce komunit}
+SUBSUB: 
+============================================================
+
+--- ctx ---
+bez záruky nalezení minima. Pro jednotkové váhy a~bez balančních omezení je 2-cestný řez
+polynomiální, $O(n^2\log n)$ (Kargerův randomizovaný minimální řez). Obecné váhy \emph{a}
+balanční omezení činí úlohu \textbf{NP-těžkou}.
+\end{defbox}
+
+\begin{defbox}[Poměrový a~normalizovaný řez]
+Minimální řez často vrací nevyvážené rozdělení (jedna množina je singleton) $\Rightarrow$
+změníme účelovou funkci tak, aby brala v~úvahu \emph{velikost komunity}. Pro rozdělení
+$\pi=\{C_1,\dots,C_k\}$:
+--- MATH ---
+\[ \mathrm{RatioCut}(\pi)=\frac{1}{k}\sum_{i=1}^{k}\frac{\mathrm{cut}(C_i,\bar C_i)}{|C_i|},\qquad
+   \mathrm{NCut}(\pi)=\frac{1}{k}\sum_{i=1}^{k}\frac{\mathrm{cut}(C_i,\bar C_i)}{\mathrm{vol}(C_i)}, \]
+--- after ---
+kde $|C_i|$ je počet uzlů v~$C_i$, $\mathrm{vol}(C_i)$ součet stupňů v~$C_i$
+a~$\mathrm{cut}(A,B)=\sum_{i\in A,\,j\in B}a_{ij}$. \textbf{Obě míry preferují vyvážené
+
+--- ctx ---
+nejkratší cesty z~2 do $\{4,5,6,7,8,9\}$ musí procházet buď $e(1,2)$, nebo $e(2,3)$, a~$e(1,2)$
+je nejkratší cesta mezi 1 a~2. Po odstranění $e(4,5)$ se mezilehlost $e(4,6)$ zvýší na 20
+(nejvyšší); po odstranění $e(4,6)$ má nejvyšší mezilehlost 4 hrana $e(7,9)$.
+
+\begin{defbox}[Modularita $Q$]
+Kvantifikuje kvalitu daného rozdělení grafu na komunity. \textbf{Základní idea:} síť má
+smysluplnou komunitní strukturu, je-li počet hran \emph{mezi} komunitami menší, než by se
+očekávalo při náhodné volbě. Očekávaný počet hran mezi uzly $i$ a~$j$ se stupni $k_i$, $k_j$
+je $k_ik_j/2m$.
+--- MATH ---
+\[ Q=\frac{1}{2m}\sum_{i,j}\Big(A_{ij}-\frac{k_ik_j}{2m}\Big)\delta(c_i,c_j), \]
+--- after ---
+kde $A_{ij}$ je prvek matice sousednosti (počet hran mezi $i$ a~$j$), $m$ počet hran, $k_i$
+stupeň vrcholu $i$, $c_i$ skupina, do níž $i$ patří, a~$\delta$ Kroneckerovo delta.
+
+
+============================================================
+SEC: \section{Modely pro analýzu sociálních sítí, centralita a~detekce komunit}
+SUB: \subsection{Predikce vazeb}
+SUBSUB: 
+============================================================
+
+--- ctx ---
+\item \textbf{Adamic--Adar} $\mathrm{AA}(i,j)=\sum_{k\in S_i\cap S_j}\frac{1}{\log|S_k|}$
+      --- váha společného souseda klesá s~jeho stupněm.
+\end{itemize}
+\end{defbox}
+
+\begin{defbox}[Katzova míra]
+Při malém počtu společných sousedů sousedské míry nerozlišují; Katzova míra měří
+\emph{nepřímou} propojenost přes procházky všech délek. Je-li $W_{ij}^{(t)}$ počet procházek
+délky $t$ mezi $i$ a~$j$ a~$\beta<1$ \emph{diskontní faktor} potlačující dlouhé procházky:
+--- MATH ---
+\[ \mathrm{Katz}(i,j)=\sum_{t=1}^{\infty}\beta^{t}\,W_{ij}^{(t)},\qquad
+   K=\sum_{t=1}^{\infty}\beta^{t}A^{t}=(I-\beta A)^{-1}-I. \]
+--- after ---
+Součet Katzových koeficientů uzlu vůči ostatním uzlům je jeho \textbf{Katzova centralita}.
+\end{defbox}

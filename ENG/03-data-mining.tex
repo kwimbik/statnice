@@ -190,19 +190,6 @@ The fourth --- and in practice decisive --- component is the need to use the pro
 support (strategic) decision-making in an enterprise. Without it, data mining reduces
 to an academic exercise.
 
-\textbf{Relation to data warehouses and OLAP.} \mimo{} The typical source of data for KDD is a
-\emph{data warehouse} --- an integrated, subject-oriented, time-variant and non-volatile
-database consolidated from operational systems. The data in it is organised into a \emph{data
-cube}: \emph{dimensions} (time, product, region, \dots) $\times$ \emph{measures} (revenue, unit
-counts); in a relational implementation this is a \emph{star schema} (a fact table surrounded
-by dimension tables), physically MOLAP (multidimensional storage) or ROLAP (relational).
-\textbf{OLAP} (On-Line Analytical Processing) over the cube supports the aggregation operations
-\emph{roll-up} / \emph{drill-down} and the \emph{slice \& dice} cuts --- but it answers only the
-questions the analyst is able to \emph{pose in advance}. Data mining goes one step
-further: it looks for patterns we do not know in advance to be in the data. For the connection
-between OLAP generalisation and attribute-oriented induction see
-Chapter~\ref{sec:pravidla}.
-
 \subsection{The KDD process}
 
 \mimoq{the five-phase framework as such; the activities inside the phases are in the slides}
@@ -236,44 +223,37 @@ table} containing the relevant information about the objects under study (a bank
 customers, \dots). This step typically consumes 60--80~\% of the total project time.
 
 \textbf{Seven steps through a manager's eyes.} \mimo{} An organisational view of the same
-process (the impulse is a \uv{current problem}, the output is \uv{the knowledge to solve it}):
-\emph{(1)}~assemble a team of specialists --- experts on the domain, on the data and on KDD
-methods; none of these roles is substitutable; \emph{(2)}~specify the problem --- translate the
-business assignment into the context of data mining (\uv{increase profit} $\to$
-\uv{predict the probability of customer churn}); \emph{(3)}~obtain all available data, including
-external data describing the environment (season, advertising campaigns, weather) --- this may
-lead to a reformulation of the problem; \emph{(4)}~select a method or a combination of methods,
-plus visualisation methods; \emph{(5)}~preprocess the data; \emph{(6)}~mine --- repeated
-application, where the results of earlier runs influence the parameters of the later ones;
-\emph{(7)}~interpret the results --- part of them tend to be uninteresting or trivial, a summary
-in an analytical report is advisable, and the output may also be the execution of a concrete
-action.
+process (the impulse is a problem, the output is the knowledge to solve it):
+\begin{enumerate}
+\item \textbf{team} --- experts on the domain, on the data, and on KDD methods;
+\item \textbf{problem specification} --- \uv{increase profit} $\to$ \uv{predict customer churn};
+\item \textbf{data collection} --- including external data on the environment (season,
+      campaigns, weather);
+\item \textbf{choice of methods};
+\item \textbf{preprocessing};
+\item \textbf{mining} --- repeatedly; the results tune the parameters of later runs;
+\item \textbf{interpretation} --- an analytical report, possibly an action.
+\end{enumerate}
 
 \subsection{Types of data mining tasks}
 
-\mimo{} By the relation of the discovered knowledge to the target concept:
+Tasks are classified from two independent points of view: \emph{what we want from the result}
+and \emph{whether a target variable is available}.
 
-\begin{center}
-\small
-\begin{tabular}{@{}p{2.9cm}p{6.0cm}p{6.4cm}@{}}
-\toprule
-\textbf{Type of task} & \textbf{Goal} & \textbf{Character of the result} \\
-\midrule
-Classification / prediction & classify new cases, resp.\ estimate the future development of an
-  entity & we prefer \emph{coverage accuracy} over simplicity; a lot of knowledge, hard to
-  interpret \\
-Description (characterisation, profile) & find the dominant structure or relations in the data
-  & we require \emph{comprehensibility} with full coverage of the concept; less knowledge and
-  less accurate \\
-Search for \uv{nuggets} & find interesting (new, surprising) knowledge & the knowledge
-  \emph{need not} cover the whole concept; surprise is what is evaluated \\
-\bottomrule
-\end{tabular}
-\end{center}
-
-Examples of prediction: weather forecasting, share prices, electricity consumption. An example
-of description: the profile of a creditworthy client. An example of a nugget: an unusual
-combination of goods in a basket, a suspicious pattern of transactions.
+\mimo{} \textbf{By what we want from the result:}
+\begin{itemize}
+\item \textbf{Classification / prediction} --- classify new cases, resp.\ estimate future
+      development (weather, share prices, electricity consumption). What matters is
+      \emph{accuracy}, not simplicity; the result tends to be a lot of knowledge, hard to
+      interpret.
+\item \textbf{Description} (characterisation, profile) --- capture the dominant structure or
+      relations in the data (the profile of a creditworthy client). What matters is
+      \emph{comprehensibility} with full coverage of the concept; the knowledge is smaller
+      and less accurate.
+\item \textbf{Search for \uv{nuggets}} --- find new, \emph{surprising} knowledge (an unusual
+      combination of goods in a basket, a suspicious pattern of transactions); it \emph{need
+      not} cover the whole concept.
+\end{itemize}
 
 \begin{defbox}[Descriptive vs.\ predictive tasks]
 \textbf{Descriptive} tasks characterise the general properties of the data: characterisation
@@ -282,11 +262,12 @@ evolution analysis.
 
 \textbf{Predictive} tasks perform inference over the data in order to predict: classification
 (discrete target attribute), regression (continuous target attribute), time series prediction.
-
-An orthogonal division by the availability of a target variable: \emph{supervised learning} ---
-classification, regression; \emph{unsupervised learning} --- clustering, association rules,
-outlier detection; \emph{semi-supervised} --- a small labelled and a large unlabelled part.
 \end{defbox}
+
+\textbf{By the availability of a target variable:} \emph{supervised learning} ---
+classification, regression; \emph{unsupervised learning} --- clustering, association rules,
+outlier detection; \emph{semi-supervised} --- a small labelled and a large unlabelled part of
+the data.
 
 This division is also the key to Chapter~\ref{sec:metody}: the topic names in it exactly one
 representative of unsupervised learning on transactional data (association rules), supervised
@@ -475,11 +456,6 @@ The basic strategies (in order from the simplest to the most accurate):
       attributes.
 \end{enumerate}
 
-\mimo{} Terminologically one distinguishes MCAR (\emph{missing completely at random}), MAR
-(\emph{missing at random} --- the missingness depends on the observed attributes) and MNAR
-(\emph{missing not at random} --- it depends on the unobserved value itself). Only under MCAR is
-plain deletion unbiased.
-
 Some methods can handle missing values themselves: C4.5 ignores them when constructing the tree
 (the splitting criterion is computed only from the known values) and estimates them at
 classification time from other patterns; CART does not count missing values towards the decision
@@ -538,6 +514,7 @@ the largest weight without being an outlier is 760~g. For females with $Q_1=260$
 $\mathrm{IQR}=80$ the limits are 180 and 420, so the outliers are the values 170~g and 440~g.
 
 \subsection{Data integration}
+\label{ssec:integrace}
 
 \mimo{} In \emph{data integration} we merge several sources into one table. The main problems:
 the \textbf{entity identification problem} (the attribute \texttt{cust\_id} in one database
@@ -572,20 +549,14 @@ absolute difference:
 \[ m_f=\tfrac1n\big(x_{1f}+\cdots+x_{nf}\big),\qquad
 s_f=\tfrac1n\big(|x_{1f}-m_f|+\cdots+|x_{nf}-m_f|\big),\qquad
 z(x_{if})=\frac{x_{if}-m_f}{s_f}. \]
-
-\textbf{Standardisation according to the standard deviation} (std-score) --- zero mean and unit
-corrected sample standard deviation:
-\[ \mathrm{cor}s_f=\sqrt{\frac{1}{n-1}\sum_{i=1}^n\big(x_{if}-m_f\big)^2},\qquad
-\mathrm{std}(x_{if})=\frac{x_{if}-m_f}{\mathrm{cor}s_f}. \]
 \end{defbox}
 
-Choosing between the two z-scores: the mean absolute difference is \emph{more robust} to
-outliers than the standard deviation (the deviations are not squared), so outliers compress the
-remaining data less.
+The mean absolute difference is \emph{robust} to outliers (the deviations are not squared), so
+outliers compress the remaining data less.
 
 \subsection{Discretisation of numeric attributes}
 
-A number of methods (association rules, ID3, CHAID, Bayesian classification with discrete
+A number of methods (association rules, ID3, Bayesian classification with discrete
 attributes) require categorical input. \emph{Discretisation} divides the range of a numeric
 attribute into intervals. The methods differ in four respects: the \emph{strategy} (top-down
 division of intervals, or bottom-up joining of intervals), the \emph{number} of intervals, the
@@ -593,73 +564,66 @@ division of intervals, or bottom-up joining of intervals), the \emph{number} of 
 error, entropy, the $\chi^2$ test).
 
 \begin{itemize}
-\item \textbf{Equi-width} --- the range is divided into intervals of the same length. The
-      simplest, but sensitive to outliers and to a skewed distribution.
-\item \textbf{Equi-depth} \mimo{} --- intervals with the same number of objects.
+\item \textbf{Equi-width} --- the range $[\min(f),\max(f)]$ is divided into a preset number
+      $k$ of intervals of the same length $(\max(f)-\min(f))/k$. The simplest (it needs
+      neither the classes nor sorting), but sensitive to outliers and to a skewed
+      distribution: a single outlier stretches the range and most objects then end up in a
+      single interval.
+\item \textbf{Equi-depth} \mimo{} --- the values are sorted in ascending order and a boundary
+      is placed after every $n/k$ objects, so each interval contains the same number of
+      objects. Robust to outliers, but the boundaries need not respect natural clusters of
+      the values.
 \item \textbf{Using the class information} --- the boundaries are chosen so that the intervals
-      are as pure as possible; the criterion is entropy (recursive splitting, as in C4.5) or
-      $\chi^2$ (bottom-up merging, as in CHAID).
+      are as pure as possible with respect to the target class. \emph{Top-down} (splitting):
+      a candidate boundary is every place between adjacent sorted values where the class
+      changes; the boundary with the smallest weighted sum of entropies of the resulting
+      parts is selected and the splitting recurses as long as it brings an improvement (the
+      same way C4.5 chooses the threshold of a numeric attribute,
+      Chapter~\ref{sec:metody}). \emph{Bottom-up} (merging): initially every value has its
+      own interval and the adjacent pair with the most similar class distributions (the
+      smallest $\chi^2$) is merged repeatedly, until the $\chi^2$ of every adjacent pair
+      exceeds a chosen significance threshold.
 \end{itemize}
 
 \subsubsection{Fuzzy discretisation}
 
-With ordinary discretisation the interval boundaries are sharp, so two nearby objects may end up
-in different categories. \emph{Fuzzy discretisation} \uv{blurs} the boundaries: \emph{two}
-discretised values may correspond to one numeric value, such that the sum of the corresponding
-characteristic functions equals 1. This gives rise to \uv{fuzzy} objects with weight $<1$; the
-weight of a fuzzy object is given by the \emph{product} of the values of the characteristic
-functions of all attributes:
-\[ w = \prod_j \mu_j. \]
-The risks are a loss of information and \emph{contradiction} --- objects with the same values of
-the discretised attributes that belong to different classes.
+Sharp boundaries have an unpleasant consequence: two nearly identical values just on the two
+sides of a boundary fall into different categories. \emph{Fuzzy discretisation} blurs the
+boundaries --- the characteristic function $\mu$ of an interval does not drop from 1 to 0 in a
+step at the boundary, but linearly over a transition zone. Suitable intervals are found by the
+procedure \textbf{Interval}: the attribute values are sorted in ascending order and maximal
+sequences of values with the same class are concatenated into intervals with $\mu=1$; stretches
+with mixed classes (and the gaps between the intervals) receive the class \uv{?}. Every
+interval $Int_i$ of class \uv{?} is then resolved according to its neighbours: if
+$Int_{i-1}$ and $Int_{i+1}$ belong to the same class, all three are joined into one crisp
+interval with $\mu=1$; otherwise \emph{two overlapping fuzzy intervals}
+$Int_{i-1}\cup Int_i$ and $Int_i\cup Int_{i+1}$ arise --- each has $\mu=1$ on its original
+crisp part, and over the \uv{?} zone (between the upper limit $x_{i-1}$ of $Int_{i-1}$ and the
+lower limit $x_{i+1}$ of $Int_{i+1}$) the characteristic functions decrease and increase
+linearly, respectively:
+\[ \mu_{i-1}(x)=\frac{x_{i+1}-x}{x_{i+1}-x_{i-1}},\qquad
+   \mu_{i+1}(x)=\frac{x-x_{i-1}}{x_{i+1}-x_{i-1}},\qquad x\in[x_{i-1},x_{i+1}]. \]
 
-\begin{defbox}[The procedure \emph{Interval} (fuzzy discretisation)]
-\begin{enumerate}
-\item If a sequence of values has the same class label, build an interval of these values (with
-      the characteristic function equal to 1 on the entire interval).
-\item For each interval $\mathit{Int}_i$ belonging to class \uv{?}:
-      \begin{itemize}
-      \item if the adjacent intervals $\mathit{Int}_{i-1}$ and $\mathit{Int}_{i+1}$ belong to
-            the \emph{same} class, join them into one interval
-            $\mathit{Int}_{i-1}\cup \mathit{Int}_i\cup \mathit{Int}_{i+1}$ (characteristic
-            function $=1$ on the entire interval);
-      \item otherwise form \emph{two fuzzy intervals}: by joining $\mathit{Int}_{i-1}\cup
-            \mathit{Int}_i$ with the characteristic function equal to 1 on $[L_{i-1},U_{i-1}]$
-            and linearly decreasing as $\frac{U_{i+1}-x}{U_{i+1}-L_{i-1}}$ on the transition
-            region, and analogously by joining $\mathit{Int}_i\cup \mathit{Int}_{i+1}$ with the
-            function linearly increasing as $\frac{x-L_{i-1}}{U_{i+1}-L_{i-1}}$.
-      \end{itemize}
-\item Provide a continuous coverage of the whole domain (the gaps between intervals are
-      understood as intervals of class \uv{?}).
-\end{enumerate}
-\end{defbox}
+One numeric value may thus correspond to \emph{two} adjacent categories whose characteristic
+functions sum to 1. An object with a value in the transition zone enters the data as a
+\uv{fuzzy object} with a weight given by the product of the characteristic functions of all
+attributes,
+\[ w = \prod_j \mu_j < 1. \]
+Discretisation in general may lose information and introduce \emph{contradictions} --- objects
+with the same discretised input values that belong to different classes.
 
 \subsubsection{Grouping the values of categorical attributes (KEX)}
 
-If a categorical attribute has too many values, it is useful to group them.
-\textbf{Objective:} form groups $A(\mathit{Grp})$ such that
-$P(\mathrm{Class}\mid A(\mathit{Grp}))$ differs \emph{significantly} from the a-priori
-$P(\mathrm{Class})$ --- and form as many groups as there are classes, plus one more (\uv{?}).
-
-\begin{defbox}[Algorithm for grouping values (KEX)]
-\textbf{Main cycle:}
-\begin{enumerate}
-\item build an ordered list of the values of the attribute considered;
-\item for each value: \emph{(a)}~compute the frequencies of occurrence of the objects with this
-      value for the respective classes; \emph{(b)}~assign a class code to the value by means of
-      the procedure \emph{Assign};
-\item form the groups of values by means of the procedure \emph{Group}.
-\end{enumerate}
-
-\textbf{Procedure \emph{Assign}:} if all objects belong to the same class for the value
-considered, assign the code of this class to the value; else --- if the object class distribution
-for the value considered differs \emph{significantly} (based on the $\chi^2$ test) from the
-a-priori class distribution --- assign the code of the most frequent class, and if it does not,
-assign the code \uv{?}.
-
-\textbf{Procedure \emph{Group}:} form a group of the values that were assigned the same class
-code.
-\end{defbox}
+A categorical attribute with too many values is handled by grouping its values; the goal is to
+form groups $\mathrm{Grp}$ for which $P(\mathrm{Class}\mid A(\mathrm{Grp}))$ differs
+significantly from the a-priori $P(\mathrm{Class})$. The algorithm: \emph{(1)}~build an ordered
+list of the attribute values; \emph{(2)}~for each value, compute the class frequencies among
+the objects with this value and let the procedure \textbf{Assign} give it a code --- if all
+such objects belong to the same class, the code of this class; if the class distribution for
+this value differs \emph{significantly} (by the $\chi^2$ test) from the a-priori one, the code
+of the most frequent class; otherwise the code \uv{?}; \emph{(3)}~the procedure \textbf{Group}
+joins the values with the same code into groups --- at most as many groups arise as there are
+classes, plus one (\uv{?}).
 
 \subsection{Data reduction}
 
@@ -703,33 +667,21 @@ discard a direction that is crucial for prediction but has small variance.
 We are looking for those attributes that best contribute to a proper classification of objects.
 
 \begin{defbox}[Filters vs.\ wrappers]
-\textbf{Filter methods} --- for each attribute we compute a characteristic that reflects its
-contribution to classification, order the attributes by it and select a certain number of the
-best ones. The characteristic is \emph{independent} of the model used afterwards; the method is
-fast.
-
-\textbf{Wrapper methods} --- a machine learning algorithm is used to build a model over a
-\emph{subset} of the attributes and the model is evaluated; the best of the models built (with
-the corresponding attributes) is then used. The method is computationally expensive, but it takes
-the interaction of the attributes \emph{with the concrete} model into account.
-
-Searching the space of subsets:
 \begin{itemize}
-\item \uv{bottom-up} (\emph{forward selection}) --- begin from the models built for individual
-      attributes and add further attributes subsequently;
-\item \uv{top-down} (\emph{backward elimination}) --- start with the model built for the complete
-      set of attributes and remove the unnecessary ones subsequently.
+\item \textbf{Filter} --- for each attribute compute a characteristic of its contribution to
+      classification, order, select the best. \emph{Independent} of the model, fast.
+\item \textbf{Wrapper} --- build a model over a \emph{subset} of the attributes and evaluate
+      it; use the best subset. Expensive, but takes the interaction of the attributes
+      \emph{with the concrete} model into account.
+\item Searching the subsets: \emph{bottom-up} (forward selection --- adding attributes)
+      vs.\ \emph{top-down} (backward elimination --- removing them).
 \end{itemize}
 \end{defbox}
 
-\textbf{The fundamental limitation of filters:} each attribute is evaluated \emph{separately},
-so the mutual influence of several attributes on the accuracy of the classification is difficult
-to capture. One can compute the criterion for a \emph{set} of attributes (i.e.\ for all
-combinations of them), but the combinatorial explosion limits this in practice to greedy forward
-or backward search. \mimo{} The practical consequence is that filters let through a pair of
-strongly correlated attributes (both get a high score, yet the second adds nothing new) and
-conversely discard an attribute that is useful only \emph{in combination} with another
-(typically an XOR relation).
+\textbf{Limitation of filters:} each attribute is evaluated \emph{separately} $\Rightarrow$
+attribute interactions are hard to capture (a criterion for whole sets runs into combinatorial
+explosion). \mimo{} A filter thus lets through a pair of strongly correlated attributes and
+discards an attribute useful only \emph{in combination} with another (an XOR relation).
 
 \subsubsection{Criteria based on contingency tables}
 \label{ssec:kontingencni}
@@ -821,13 +773,87 @@ attributes with many values (in the limit, the object identifier is the \uv{most
 attribute). The same bias is addressed by the information gain ratio in C4.5
 (Chapter~\ref{sec:metody}).
 
-\subsection{Relations between attributes: regression and correlation}
+\subsubsection{Criteria for numeric attributes: correlation}
+\label{ssec:korelace}
+
+The criteria above ($\chi^2$, entropy) work with \emph{categorical} attributes over a contingency
+table. For a pair of \textbf{numeric} attributes, \emph{correlation analysis} is used instead ---
+and it serves two purposes: measuring the \textbf{relevance} of an input with respect to
+a~numeric output, and detecting \textbf{redundancy} between a~pair of inputs
+(see Sect.~\ref{ssec:integrace}).
+
+\begin{defbox}[Pearson correlation coefficient]
+A~measure of the \textbf{linear} relationship between two numeric quantities; it is the sample
+covariance normalised by the standard deviations:
+\[ r=\frac{\mathrm{cov}(X,Y)}{s_X\,s_Y}
+   =\frac{\sum_{i=1}^{n}(x_i-\bar x)(y_i-\bar y)}
+          {\sqrt{\sum_{i=1}^{n}(x_i-\bar x)^2\ \sum_{i=1}^{n}(y_i-\bar y)^2}}\ \in[-1,1]. \]
+$r=\pm 1$ means the points lie \emph{exactly} on a~line (with a~positive, resp.\ negative
+slope); $r=0$ means there is no \emph{linear} relationship between them. The square $r^2$ (the
+\emph{coefficient of determination}) gives the proportion of the variance of $Y$ explained by
+the linear dependence on~$X$.
+
+\textbf{Relation to regression} (Sect.~\ref{ssec:regrese}): the slope is
+$\beta=\mathrm{cov}(X,Y)/s_X^2$, hence $r=\beta\,s_X/s_Y$ --- the same information, merely
+scaled to be dimensionless.
+\end{defbox}
+
+\begin{poznbox}[Three pitfalls of the Pearson coefficient]
+\textbf{(1) It measures only a~linear relationship.} For data distributed symmetrically around
+zero and $y=x^2$ we get $r=0$, even though $Y$ depends on $X$ \emph{functionally}. Zero
+correlation therefore \textbf{does not imply independence} (the converse does hold:
+independence $\Rightarrow r=0$).
+
+\textbf{(2) It is sensitive to outliers.} A~single extreme point can drive $r$ towards one even
+where the rest of the data shows no trend at all.
+
+\textbf{(3) Correlation is not causation.} The relationship may be produced by a~hidden third
+variable; distinguishing them requires an experiment or a~temporal ordering (cf.\ influence
+versus correlation in Chapter~\ref{sec:sna}).
+\end{poznbox}
+
+\begin{defbox}[Spearman rank correlation coefficient $\rho$]
+It is the \textbf{Pearson coefficient computed from the ranks} instead of the values. If there
+are no tied ranks in the data, it simplifies to
+\[ \rho = 1-\frac{6\sum_{i=1}^{n} d_i^2}{n\,(n^2-1)}\ \in[-1,1], \]
+where $d_i$ is the difference of the ranks of the $i$-th object in $X$ and in $Y$.
+
+\textbf{What this buys you:}
+\begin{itemize}
+\item It captures \emph{any \textbf{monotone}} relationship, not merely a~linear one.
+\item It is \textbf{robust to outliers} --- ranking compresses the extremes.
+\item It is \textbf{invariant under monotone transformations} ($\log$, $\sqrt{\ }$, \dots);
+      Pearson is not.
+\item It also works for \textbf{ordinal} attributes, whose values can be ordered but not
+      subtracted (grades, satisfaction levels).
+\end{itemize}
+\end{defbox}
+
+\textbf{A~numerical example.} Five objects, $x=(1,2,3,4,5)$ and $y=(1,2,4,8,16)$ --- the
+relationship is \emph{perfectly monotone}, yet exponential, i.e.\ non-linear. The ranks of both
+variables coincide, so all $d_i=0$ and $\rho=1$ (a~perfect match). Pearson, by contrast, gives
+$r\doteq 0{,}93$: it \emph{penalises} the non-linearity. Had we taken the logarithm of $y$
+($\log_2 y = 0,1,2,3,4$), Pearson would give $r=1$ as well --- which is exactly the invariance
+at work: Spearman returns $1$ straight away, Pearson only after the right transformation.
+
+\textbf{Which measure to choose.} Pearson where the relationship is approximately linear and the
+data are free of outliers (and where we want to read $r^2$ as the explained variance); Spearman
+where only the \emph{strength and direction of the trend} matter, where the data contain
+extremes, or where the attributes are merely ordinal. \mimo{} A~third common variant is
+\emph{Kendall's $\tau$}, which counts the proportion of concordant and discordant pairs instead
+of rank differences.
+
+\textbf{Use in data reduction.} A~\emph{correlation matrix} of all pairs of input attributes is
+built; pairs with $|r|$ close to 1 carry practically the same information and one of them can be
+removed. Mind, however, the caveat from Sect.~\ref{ssec:filtr}: pairwise correlation alone cannot
+recognise an attribute that is useful only \emph{in combination} with another.
+
+\subsection{Relations between attributes: regression}
 \label{ssec:regrese}
 
 Whereas contingency tables describe the relation of \emph{categorical} attributes, for numeric
-ones regression and correlation analysis is used. \emph{Correlation analysis} answers the
-question whether a linear relationship between two numerical quantities \emph{exists};
-\emph{linear regression} determines its \emph{parameters}.
+ones regression analysis is used: \emph{linear regression} determines the \emph{parameters} of
+a linear relationship between two numerical quantities.
 
 \textbf{Reasons for regression analysis:} \emph{(1)}~it is very costly to measure the output
 $\Rightarrow$ predict it from inputs that are easily available; \emph{(2)}~the input values are
@@ -846,18 +872,6 @@ whence, after rearranging, $\alpha=\bar y-\beta\bar x$ and
 \[ \beta=\frac{\sum_{i=1}^{p}(x_i-\bar x)(y_i-\bar y)}{\sum_{i=1}^{p}(x_i-\bar x)^2}
    \qquad(\text{i.e.\ the sample covariance divided by the sample variance in }x). \]
 Prediction: $\hat y=\beta x+\alpha$.
-\end{defbox}
-
-\begin{defbox}[Correlation coefficient]
-An assessment of the \uv{amount} of linear dependence:
-\[ \rho(x,y)=\frac{\sigma_{xy}}{\sqrt{\sigma_x^2\sigma_y^2}}=\frac{\sigma_{xy}}{\sigma_x\sigma_y},
-\qquad
-\sigma_{xy}=\frac{1}{n-1}\sum_i (x_i-\bar x)(y_i-\bar y), \]
-\[ \sigma_x^2=\frac{1}{n-1}\sum_i (x_i-\bar x)^2,\qquad
-   \sigma_y^2=\frac{1}{n-1}\sum_i (y_i-\bar y)^2. \]
-We have $\rho\in[-1,1]$; $|\rho|=1$ means an exact linear relation, $\rho=0$ means no
-\emph{linear} relation (not the absence of any dependence --- $\rho$ does not capture non-linear
-relations).
 \end{defbox}
 
 \textbf{Multi-dimensional linear regression.} We assume a linear dependence of the explained
@@ -888,14 +902,15 @@ Chapter~\ref{sec:metody}, Section~\ref{ssec:logreg}.
       $[Q_1-1.5\,\mathrm{IQR},\,Q_3+1.5\,\mathrm{IQR}]$. Be able to compute the quartiles from
       ascending data (the $n/4$ and $3n/4$ rule, rounding up) and to draw a box plot.
 \item \textbf{Standardisation}: decimal scaling, min-max to $[0,1]$ and $[-1,1]$, z-score by the
-      mean absolute difference (more robust), std-score by the standard deviation. The
+      mean absolute difference (robust to outliers). The
       motivation: without it the distance is dominated by the attribute with the largest range.
-\item \textbf{Discretisation}: equi-width, equi-depth, using the class (entropy, $\chi^2$);
-      \textbf{fuzzy discretisation} --- blurred boundaries, two categories correspond to one
-      value with characteristic functions summing to 1, the weight of a fuzzy object is the
-      product $\prod_j\mu_j$; the risks are loss of information and contradiction. \textbf{KEX}
-      groups the values of a categorical attribute using the $\chi^2$ test against the a-priori
-      class distribution (procedures \emph{Assign} and \emph{Group}).
+\item \textbf{Discretisation}: equi-width (same length), equi-depth (same number of objects),
+      using the class (entropy top-down by splitting, $\chi^2$ bottom-up by merging);
+      \textbf{fuzzy discretisation} --- the procedure Interval, blurred boundaries, two
+      categories per value with characteristic functions summing to 1, the weight of an
+      object is $\prod_j\mu_j$. \textbf{KEX} groups the values of a categorical attribute
+      (Assign: a class code by the $\chi^2$ test against the a-priori class distribution,
+      otherwise \uv{?}; Group: values with the same code).
 \item \textbf{Data reduction}: too many objects $\to$ sampling (representativeness!), efficient
       storage, several models over subsets; unbalanced classes $\to$ error weights or different
       selection probabilities. Too many attributes $\to$ \emph{transformation} (PCA: fewer new
@@ -914,10 +929,9 @@ Chapter~\ref{sec:metody}, Section~\ref{ssec:logreg}.
       $r_ks_l/n\ge 5$; for low frequencies \textbf{Fisher's exact test}. Be able to go through
       the computation on a four-field table (the credit example: $\chi^2=42.857>3.84$
       $\Rightarrow$ dependence).
-\item \textbf{Regression and correlation}: the least squares method, $\beta$ as covariance
+\item \textbf{Regression}: the least squares method, $\beta$ as covariance
       divided by variance, $\alpha=\bar y-\beta\bar x$; multi-dimensionally
-      $\beta=(X^{\!\top}\!X)^{-1}X^{\!\top}Y$; the correlation coefficient
-      $\rho=\sigma_{xy}/(\sigma_x\sigma_y)$ measures only \emph{linear} dependence.
+      $\beta=(X^{\!\top}\!X)^{-1}X^{\!\top}Y$.
 \end{itemize}
 
 %=====================================================================
@@ -1027,19 +1041,12 @@ transactions: \emph{rare items are moved to higher levels} of the taxonomy (wher
 relatively more frequently) and \emph{the more common items are left at lower levels} (in order
 not to allow the most frequent items to dominate the rules).
 
-\textbf{Virtual items} exceed the framework of a traditional taxonomy: they blur the boundary
-between certain types of products (e.g.\ brands --- Calvin Klein) and can contain information
-about the transaction itself --- anonymous (day of the week, time) or signed (information about
-the customer and their behaviour). They may, however, cause \emph{redundancy} in the rules:
-either the virtual item corresponds to exactly one item from the taxonomy (\uv{If product\_Skoda
-then Skoda.}) or both the virtual and the general item occur in the rule at the same time
-(\uv{If product\_Skoda and small car then tent} instead of \uv{If Fabia then tent}).
-
-\textbf{Comparison of shops by means of virtual items:} a virtual item indicates the type of the
-shop where the transaction took place (it corresponds to no product or service). The procedure:
-\emph{(1)}~provide transaction data from the new shops for a certain time; \emph{(2)}~provide
-about the same amount of data from the existing shops; \emph{(3)}~use MBA on both sets of
-transactions; \emph{(4)}~in particular, consider the rules with virtual items.
+\textbf{Virtual items} exceed the framework of a taxonomy: brands across product types (Calvin
+Klein) or information about the transaction itself (day, time, customer). The risk is
+\emph{redundancy} in the rules (a virtual item corresponds to exactly one taxonomy item, or
+meets the general item in one rule). A typical use is the \emph{comparison of shops}: a virtual
+item marks the type of the shop, MBA is applied to comparably sized data from the new and the
+existing shops, and one watches the rules in which the virtual items appear.
 
 \textbf{Pruning according to minimum support} eliminates the less frequent items --- the actions
 undertaken should concern enough transactions. Two options: eliminate the rare items (and
@@ -1117,224 +1124,69 @@ simple and easy-to-understand computation & \emph{it tends to produce excessive 
 
 \subsubsection{Multiple minimum supports: MS-Apriori}
 
-\textbf{The rare item problem.} A single \emph{minsup} assumes that all items in the data are of
-the same nature and have similar frequencies. In practice, however, some items occur quite
-frequently and others rather rarely (a food processor vs.\ bread and milk). The consequence:
-\begin{itemize}
-\item if \emph{minsup} is set too \textbf{high}, the rules involving rare items will not be
-      found;
-\item if it is set too \textbf{low} (in order to find rules involving both frequent and rare
-      items), a \emph{combinatorial explosion} threatens --- the frequent items get associated
-      with one another in all possible ways.
-\end{itemize}
+\textbf{The rare item problem:} a single \emph{minsup} does not fit frequent and rare items at
+the same time (bread vs.\ a food processor) --- a high one misses rules with rare items, a low
+one explodes combinatorially on the frequent ones.
 
-\begin{defbox}[The multiple minsups model (MIS)]
-The minimum support of a rule is expressed in terms of the \emph{minimum item supports} (MIS) of
-the items that appear in the rule. Each item can have its own $\mathrm{MIS}(i)$; by providing
-different values, the user expresses different support requirements for different rules.
-
-\textbf{The minsup of a rule} $R: a_1,\dots,a_k\Rightarrow a_{k+1},\dots,a_r$ is the
-\emph{lowest} MIS value of its items: the rule satisfies its minimum support if its actual
-support is $\ge \min\big(\mathrm{MIS}(a_1),\dots,\mathrm{MIS}(a_r)\big)$.
-
-\textbf{The support difference constraint:} to prevent very frequent and very rare items from
-appearing in the same itemset, one requires
-\[ \max_{i\in s}\{\mathrm{sup}(i)\}-\min_{i\in s}\{\mathrm{sup}(i)\}\le\varphi, \]
-where $0\le\varphi\le 1$ is the user-specified maximum support difference (the same for all
-itemsets).
+\begin{defbox}[The main difference from Apriori]
+Each item has its \emph{own minimum support} $\mathrm{MIS}(i)$ (\emph{minimum item support});
+\textbf{the minsup of a rule is the minimum of the MIS values of its items}. To prevent very
+frequent and very rare items from mixing in one itemset, the support difference is also
+bounded: $\max_{i\in s}\mathrm{sup}(i)-\min_{i\in s}\mathrm{sup}(i)\le\varphi$.
 \end{defbox}
 
-\begin{defbox}[Example --- the minsup of a rule under MIS]
-The items \emph{bread}, \emph{shoes}, \emph{clothes} with $\mathrm{MIS}(\text{bread})=2\,\%$,
-$\mathrm{MIS}(\text{shoes})=0.1\,\%$, $\mathrm{MIS}(\text{clothes})=0.2\,\%$.
-
-$R_1$: clothes $\Rightarrow$ bread $[\mathrm{sup}=0.15\,\%]$ does \textbf{not} satisfy its
-minsup, because $0.15\,\%<\mathrm{MIS}(\text{clothes})=0.2\,\%$.
-
-$R_2$: clothes $\Rightarrow$ shoes $[\mathrm{sup}=0.15\,\%]$ \textbf{does} satisfy its minsup,
-because $0.15\,\%\ge\mathrm{MIS}(\text{shoes})=0.1\,\%$.
-\end{defbox}
-
-\textbf{Downward closure no longer holds in the new model!} MIS namely allows higher minimum
-supports for rules that involve only frequent items and lower minimum supports for rules with
-less frequent items. Example: $\mathrm{MIS}(1)=10\,\%$, $\mathrm{MIS}(2)=20\,\%$,
-$\mathrm{MIS}(3)=5\,\%$, $\mathrm{MIS}(4)=6\,\%$. The itemset $\{1,2\}$ with support 9~\% is
-infrequent, but $\{1,2,3\}$ and $\{1,2,4\}$ could be frequent --- we therefore \emph{cannot}
-discard $\{1,2\}$.
-
-\textbf{The remedy:} sort all items in \emph{ascending order of their MIS values}; the order is
-then fixed and used for all subsequent operations throughout the algorithm. Each itemset $w$ has
-the form $\{w[1],\dots,w[k]\}$ where $\mathrm{MIS}(w[1])\le\cdots\le\mathrm{MIS}(w[k])$.
-
-\begin{defbox}[The MS-Apriori algorithm]
-\begin{algorithmic}[1]
-\State $M\gets \textsc{sort}(I,\mathit{MS})$ \Comment{sorting the items by $\mathrm{MIS}(i)$}
-\State $L\gets \textsc{init-pass}(M,T)$ \Comment{first pass over the data; $L$ is the set of
-       seeds}
-\State $F_1\gets \{\{i\}\mid i\in L,\ i.\mathrm{count}/n\ge \mathrm{MIS}(i)\}$
-\For{$k=2$; $F_{k-1}\neq\emptyset$; $k{+}{+}$}
-  \If{$k=2$}
-     \State $C_k\gets \textsc{level2-candidate-gen}(L,\varphi)$
-  \Else
-     \State $C_k\gets \textsc{MScandidate-gen}(F_{k-1},\varphi)$
-  \EndIf
-  \For{each transaction $t\in T$}
-     \For{each candidate $c\in C_k$}
-        \If{$c\subseteq t$} \State $c.\mathrm{count}{+}{+}$ \EndIf
-        \If{$c\setminus\{c[1]\}\subseteq t$} \State $c.\mathrm{tailCount}{+}{+}$
-           \Comment{for rule generation} \EndIf
-     \EndFor
-  \EndFor
-  \State $F_k\gets \{c\in C_k\mid c.\mathrm{count}/n\ge \mathrm{MIS}(c[1])\}$
-\EndFor
-\State \Return $F=\bigcup_k F_k$
-\end{algorithmic}
-\end{defbox}
-
-\textbf{The first pass over the data} (\textsc{init-pass}): the algorithm records the support of
-each item, then follows the sorted order to find the \emph{first} item $i$ that meets
-$\mathrm{MIS}(i)$ and inserts it into the set of seeds $L$. For each subsequent item $j$ after
-$i$: if $j.\mathrm{count}/n\ge \mathrm{MIS}(i)$, then $j$ is also inserted into $L$.
-
-\emph{Example:} $\mathrm{MIS}(1)=10\,\%$, $\mathrm{MIS}(2)=20\,\%$, $\mathrm{MIS}(3)=5\,\%$,
-$\mathrm{MIS}(4)=6\,\%$; 100 transactions with the counts $\{3\}=6$, $\{4\}=3$, $\{1\}=9$,
-$\{2\}=25$. Then $L=\{3,1,2\}$ and $F_1=\{\{3\},\{2\}\}$. Item 4 is not in $L$ because
-$4.\mathrm{count}/n<\mathrm{MIS}(3)=5\,\%$; $\{1\}$ is not in $F_1$ because
-$1.\mathrm{count}/n<\mathrm{MIS}(1)=10\,\%$.
-
-\textbf{Candidate generation at level 2} (\textsc{level2-candidate-gen}): for each item $l\in L$
-in the given order, if $l.\mathrm{count}/n\ge\mathrm{MIS}(l)$, then for each item $h$ after $l$
-the candidate $\{l,h\}$ is added, provided $h.\mathrm{count}/n\ge\mathrm{MIS}(l)$ \emph{and}
-$|\mathrm{sup}(h)-\mathrm{sup}(l)|\le\varphi$. It is essential that $L$ is used and not $F_1$
---- $F_1$ does not contain the items that satisfy the MIS of some earlier item but not their own
-(item 1 in the example).
-
-\textbf{Candidate generation at higher levels} (\textsc{MScandidate-gen}) has two parts. The
-\emph{join step} is as in Apriori: $f_1=\{i_1,\dots,i_{k-2},i_{k-1}\}$ and
-$f_2=\{i_1,\dots,i_{k-2},i'_{k-1}\}$, differing only in the last item, are joined provided
-$i_{k-1}<i'_{k-1}$ and $|\mathrm{sup}(i_{k-1})-\mathrm{sup}(i'_{k-1})|\le\varphi$. The
-\emph{pruning step}: for each $(k-1)$-subset $s$ of the candidate $c$ --- if $s\notin F_{k-1}$,
-then $c$ can be deleted, \textbf{with one exception}: if $s$ does not include the item $c[1]$
-(there is exactly one such $s$), i.e.\ the item with the lowest MIS value, we \emph{must not}
-delete $c$ --- we cannot be sure that $s$ does not satisfy $\mathrm{MIS}(c[1])$, we only know
-that it does not satisfy $\mathrm{MIS}(c[2])$; that suffices only if
-$\mathrm{MIS}(c[2])=\mathrm{MIS}(c[1])$.
-
-\textbf{Why \texttt{tailCount}.} For Apriori it holds that if $f$ is frequent and
-$f_{sub}\subseteq f$, then $f_{sub}$ is frequent too --- to determine the confidence of the rules
-it therefore suffices to record the supports of the frequent itemsets. For MS-Apriori this is not
-sufficient; the problem arises only when the item with the \emph{lowest} MIS value in the itemset
-would be in the consequent of the rule. Therefore $c.\mathrm{tailCount}$ --- the support of $c$
-without its first item --- is counted separately.
-
-\textbf{How to specify the MIS values:} \emph{(a)}~according to the actual support of the item in
-the data, e.g.\ $\lambda\cdot\mathrm{sup}(i)$ for a parameter $0\le\lambda\le 1$ that is the same
-for all items; \emph{(b)}~group the items into clusters (blocks) of similar frequencies and assign
-the same MIS value to all items from the same cluster. By setting $\mathrm{MIS}=100\,\%$ (or
-more) we effectively instruct the algorithm not to generate rules involving only these items ---
-a practical trick. The multiple minsups model \emph{subsumes} the single support model.
+\textbf{Consequence: downward closure no longer holds.} Counterexample:
+$\mathrm{MIS}(1)=10\,\%$, $\mathrm{MIS}(2)=20\,\%$, $\mathrm{MIS}(3)=5\,\%$; the itemset
+$\{1,2\}$ with support 9~\% is infrequent, but $\{1,2,3\}$ could be frequent --- $\{1,2\}$
+cannot be discarded. MS-Apriori copes with this by three modifications: \emph{(a)}~it sorts
+the items in \emph{ascending order of MIS} and tests the frequency of an itemset against the
+MIS of its \emph{first} item ($c.\mathrm{count}/n\ge\mathrm{MIS}(c[1])$); \emph{(b)}~it
+generates the level-2 candidates from the set of seeds $L$ (items satisfying the MIS of some
+earlier item), not from $F_1$; \emph{(c)}~for rule generation it additionally counts
+\texttt{tailCount} --- the support of the itemset without its first item --- because the
+supports of the subsets are no longer guaranteed to be available. The single-minsup model is a
+special case ($\mathrm{MIS}=100\,\%$ prohibits rules with the item).
 
 \subsubsection{Class association rules (CAR)}
 
-Usual association rule mining does not involve any target attribute --- it finds all rules that
-exist in the data, and any item can appear as a condition or a consequent. In some applications,
-however, the user is interested rather in the \emph{targets} (attributes, classes) --- e.g.\ which
-words are associated with which topic of a document.
+Usual mining finds all rules; sometimes only rules with a \emph{target class} in the
+consequent are of interest (which words are associated with which topic of a document).
 
 \begin{defbox}[Class association rule]
-Let $T$ be a transaction data set of $n$ transactions, each of which is also labelled with a
-class $y$; let $I$ be the set of all items in $T$, $Y$ the set of all class labels, and
-$I\cap Y=\emptyset$.
-
-A \emph{class association rule} (CAR) is an implication $X\to y$, where $X\subseteq I$ and
-$y\in Y$. Support and confidence are defined the same way as for usual association rules.
+The transactions are additionally labelled with classes; a \emph{class association rule}
+(CAR) is an implication $X\to y$, where $X\subseteq I$ (items) and $y\in Y$ (classes),
+$I\cap Y=\emptyset$. Support and confidence are defined the same way as for usual association
+rules. E.g.\ on a collection of documents:
+Student, School $\to$ Education $[\mathrm{sup}=2/7,\ \mathrm{conf}=2/2]$.
 \end{defbox}
 
-\begin{defbox}[Example --- CAR on a text collection]
-\begin{center}
-\small
-\begin{tabular}{@{}ll@{}}
-\toprule
-Document & Class \\
-\midrule
-1: Student, Teach, School & Education \\
-2: Student, School & Education \\
-3: Teach, School, City, Game & Education \\
-4: Baseball, Basketball & Sport \\
-5: Basketball, Player, Spectator & Sport \\
-6: Baseball, Coach, Game, Team & Sport \\
-7: Basketball, Team, City, Game & Sport \\
-\bottomrule
-\end{tabular}
-\end{center}
-For $\mathit{minsup}=20\,\%$ and $\mathit{minconf}=60\,\%$, two examples of class association
-rules are
-\begin{gather*}
-\text{Student, School}\to\text{Education}\ [\mathrm{sup}=2/7,\ \mathrm{conf}=2/2],\\
-\text{Game}\to\text{Sport}\ [\mathrm{sup}=2/7,\ \mathrm{conf}=2/3].
-\end{gather*}
-\end{defbox}
-
-CARs can be mined \textbf{directly in one step} (unlike usual association rules). The key
-operation is to find all \emph{rule-items} of the form $(\mathit{condset},y)$, where
-$\mathit{condset}\subseteq I$ and $y\in Y$, with a support above \emph{minsup}; each rule-item
-represents the rule $\mathit{condset}\to y$. Apriori can be modified to generate CARs.
-
-The idea of multiple minimum supports can be used here too: the user specifies \emph{different
-minimum supports for different classes} (this effectively assigns a different minimum support to
-the rules of each class) --- e.g.\ rules of class \emph{Yes} with a minsup of 5~\% and of class
-\emph{No} with 10~\%. By setting the minimum class support to 101~\% we prohibit generating rules
-for that class.
+CARs are mined \textbf{directly in one step} (by a modified Apriori) via \emph{rule-items}
+$(\mathit{condset},y)$ with a support above \emph{minsup}. \emph{Different minsups for
+different classes} can be specified (the multiple-supports idea); a class minsup of 101~\%
+prohibits generating its rules.
 
 \subsubsection{Sequential pattern mining}
 
-Association rule mining does not consider the \emph{order} of the transactions. In many
-applications the ordering is significant: in MBA it is interesting to know whether people buy
-items in a sequence (a bed first, and bed sheets some time later); in web usage mining one looks
-for navigational patterns based on the sequences of page visits.
+Association rules ignore the \emph{order} of the transactions; the order matters e.g.\ in MBA
+(a bed first, bed sheets later) or when looking for navigational patterns in web logs
+(\emph{web usage mining}).
 
 \begin{defbox}[Sequence, size, length, subsequence]
-Let $I=\{i_1,\dots,i_m\}$ be a set of items. A \emph{sequence} is an ordered list of itemsets.
-An \emph{itemset} (an \emph{element} of the sequence) is a non-empty $X\subseteq I$; a sequence
-$s$ is denoted $\langle a_1a_2\dots a_r\rangle$, where $a_i$ is an element. Without loss of
-generality we assume the items in an element to be in lexicographic order.
-
-The \emph{size} of a sequence is the number of its elements, the \emph{length} the number of
-items; a sequence of length $k$ is called a $k$-sequence.
-
-$s_1=\langle a_1\dots a_r\rangle$ is a \emph{subsequence} of $s_2=\langle b_1\dots b_v\rangle$
-(and $s_2$ a \emph{supersequence} of $s_1$; we also say $s_2$ \emph{contains} $s_1$) if there
-exist integers $1\le j_1<j_2<\cdots<j_r\le v$ such that
-$a_1\subseteq b_{j_1},\dots,a_r\subseteq b_{j_r}$.
+A \emph{sequence} $s=\langle a_1a_2\dots a_r\rangle$ is an ordered list of non-empty itemsets
+(\emph{elements}). The \emph{size} $=$ the number of elements, the \emph{length} $=$ the
+number of items ($k$-sequence). $s_1=\langle a_1\dots a_r\rangle$ is a \emph{subsequence} of
+$s_2=\langle b_1\dots b_v\rangle$ if there exist indices $1\le j_1<\cdots<j_r\le v$ such that
+$a_1\subseteq b_{j_1},\dots,a_r\subseteq b_{j_r}$. Beware: $\langle\{3\}\{8\}\rangle$ and
+$\langle\{3,8\}\rangle$ do \emph{not} contain each other.
 \end{defbox}
 
-\emph{Example.} For $I=\{1,\dots,9\}$, $\langle\{3\}\{4,5\}\{8\}\rangle$ is a subsequence of
-$\langle\{6\}\{3,7\}\{9\}\{4,5,8\}\{3,8\}\rangle$, because $\{3\}\subseteq\{3,7\}$,
-$\{4,5\}\subseteq\{4,5,8\}$ and $\{8\}\subseteq\{3,8\}$. Conversely,
-$\langle\{3\}\{8\}\rangle$ is \emph{not} contained in $\langle\{3,8\}\rangle$ nor vice versa. The
-size of $\langle\{3\}\{4,5\}\{8\}\rangle$ is 3 and its length is 4.
-
-\textbf{The task:} given a set $S$ of input data sequences (a sequence database), find all
-sequences that have a user-specified minimum support; each such sequence is called a
-\emph{frequent sequence} or a \emph{sequential pattern}. The support of a sequence is the
-fraction of the data sequences in $S$ that contain it.
-
-The \textbf{GSP} algorithm (Generalized Sequential Pattern) generates sequential patterns in a way
-similar to Apriori --- breadth-first with candidate generation and testing, where candidates of
-length $k$ arise by joining frequent sequences of length $k-1$.
-
-\textbf{Time series analysis by means of MBA} --- a cause--effect analysis: new items are
-introduced for the transactions that occurred \emph{before} the event considered (the causes) and
-\emph{after} it (the effects); duplicate items are subsequently removed from the transactions. A
-\emph{window} is a snapshot of all the data that occurred during a certain time period (e.g.\ all
-transactions from the last month) --- it serves to capture trends for rare items. An
-identification of the customer may be necessary.
-
-\textbf{Dissociation rules} of the form \uv{IF $A$ AND NOT $B$ THEN $C$}: new items
-complementary to the original ones are introduced (if the transaction does not contain the
-original item, it will contain its negation). Disadvantages: twice as many items, an increased
-size of the transactions, and the negated items occur more often than the original ones (rules
-with all items negated are more difficult to exploit).
+\textbf{The task:} find all sequences with a support (the fraction of the data sequences
+containing them) of at least \emph{minsup} --- the \emph{sequential patterns}. The
+\textbf{GSP} algorithm (\emph{Generalized Sequential Pattern}) works similarly to Apriori:
+breadth-first, candidates of length $k$ by joining frequent sequences of length $k-1$.
+Add-ons: a cause--effect analysis by introducing items for the transactions \emph{before} and
+\emph{after} an event; \emph{dissociation rules} (IF $A$ AND NOT $B$) via complementary items
+--- at the cost of twice as many items.
 
 \subsubsection{FP-Growth and the FP-tree}
 
@@ -1670,12 +1522,9 @@ minimising the weighted entropy $H(A)$.
       denominator penalises \emph{excessive branching} (attributes with many values).
 \end{itemize}
 
-\textbf{The C5.0 algorithm} --- a commercial version of C4.5 for large databases; a similar
-induction of the decision tree, an improved (more efficient) generation of rules, and a higher
-accuracy achieved by \emph{boosting}: based on the original training data, various training
-subsets are built, each training pattern is assigned a weight corresponding to its impact during
-classification, for each weight combination a separate classifier is formed, and each classifier
-has its own vote during the subsequent classification --- the majority class wins.
+\textbf{The C5.0 algorithm} --- a commercial successor of C4.5 for large databases: a more
+efficient generation of rules and a higher accuracy thanks to \emph{boosting} (see the
+ensemble methods below).
 
 \begin{defbox}[CART --- Classification And Regression Trees]
 Generates \emph{binary} trees --- during each data division just two edges are formed. The choice
@@ -1701,28 +1550,6 @@ impact during classification; missing data is ignored and is not counted towards
 the decision criteria; the stopping criterion --- no further division would improve the
 classification accuracy; a high accuracy achieved on the training set does not have to reflect the
 accuracy on the test data.
-\end{defbox}
-
-\begin{defbox}[CHAID --- Chi-square Automatic Interaction Detection]
-The criterion for branching is $\chi^2$. The algorithm automatically \emph{groups together the
-values} of the categorical attributes --- the values are gradually grouped together starting from
-the original number until there are just two groups of them; subsequently, the attribute and its
-categorisation that are the best for data division at the given step are selected. During
-branching there are therefore not as many branches as there are attribute values.
-
-\textbf{Grouping of attribute values:}
-\begin{enumerate}
-\item Repeat until there are just two groups of attribute values only:
-      \emph{(a)}~choose the pair of attribute categories that are most similar to one another from
-      the point of view of $\chi^2$ and that can be merged; \emph{(b)}~consider the new attribute
-      category to be a possible grouping at the given step.
-\item For each of the possible groups of values, test their relevance to the predictor variable by
-      means of the $\chi^2$ test.
-\item Choose the grouping that yields the \uv{best} grouping of attribute values with the most
-      significant split.
-\item Determine whether this grouping contributes in a statistically significant way to
-      distinguishing the patterns from different classes.
-\end{enumerate}
 \end{defbox}
 
 \subsubsection{Bayesian classification}
@@ -1808,21 +1635,60 @@ $\langle w\cdot x_i\rangle+b\le -1$ for $y_i=-1$.
 \end{defbox}
 
 \begin{defbox}[The dual formulation and support vectors]
-The problem is solved by the standard \emph{Lagrangian} method:
+The problem is solved by the standard \emph{Lagrangian} method --- the constraints are pulled
+into the objective function using \emph{Lagrange multipliers} $\alpha_i$, one per training
+constraint:
 \[ L_P=\frac{\langle w\cdot w\rangle}{2}-\sum_{i=1}^{r}\alpha_i
    \big[y_i(\langle w\cdot x_i\rangle+b)-1\big],\qquad \alpha_i\ge 0. \]
-An optimal solution must satisfy the \emph{Kuhn--Tucker conditions}, which for a \emph{convex}
-objective function with \emph{linear} constraints are not only necessary but also sufficient. The
-complementarity condition shows that only the data points \emph{on} the margin hyperplanes can
-have $\alpha_i>0$ (for them $y_i(\langle w\cdot x_i\rangle+b)-1=0$) --- these are the
-\textbf{support vectors}; for all the others $\alpha_i=0$.
 
-Setting to zero the partial derivatives of $L_P$ with respect to $w$ and $b$ and substituting the
-resulting relations back, we obtain the \emph{Wolfe dual} problem
-\[ L_D=\sum_{i=1}^{r}\alpha_i-\frac12\sum_{i,j}y_iy_j\alpha_i\alpha_j
-   \langle x_i\cdot x_j\rangle\ \longrightarrow\ \max, \]
-whose maximum occurs at the same values of $w,b,\alpha_i$ as the minimum of $L_P$. The dual is
-easier to solve than the primal (numerical techniques are required).
+\textbf{Kuhn--Tucker conditions.} An optimal solution must satisfy them. In general they are only
+\emph{necessary}, but for a \emph{convex} objective function with \emph{linear} constraints ---
+which is exactly our case --- they are also \emph{sufficient}:
+\begin{align*}
+\frac{\partial L_P}{\partial w_j} &= w_j - \sum_{i=1}^{r} y_i\alpha_i x_{ij} = 0,
+  \quad j=1,\dots,n && \text{stationarity in }w\\
+\frac{\partial L_P}{\partial b} &= -\sum_{i=1}^{r} y_i\alpha_i = 0
+  && \text{stationarity in }b\\
+y_i\big(\langle w\cdot x_i\rangle+b\big)-1 &\ge 0, \quad i=1,\dots,r
+  && \text{the original constraints}\\
+\alpha_i &\ge 0, \quad i=1,\dots,r && \text{non-negativity of multipliers}\\
+\alpha_i\big(y_i(\langle w\cdot x_i\rangle+b)-1\big) &= 0, \quad i=1,\dots,r
+  && \text{\textbf{complementarity}}
+\end{align*}
+where $x_{ij}$ is the $j$-th component of the vector $x_i$ (in vector form
+$w=\sum_i y_i\alpha_i x_i$).
+
+\textbf{Why complementarity yields the support vectors:} the product is zero, so for every $i$ at
+least one of the two factors must vanish. If $\alpha_i>0$, the second bracket must be zero, i.e.\
+$y_i(\langle w\cdot x_i\rangle+b)=1$ --- the point lies \emph{exactly on} the margin hyperplane
+$H_+$ or $H_-$. These are the \textbf{support vectors}. For all the other points $\alpha_i=0$, so
+they do not enter the solution at all: an SVM is determined by a~small subset of the training data
+only.
+
+\textbf{From the primal to the dual program} --- two steps:
+\begin{enumerate}
+\item \emph{Set to zero the partial derivatives of $L_P$ with respect to the primal variables}
+      $w$ and $b$. This gives the first two KKT conditions, rewritten as
+      \[ w=\sum_{i=1}^{r} y_i\alpha_i x_i, \qquad \sum_{i=1}^{r} y_i\alpha_i = 0. \]
+\item \emph{Substitute these relations back into $L_P$.} The primal variables $w$ and $b$ are
+      thereby \textbf{eliminated} and only the multipliers $\alpha_i$ remain.
+\end{enumerate}
+The result is the \textbf{Wolfe dual} problem. \emph{Note:} it is a~\textbf{constrained} problem
+--- the relations obtained in step~1 are part of it:
+\[ \text{maximize }\ L_D=\sum_{i=1}^{r}\alpha_i-\frac12\sum_{i,j}y_iy_j\alpha_i\alpha_j
+   \langle x_i\cdot x_j\rangle
+   \quad\text{subject to}\quad \sum_{i=1}^{r} y_i\alpha_i=0,\ \ \alpha_i\ge 0. \]
+The maximum of $L_D$ occurs at the same values of $w,b,\alpha_i$ as the minimum of $L_P$. The dual
+is easier to solve than the primal (numerical techniques, in practice e.g.\ SMO) and, crucially,
+it involves the input vectors \emph{only} through the dot products $\langle x_i\cdot x_j\rangle$
+--- precisely what makes the kernel trick possible (see below).
+
+\textbf{Recovering $w$ and $b$.} Solving the dual yields the $\alpha_i$; from them
+\[ w=\sum_{i\in \mathit{sv}} y_i\alpha_i x_i, \qquad
+   b = y_k - \langle w\cdot x_k\rangle \quad\text{for any support vector } x_k, \]
+where the expression for $b$ follows from complementarity: for a~support vector
+$y_k(\langle w\cdot x_k\rangle+b)=1$, and since $y_k\in\{1,-1\}$, hence $y_k^2=1$, it suffices to
+multiply by $y_k$. Numerically, $b$ is usually \emph{averaged} over all support vectors.
 
 \textbf{The decision boundary} and \textbf{testing} an instance $z$:
 \[ \langle w\cdot x\rangle+b=\sum_{i\in \mathit{sv}}y_i\alpha_i\langle x_i\cdot x\rangle+b=0,
@@ -1939,45 +1805,28 @@ matrices} (composed of corrected sample variances).
 \subsubsection{Neural networks and extreme learning machines (ELM)}
 
 \begin{defbox}[The ELM network (Extreme Learning Machine, G.-B.~Huang)]
-A feedforward network with \emph{one} hidden layer: $n$ input neurons, $L$ hidden ones, 1 output
-neuron. The output of the hidden neurons is $h(x)=\big[G(a_1,b_1,x),\dots,G(a_L,b_L,x)\big]$,
-where $a_i$ is the weight vector and $b_i$ the bias of the $i$-th neuron; e.g.\
-$G(a_i,b_i,x)=g(\langle a_i\cdot x\rangle+b_i)$ (sigmoid) or
-$G(a_i,b_i,x)=g(b_i\|x-a_i\|)$ (RBF). The output of the network is
-$f_L(x)=\sum_{i=1}^{L}\beta_iG(a_i,b_i,x)$.
+A feedforward network with \emph{one} hidden layer ($n$ inputs, $L$ hidden neurons, 1 output):
+$f_L(x)=\sum_{i=1}^{L}\beta_i\,G(a_i,b_i,x)$, where $G$ is e.g.\ a sigmoid
+$g(\langle a_i\cdot x\rangle+b_i)$ or an RBF $g(b_i\|x-a_i\|)$.
 
-\textbf{The key idea:} if a continuous function $f$ can be approximated by a feedforward network
-with a hidden layer of neurons computing $G$, it is \emph{not necessary to adapt the parameters of
-the hidden neurons} --- they can be generated \emph{randomly}, even without the knowledge of the
-training data. For each continuous $f$ and a randomly generated sequence $\{(a_i,b_i)\}$ it holds
-with probability one that
-\[ \lim_{L\to\infty}\Big\|f-\textstyle\sum_{i=1}^{L}\beta_iG(a_i,b_i,\cdot)\Big\|=0 \]
-subject to setting the values of $\beta_i$ so that they minimise $\|f-f_L\|$.
-
-\textbf{The matrix model:} the system $\sum_{i=1}^{L}\beta_iG(a_i,b_i,x_j)=t_j$,
-$j=1,\dots,N$ is equivalent to $H\beta=T$, where $H$ is the \emph{output matrix of the hidden
-layer} (its $j$-th row being the outputs of the hidden neurons for the pattern $x_j$, its $i$-th
-column the outputs of the $i$-th neuron for all patterns).
-
-\textbf{The training algorithm} (three non-iterative steps):
+\textbf{The key idea:} the parameters of the hidden neurons $(a_i,b_i)$ are \emph{not
+adapted} --- they are generated \emph{randomly}, even without the knowledge of the training
+data (with probability one, $\lim_{L\to\infty}\|f-f_L\|=0$). Only the output weights $\beta$
+are learned, and \emph{once} --- by solving the system $H\beta=T$, where $H$ is the
+\emph{output matrix of the hidden layer} (its $j$-th row $=$ the outputs of the hidden
+neurons for the pattern $x_j$):
 \begin{algorithmic}[1]
 \State choose \emph{randomly} the parameters of the hidden neurons $(a_i,b_i)$, $i=1,\dots,L$
 \State compute the output matrix of the hidden layer $H$
-\State compute the output weights $\beta=H^{+}T$
+\State $\beta\gets H^{+}T$ \Comment{the Moore--Penrose pseudoinverse}
 \end{algorithmic}
-where $H^{+}$ is the Moore--Penrose pseudoinverse of $H$. A more stable solution with improved
-generalisation is obtained by regularisation --- adding $I/C$ to the diagonal of
-$H^{\!\top}H$: $f(x)=h(x)\big(I/C+H^{\!\top}H\big)^{-1}H^{\!\top}T$.
+Regularisation (adding $I/C$ to the diagonal of $H^{\!\top}H$) gives a more stable solution
+with better generalisation.
 \end{defbox}
 
-\textbf{Advantages of ELM:} a simple non-iterative procedure consisting of three steps (many
-traditional training algorithms are considerably more complex); a very fast and straightforward
-training process (it is not necessary to solve the tasks concerning local minima, appropriate
-parameter initialisation, overtraining, etc.); the parameters of the hidden neurons $a_i,b_i$ are
-independent of the training data and of themselves too, so they can be generated \emph{already
-before} presenting the training data (conventional techniques must \uv{see} the data first);
-usability with \emph{any} bounded piecewise continuous non-constant transfer function (gradient
-training algorithms work with smooth transfer functions only).
+\textbf{Advantages of ELM:} three non-iterative steps --- very fast, no local minima or
+initialisation issues; the hidden-neuron parameters do not depend on the data; any bounded
+piecewise continuous transfer function suffices (gradient algorithms require a smooth one).
 
 \subsubsection{Ensemble methods}
 
@@ -2243,32 +2092,18 @@ $k$-medoids is \emph{slower} than $k$-means but applicable to various data types
 \end{defbox}
 
 \begin{defbox}[Scalable variants: CLARA and CLARANS]
-In many applications the size of the data is so large that it cannot be stored in main memory and
-needs to reside on disk --- a challenge with constraints on the algorithmic design. CLARA and
-CLARANS are scalable implementations of $k$-medoids; they inherit both the advantages and
-disadvantages of the base algorithm (CLARANS is easily generalisable to different data types but
-inherits the relatively high computational complexity).
-
-\textbf{CLARA} (Clustering LARge Applications) --- based on a variant of $k$-medoids called
-\emph{PAM} (Partitioning Around Medoids), which tests all $k(n-k)$ pairs of medoids and non-medoids
-for an exchange and exchanges the pair with the best improvement of the objective function;
-exchanges are performed until the algorithm converges to a locally optimal value. Each iteration
-requires $O(kn^2)$ distance computations, i.e.\ $O(kn^2d)$ time --- \emph{rather expensive}. CLARA
-therefore applies the algorithm to a smaller \emph{sample} of size $f\cdot n$ ($f\ll 1$) to find
-the medoids, and the remaining (non-sampled) points are assigned to the medoids found. The approach
-is applied repeatedly over independently chosen samples of the same size and the best clustering is
-selected. The complexity of each iteration is then $O(kf^2n^2d+k(n-k))$ --- for small $f$ orders of
-magnitude faster. \textbf{The main problem:} the preselected samples may not include a good choice
-of medoids.
-
-\textbf{CLARANS} (Clustering Large Applications based on RANdomized Search) --- works with the
-\emph{full} data to avoid the problem with incorrectly preselected samples. It iteratively tests
-exchanges between \emph{random} medoids and \emph{random} non-medoids; after each trial it is
-checked whether the quality improves. If it does, the attempted exchange is made final; otherwise
-the number of unsuccessful attempts is counted, and a local optimum is said to have been found when
-a user-specified number of unsuccessful attempts \emph{MaxAttempt} has been reached. The entire
-process is repeated \emph{MaxLocal} times and the best among these local optima is selected.
-CLARANS explores a \emph{greater diversity} of the search space than CLARA.
+Scalable implementations of $k$-medoids; the base variant \emph{PAM} (Partitioning Around
+Medoids) tests all $k(n-k)$ medoid--non-medoid exchanges, $O(kn^2d)$ per iteration --- too
+expensive.
+\begin{itemize}
+\item \textbf{CLARA} (Clustering LARge Applications): apply PAM to a \emph{sample} only and
+      assign the remaining points to the medoids found; repeat over independent samples,
+      select the best. Risk: a sample may not include good medoids.
+\item \textbf{CLARANS} (\dots\ based on RANdomized Search): works with the \emph{full} data
+      and tries \emph{random} exchanges; a local optimum after \emph{MaxAttempt} failures,
+      the whole process \emph{MaxLocal} times. Explores a greater diversity of solutions than
+      CLARA.
+\end{itemize}
 \end{defbox}
 
 \subsubsection{Hierarchical clustering}
@@ -2293,20 +2128,9 @@ dendrogram at a suitable height.
 with one cluster containing all patterns and divides it gradually. The best-known example in the
 context of networks is the Girvan--Newman algorithm (Chapter~\ref{sec:sna}).
 
-\begin{defbox}[CURE (Clustering Using REpresentatives)]
-An agglomerative hierarchical algorithm, \emph{very fast} and able to discover clusters of an
-\emph{arbitrary shape} (unlike e.g.\ CLARANS). The procedure:
-\begin{enumerate}
-\item Sample $s$ points from the database $D$ of size $n$.
-\item Divide the sampled $s$ points into $p$ partitions of size $s/p$ each.
-\item Cluster each partition \emph{independently} using hierarchical merging to $k'$ clusters; the
-      overall number $k'\cdot p$ of clusters across all partitions is still larger than the
-      user-desired target $k$.
-\item Perform hierarchical clustering over the $k'\cdot p$ clusters down to the target $k$.
-\item Assign each of the $(n-s)$ non-sample data points to the cluster containing the closest
-      representative.
-\end{enumerate}
-\end{defbox}
+There is also a scalable agglomerative variant, \textbf{CURE} (\emph{Clustering Using
+REpresentatives}): sampling and hierarchical merging per partition; it is very fast and
+discovers clusters of an \emph{arbitrary shape}.
 
 \subsubsection{Vector quantisation: the LVQ algorithm}
 
@@ -2334,45 +2158,14 @@ neurons with the classes.
 
 \subsubsection{Grid-based and density-based methods}
 
-\begin{defbox}[Grid-based methods (e.g.\ MAFIA)]
-\begin{itemize}
-\item The data is discretised into $p$ (equi-width) intervals, which for a $d$-dimensional data set
-      yields $p^d$ hypercubes.
-\item The resulting hypercubes are the building blocks for the clustering.
-\item A density threshold $\tau$ is used to identify \emph{dense} hypercubes (with at least $\tau$
-      points).
-\item An arbitrarily shaped cluster involves multiple dense regions that are \emph{connected}
-      together; two grid regions are connected if they share a side.
-\end{itemize}
-\textbf{The objective:} determine the clusters as dense mutually connected regions. Dense grid
-cells are associated with nodes in a graph, and the edges stand for adjacent connectivity; the data
-covered by the cells from the connected components of the graph forms the final clusters.
-\end{defbox}
-
-\begin{defbox}[DBSCAN --- Density-Based Spatial Clustering of Applications with Noise]
-Instead of grid cells, the building blocks are \emph{individual data points}, resp.\ circular
-regions around them; their density is given by the number of points that lie within their radius
-$\varepsilon$ (including the point itself):
-\begin{enumerate}
-\item \textbf{Core point} --- if the spherical region of radius $\varepsilon$ around it contains at
-      least $\tau$ data points.
-\item \textbf{Border point} --- if the region contains \emph{fewer} than $\tau$ points, but also at
-      least one core point within $\varepsilon$.
-\item \textbf{Noise point} --- a point that is neither a core point nor a border point.
-\end{enumerate}
-
-\textbf{The algorithm:}
-\begin{enumerate}
-\item Determine the core, border and noise points.
-\item Construct a connectivity graph in which each node corresponds to a core point; an edge is
-      added between a pair of core points \emph{if and only if} they lie within the distance of
-      $\varepsilon$ from one another.
-\item Identify all connected components of the connectivity graph --- they correspond to the
-      clusters (constructed on the core points). The border points are then assigned to the cluster
-      with which they have the highest level of connectivity; the noise points are reported as
-      \emph{outliers}.
-\end{enumerate}
-\end{defbox}
+Grid-based and density-based methods find clusters of an \emph{arbitrary shape} as
+\textbf{connected dense regions} (the connected components of a connectivity graph).
+\emph{Grid-based} methods (e.g.\ MAFIA) discretise the space into $p^d$ hypercubes and connect
+\emph{dense} cells (at least $\tau$ points) that share a side. The density-based
+\textbf{DBSCAN} builds on \emph{core points} instead of cells (at least $\tau$ points within
+the radius $\varepsilon$): the clusters are the connected components of the graph of core
+points at most $\varepsilon$ apart, \emph{border} points are assigned to the closest cluster,
+and \emph{noise} points are reported as outliers.
 
 \begin{center}
 \small
@@ -2451,8 +2244,7 @@ DBSCAN & arbitrary & follows from the data & \emph{detects them} & parameters $\
       $\mathit{acc}-1.96\sqrt{\mathit{acc}(1-\mathit{acc})/n}$, the \emph{information gain ratio}
       (which penalises excessive branching). \textbf{C5.0} --- commercial, boosting.
       \textbf{CART} --- \emph{binary} trees, the Gini index $G(v_i)=1-\sum_j p_j^2$ (lower $=$
-      better), the criterion $\Phi=2P_LP_R\sum_j|P(C_j|t_L)-P(C_j|t_R)|$. \textbf{CHAID} ---
-      $\chi^2$, automatic grouping of the values of categorical attributes.
+      better), the criterion $\Phi=2P_LP_R\sum_j|P(C_j|t_L)-P(C_j|t_R)|$.
 \item \textbf{Bayes}: $H_{MAP}=\arg\max_H P(E\mid H)P(H)$ (the denominator can be neglected); the
       \emph{naive} assumption of conditional independence $\Rightarrow$
       $\arg\max_{H_t}P(H_t)\prod_i P(E_i\mid H_t)$. Handles incomplete patterns; the problem of
@@ -2460,7 +2252,14 @@ DBSCAN & arbitrary & follows from the data & \emph{detects them} & parameters $\
 \item \textbf{SVM}: the maximal margin $2/\|w\|$, the primal $\min\frac{\langle w\cdot
       w\rangle}{2}$ subject to $y_i(\langle w\cdot x_i\rangle+b)\ge 1$; the Kuhn--Tucker conditions
       are, for a convex problem with linear constraints, necessary \emph{and} sufficient;
-      $\alpha_i>0$ only for the \emph{support vectors}; the Wolfe dual. \textbf{The kernel trick}:
+      $\alpha_i>0$ only for the \emph{support vectors} (this follows from \emph{complementarity}).
+      \textbf{The Wolfe dual} arises in two steps: set $\partial L_P/\partial w$ and
+      $\partial L_P/\partial b$ to zero (giving $w=\sum_i y_i\alpha_i x_i$ and
+      $\sum_i y_i\alpha_i=0$) and substitute back into $L_P$, which eliminates $w,b$; it is a
+      \emph{constrained} problem --- $\max L_D$ subject to $\sum_i y_i\alpha_i=0$,
+      $\alpha_i\ge 0$. Back again: $w$ from stationarity,
+      $b=y_k-\langle w\cdot x_k\rangle$ from complementarity.
+      \textbf{The kernel trick}:
       the dual needs only dot products $\Rightarrow$
       $K(x,z)=\langle\phi(x)\cdot\phi(z)\rangle$ and $\phi$ is never evaluated (Mercer's theorem).
       Only 2 classes, only a real-valued space, not interpretable.
@@ -2502,21 +2301,20 @@ DBSCAN & arbitrary & follows from the data & \emph{detects them} & parameters $\
 \item \textbf{$k$-medians} (Manhattan, median per dimension, more robust) vs.\
       \textbf{$k$-medoids} (representatives \emph{from the data}, hill-climbing with exchanges,
       $O(knd)$ per iteration, any data type). \textbf{PAM} tests all $k(n-k)$ exchanges
-      ($O(kn^2d)$); \textbf{CLARA} samples ($O(kf^2n^2d+k(n-k))$, risk of a bad sample),
-      \textbf{CLARANS} searches randomly over the full data (\emph{MaxAttempt}, \emph{MaxLocal}).
+      ($O(kn^2d)$); \textbf{CLARA} applies PAM to samples (risk of a bad sample),
+      \textbf{CLARANS} tries random exchanges over the full data (\emph{MaxAttempt},
+      \emph{MaxLocal}).
 \item \textbf{Hierarchical clustering} bottom-up: every pattern its own cluster $\to$ merge the two
       closest; the output is a \textbf{dendrogram} and the number of clusters is chosen only by
-      cutting it. \textbf{CURE}: sample $\to$ $p$ partitions $\to$ independently hierarchical to
-      $k'$ clusters $\to$ hierarchical to $k$ $\to$ assign the rest; fast, arbitrary cluster shapes.
+      cutting it. \textbf{CURE}: a scalable variant (sampling, hierarchical merging per
+      partition); fast, arbitrary cluster shapes.
 \item \textbf{LVQ}: \emph{supervised} clustering --- the winning weight vector is pulled towards the
       pattern if the classes agree and pushed away if they do not; $\mu$ decreases as
       $\mu(k-1)/(k+1)$.
-\item \textbf{Grid-based methods} (MAFIA): $p^d$ hypercubes, density threshold $\tau$, clusters as
-      connected dense regions (connected components of the cell graph). \textbf{DBSCAN}: a
-      \emph{core} point ($\ge\tau$ points within radius $\varepsilon$), a \emph{border} point
-      ($<\tau$, but a core point within $\varepsilon$), a \emph{noise} point; clusters $=$ the
-      connected components of the core-point graph, noise points reported as outliers. It handles
-      clusters of \emph{arbitrary shape} and detects the outliers itself.
+\item \textbf{Grid-based and density-based methods} (MAFIA, \textbf{DBSCAN}): clusters of
+      arbitrary shape as connected dense regions; DBSCAN --- core points ($\ge\tau$ points
+      within radius $\varepsilon$), clusters $=$ the connected components of the core-point
+      graph, noise $=$ outliers.
 \end{itemize}
 
 %=====================================================================
@@ -2536,8 +2334,9 @@ observational rules (Section~\ref{ssec:observacni}), the statistical view
 (Section~\ref{ssec:zajimavost}) and applications
 (Section~\ref{ssec:aplikace-pravidel}). The notions of a~\emph{characteristic} and
 a~\emph{discriminant} rule with the t-weight and d-weight measures
-(Section~\ref{ssec:char-diskr}) are added following Han--Kamber, because the topic names
-them explicitly.
+(Section~\ref{ssec:char-diskr}), together with \emph{attribute-oriented induction}
+(Section~\ref{ssec:aoi}) which produces those rules, are added following Han--Kamber,
+because the topic names them explicitly.
 
 \begin{poznbox}[Sources of the chapter]
 \small
@@ -2552,9 +2351,8 @@ classifiers: bagging, boosting, random forests) coincides with
 Chapter~\ref{sec:metody}, and the confusion matrix and ROC/AUC of \texttt{ikm2} with
 Chapter~\ref{sec:reprez} --- they are treated there. The slides
 \texttt{nmr1}--\texttt{nmr5} from the same folder belong to a~different (optional)
-course by Holeňa and do not cover the subject matter of this chapter. Only
-Section~\ref{ssec:char-diskr} follows Han--Kamber; regression and discriminant analysis
-are also backed by the NDBI023 slides (\emph{Data Analysis}).
+course by Holeňa and do not cover the subject matter of this chapter. Sections~\ref{ssec:aoi} and~\ref{ssec:char-diskr} follow Han--Kamber; regression and
+discriminant analysis are also backed by the NDBI023 slides (\emph{Data Analysis}).
 \end{poznbox}
 
 \subsection{Rules as a comprehensible form of classification}
@@ -2588,10 +2386,139 @@ cases: if $t(\varphi)\le t(\psi)$, then $t(\varphi\Rightarrow\psi)=1$; if
 $t(\varphi)=t(\psi)$, then $t(\varphi\Leftrightarrow\psi)=1$.
 \end{defbox}
 
+\textbf{Intuition.} A~fuzzy degree of truth is \emph{not} the fraction of objects on
+which the rule holds (that is the confidence of an association rule, a~different layer)
+but the degree to which \emph{one particular object} satisfies a~vague property. The rule
+``whoever buys \emph{many} rolls buys \emph{a~lot of} butter'' is evaluated for each
+customer separately. For Petr, 8~rolls are ``many'' to degree $0.7$ and 250\,g of butter
+is ``a~lot'' to degree $0.9$; the antecedent $0.7 \le 0.9$, so the rule holds for him
+\emph{fully}, $t = 1$. His butter could drop to $0.7$ and the rule would still hold
+fully --- that slack is not added anywhere, truth is capped at one. The residuum handles
+the opposite case: Jana has rolls ``many'' to $0.9$ but butter only to $0.4$, so she
+violates the rule and the question is \emph{by how much}. In Boolean logic the rule would
+simply be false; fuzzy logic says ``partly'', and the different t-norms are differently
+strict ways of penalising the gap between antecedent and consequent (for
+$t(\varphi) > t(\psi)$): minimum (Gödel) gives $t(\psi) = 0.4$, product (Goguen) gives
+$t(\psi)/t(\varphi) \approx 0.44$, Łukasiewicz gives $1 - t(\varphi) + t(\psi) = 0.5$.
+Only averaging these values over all customers yields the fuzzy counterpart of rule
+confidence.
+
 Comprehensibility is the reason why rules are used wherever the result of the
 classification is judged by a~human: a~malware analyst wants to know \emph{why}
 a~program is suspicious, and recommender systems increase the user's trust in
 a~recommendation by explaining it (Section~\ref{ssec:aplikace-pravidel}).
+
+\subsection{Attribute-oriented induction (AOI)}
+\label{ssec:aoi}
+
+\mimo{} This section follows Han--Kamber; the topic speaks of characteristic and discriminant
+rules, and AOI is the method that produces them.
+
+\textbf{Motivation.} Data in a~database sit at \emph{too low a~level of abstraction}. A~single
+tuple \uv{John Newman, 23, Brno, physics} says nothing about a~class --- describing a~class
+requires \emph{concepts}, not individual values. \textbf{Attribute-oriented induction} (AOI)
+therefore \emph{lifts} the data to a~higher conceptual level and only then looks for
+regularities.
+
+\begin{defbox}[Concept hierarchy]
+Background domain knowledge supplied by the user (or derived from the data) telling us how the
+values of an attribute are to be generalised. For example
+\[ \text{Brno} \to \text{South Moravia} \to \text{Czechia} \to \text{Europe} \to \mathrm{ANY} \]
+The top \textbf{ANY} means \uv{the value does not matter} --- generalising this far effectively
+removes the attribute. For numeric attributes the hierarchy consists of intervals
+(age $21 \to 20$--$25 \to$ young) obtained by discretisation (Chapter~\ref{sec:priprava}).
+\end{defbox}
+
+\begin{defbox}[The two basic AOI operations]
+\textbf{1. Attribute removal} --- applied when an attribute has \emph{many distinct values} and
+\emph{no concept hierarchy is available} (name, birth number, telephone). Such an attribute
+cannot be generalised, and keeping it would mean that no two tuples ever merge.
+
+\textbf{2. Attribute generalization} --- if a~hierarchy exists, the values are replaced by the
+concepts one level up. This is repeated until the number of distinct values drops below
+a~chosen threshold.
+
+After each step, \textbf{identical generalised tuples are merged} and their number is
+accumulated into a~\texttt{count} attribute (possibly along with \texttt{sum}, \texttt{avg}).
+\end{defbox}
+
+\begin{defbox}[When to stop generalising --- two thresholds]
+\textbf{Attribute generalization threshold}: each attribute may have at most $k$ distinct
+values, typically 2--8. Generalisation continues until it falls below the threshold.
+
+\textbf{Generalized relation threshold}: the resulting relation may have at most $k$ tuples,
+typically 10--30. If it has more, generalisation continues (the attribute with the most values
+is lifted one level).
+
+The choice of thresholds is essential and it is a~\emph{trade-off}: thresholds that are too low
+lead to \textbf{over-generalisation} --- the rule \uv{all clients are people} is true and
+worthless; thresholds that are too high leave the result unreadable.
+\end{defbox}
+
+\noindent\textbf{The AOI algorithm:}
+\begin{algorithmic}[1]
+\Require relation $W$ (the result of a~query on the target class), concept hierarchies,
+  thresholds
+\Ensure the generalised (\emph{prime}) relation $P$
+\ForAll{attributes $A$ of the relation $W$}
+  \State determine the number of distinct values of $A$
+  \If{$A$ has no hierarchy and many values}
+    \State remove $A$ \Comment{attribute removal}
+  \Else
+    \While{number of distinct values of $A$ $>$ attribute threshold}
+      \State replace the values of $A$ by the concepts one level up
+        \Comment{attribute generalization}
+    \EndWhile
+  \EndIf
+\EndFor
+\State merge identical tuples, accumulate \texttt{count}
+\While{$|P| >$ relation threshold}
+  \State generalise further the attribute with the most distinct values and merge again
+\EndWhile
+\State \Return $P$
+\end{algorithmic}
+
+\medskip
+\noindent\textbf{Example.} The raw student table has the attributes
+\emph{name, birth number, gender, field, country, age, grade}.
+\emph{Name} and \emph{birth number} are removed (many values, no hierarchy);
+\emph{field} is generalised (physics, chemistry, biology $\to$ science),
+\emph{country} (Czechia, Slovakia $\to$ domestic; otherwise foreign),
+\emph{age} (21, 22, 23 $\to$ 20--25) and \emph{grade} (1, 2 $\to$ excellent).
+Hundreds of rows collapse to a~few:
+
+\begin{center}\small
+\begin{tabular}{lllll r}
+\toprule
+\textbf{gender} & \textbf{field} & \textbf{country} & \textbf{age} & \textbf{grade}
+  & \textbf{count} \\
+\midrule
+M & science   & domestic & 20--25 & excellent & 84 \\
+F & science   & foreign  & 25--30 & excellent & 36 \\
+M & humanities & domestic & 20--25 & good      & 30 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{poznbox}[Connections that get asked about]
+\textbf{AOI vs.\ OLAP.} Generalisation corresponds to the \emph{roll-up} aggregation operation
+over a~data-warehouse cube (the opposite direction being \emph{drill-down}). The difference:
+OLAP works over a~\emph{precomputed} cube and is driven manually by the user, whereas AOI runs
+\emph{automatically} over a~relation and decides itself which attributes to remove and which to
+generalise.
+
+\textbf{Characterisation vs.\ discrimination.} Run on the \emph{target class alone}, AOI yields
+a~\emph{characterisation}; run on the \emph{target and the contrasting classes at once} (at the
+same level of generalisation, so that they are comparable), it yields a~\emph{discrimination}.
+The t-weight and d-weight are then computed over the resulting relation
+(Sect.~\ref{ssec:char-diskr}).
+
+\textbf{Complexity.} It is essentially a~single pass over the data with aggregation, hence
+linear in the number of tuples --- which is why AOI is usable on large databases.
+
+\textbf{Forms of presentation:} the generalised relation (the table above), a~cross-tab,
+quantitative rules with weights, or charts (pie, bar).
+\end{poznbox}
 
 \subsection{Characteristic and discriminant rules: t-weight and d-weight}
 \label{ssec:char-diskr}
@@ -2599,51 +2526,48 @@ a~recommendation by explaining it (Section~\ref{ssec:aplikace-pravidel}).
 \mimo{} This section follows Han--Kamber --- the topic names both kinds of rules
 explicitly.
 
-\begin{defbox}[Characterisation vs.\ discrimination]
-\textbf{Data characterisation} --- a~summary of the general properties of the
-\emph{target class} (\uv{what does a~typical client with a~mortgage look like?}); the
-result consists of \emph{characteristic rules}. \textbf{Data discrimination} ---
-a~comparison of the target class with one or more \emph{contrasting classes} (\uv{how
-does it differ from a~client without a~mortgage?}); the result consists of
-\emph{discriminant rules}. A~property can be \emph{typical} of the target class and
-still have no \emph{discriminating} power --- if it is equally typical of the
-contrasting class.
+Both kinds of rules answer two different questions about the \emph{target class} (e.g.\
+clients with a~mortgage). \textbf{Characterisation:} \uv{what does a~typical member of
+the class look like?} \textbf{Discrimination:} \uv{how does it differ from the
+\emph{contrasting class}?} (clients without a~mortgage). Both are read off the same
+generalised relation produced by AOI (Sect.~\ref{ssec:aoi}): rows $q_1,\dots,q_N$ with
+\texttt{count}s, for discrimination separately for the target and the contrasting class.
+Each row gets one number for each of the two questions.
+
+\begin{defbox}[t-weight --- typicality (characteristic rule)]
+\textbf{Purpose:} measures how large a~part of the target class the row $q_a$ describes.
+\textbf{Formula:}
+\[ t\text{-}\mathrm{weight}(q_a)=\frac{\mathrm{count}(q_a)}
+   {\sum_{i=1}^{N}\mathrm{count}(q_i)}, \]
+i.e.\ the number of target-class objects in the row divided by the size of the whole
+target class; the sum over the rows is 100~\%. \textbf{Meaning:} \uv{45~\% of clients
+with a~mortgage are 30--40 years old, high-income, from Prague.} It appears in the
+\emph{characteristic rule}, which goes \emph{from} the class to the properties
+(a~necessary condition):
+\[ \mathrm{target}(X)\Rightarrow \mathrm{cond}_1(X)\,[t{:}\,w_1]\ \vee\ \cdots\ \vee\
+   \mathrm{cond}_N(X)\,[t{:}\,w_N]. \]
+It says nothing about whether the property \emph{distinguishes} the class from the others.
 \end{defbox}
 
-Rules of this kind are obtained by \emph{generalising the data}:
-\emph{attribute-oriented induction} (AOI) replaces attribute values by more general
-ones following concept hierarchies (city $\to$ region, date of birth $\to$ age
-category), removes many-valued attributes without a~hierarchy (name, telephone) and
-merges identical generalised tuples with a~\texttt{count}; the same is done by the
-\emph{roll-up} / \emph{drill-down} operations over an OLAP cube
-(Chapter~\ref{sec:paradigmata}). Over the generalised tuples, two weights are defined:
-
-\begin{defbox}[t-weight, d-weight and quantitative rules]
-Let $q_1,\dots,q_N$ be the generalised tuples of the target class.
-
-The \textbf{typicality} (t-weight) of the tuple $q_a$:
-\[ t\text{-}\mathrm{weight}(q_a)=\frac{\mathrm{count}(q_a)}
-   {\sum_{i=1}^{N}\mathrm{count}(q_i)}\in[0,1], \]
-i.e.\ the fraction of the target-class objects covered by $q_a$ (the sum over all tuples
-is 100~\%). It appears in the \textbf{quantitative characteristic rule} (a~necessary
-condition --- an implication \emph{from} the class):
-\[ \forall X\ \ \mathrm{target}(X)\Rightarrow \mathrm{cond}_1(X)\,[t{:}\,w_1]\ \vee\
-   \cdots\ \vee\ \mathrm{cond}_N(X)\,[t{:}\,w_N]. \]
-
-The \textbf{discriminating weight} (d-weight) of the tuple $q_a$ with respect to the
-target class $C_t$ and the contrasting classes $C_1,\dots,C_m$:
+\begin{defbox}[d-weight --- discriminating power (discriminant rule)]
+\textbf{Purpose:} measures how reliably the row $q_a$ points to the target class rather
+than to a~contrasting one. \textbf{Formula:}
 \[ d\text{-}\mathrm{weight}(q_a)=\frac{\mathrm{count}(q_a\in C_t)}
-   {\mathrm{count}(q_a\in C_t)+\sum_{j=1}^{m}\mathrm{count}(q_a\in C_j)}\in[0,1], \]
-i.e.\ the fraction of the objects covered by $q_a$ that belong to the target class. It
-appears in the \textbf{quantitative discriminant rule} (a~sufficient condition --- an
-implication \emph{into} the class):
-\[ \forall X\ \ \mathrm{target}(X)\Leftarrow \mathrm{cond}(X)\,[d{:}\,w]. \]
-The \emph{quantitative description rule} combines both ($\Leftrightarrow$,
-$[t{:}\,w,\ d{:}\,w']$).
+   {\mathrm{count}(q_a\in C_t)+\sum_{j=1}^{m}\mathrm{count}(q_a\in C_j)}, \]
+i.e.\ of all objects (target and contrasting) that satisfy the row, the fraction from the
+target class --- the precision of the row as a~classifier. \textbf{Meaning:} \uv{90~\% of
+people aged 30--40 with a~high income from Prague have a~mortgage.} It appears in the
+\emph{discriminant rule}, which goes from the properties \emph{into} the class
+(a~sufficient condition):
+\[ \mathrm{target}(X)\Leftarrow \mathrm{cond}(X)\,[d{:}\,w]. \]
+Always compare it with the \emph{a-priori proportion} of the target class: a~d-weight
+equal to the a-priori proportion means zero discriminating power, a~d-weight below it
+rather excludes the class. The \emph{quantitative description rule} states both weights
+at once ($\Leftrightarrow$, $[t{:}\,w,\ d{:}\,w']$).
 \end{defbox}
 
 \begin{defbox}[Example --- clients with a mortgage (200) vs.\ without one (800)]
-The prime relation after generalisation:
+The generalised relation:
 \begin{center}
 \small
 \begin{tabular}{@{}lllrrrr@{}}
@@ -2658,14 +2582,11 @@ Age & Income & Region & \multicolumn{2}{c}{count} & $t$-weight & $d$-weight \\
 \bottomrule
 \end{tabular}
 \end{center}
-The computation for the first tuple: $t=90/200=45\,\%$, $d=90/(90+10)=90\,\%$.
-
-\textbf{The classic trap:} the 3rd row has $t=20\,\%$, but its $d=40/200=20\,\%$ is
-\emph{exactly} the a-priori proportion of the target class ($200/1000=20\,\%$) --- zero
-discriminating power; the 4th row with $d=4\,\%$, far below the a-priori proportion,
-rather \emph{excludes} a~mortgage. High typicality thus does not by itself mean
-discriminating power: the d-weight must always be compared with the a-priori class
-proportion.
+First row: $t=90/200=45\,\%$ (almost half of all mortgages are here),
+$d=90/(90+10)=90\,\%$ (whoever falls here has a~mortgage with 90~\%).
+\textbf{The trap:} the 3rd row has a~decent $t=20\,\%$, but $d=40/200=20\,\%$ is exactly
+the a-priori proportion of mortgages ($200/1000$) --- typical, yet it distinguishes
+nothing; the 4th row with $d=4\,\%$ rather excludes a~mortgage.
 \end{defbox}
 
 \subsection{Extraction of rules from classification trees}
@@ -2732,35 +2653,65 @@ Pittsburgh & the entire sought set of rules & the result is directly a~consisten
 \subsection{Observational rules: confidence, support and hypothesis tests}
 \label{ssec:observacni}
 
-Boolean logic can say something about data in only two ways: \uv{\emph{all} objects
-satisfy $\varphi\Rightarrow\psi$} (rarely the case), or \uv{\emph{there exists} an
-object satisfying $\varphi\wedge\psi$} (weak information). For a~more useful
-description of data, the \emph{observational calculus} was proposed (Hájek--Havránek
-1978, the basis of the Czech GUHA method).
+Classical logic can say about data only \uv{$\varphi\Rightarrow\psi$ holds for
+\emph{all} objects} (almost never) or \uv{it holds for at least \emph{one}} (almost
+nothing). The \emph{observational calculus} (Hájek--Havránek 1978, the basis of the
+Czech GUHA method) therefore replaces the quantifiers $\forall$ and $\exists$ by
+a~\emph{generalised quantifier} $\sim$ meaning \uv{holds for \emph{enough} objects},
+and defines \uv{enough} statistically. An observational rule $\varphi\sim\psi$ is thus
+the statement \uv{in the data, $\varphi$ and $\psi$ occur together sufficiently often},
+and the individual quantifiers differ only in how they measure \uv{sufficiently}.
 
-\begin{defbox}[Observational rules and generalised quantifiers]
-An \emph{observational rule} has the form $\varphi\sim\psi$, where $\sim$ is
-a~\emph{generalised quantifier}: the truth of the rule captures the result of
-a~statistical analysis of the data corresponding to $\varphi$ and $\psi$, summarised by
-a~four-fold table --- $a$ objects satisfy $\varphi\wedge\psi$, $b$ objects
-$\varphi\wedge\neg\psi$, $c$ objects $\neg\varphi\wedge\psi$, $d$ objects
-$\neg\varphi\wedge\neg\psi$, in total $n=a+b+c+d$.
-
-Two common types of observational rules:
-\begin{itemize}
-\item \textbf{based on estimates of probabilities} (possibly conditional) --- the most
-      common are association rules (Section~\ref{ssec:ar}) with confidence
-      $c_0\in(0,1)$ and support $s_0\in(0,1)$:
-      \[ (\varphi\sim\psi)=1\quad\text{iff}\quad
-         \frac{a}{a+b}\ge c_0\ \wedge\ \frac{a}{n}\ge s_0, \]
-      where $\tfrac{a}{a+b}$ is an unbiased estimate of $P(\psi\mid\varphi)$;
-\item \textbf{based on hypothesis tests} ($H_0$ the null, $H_1$ the alternative) ---
-      e.g.\ $(\varphi\sim\psi)=1$ iff the one-sided Fisher test
-      (Section~\ref{ssec:kontingencni}) at the level $\alpha\in(0;0.5\rangle$ rejects
-      $H_0$: independence of $\varphi$ and $\psi$ in favour of $H_1$: positive
-      dependence of $\varphi$ and $\psi$.
-\end{itemize}
+\begin{defbox}[Four-fold table --- the only input of all quantifiers]
+For a~pair $\varphi,\psi$ four numbers are counted from the data:
+\begin{center}
+\begin{tabular}{@{}lcc@{}}
+\toprule
+ & $\psi$ & $\neg\psi$ \\
+\midrule
+$\varphi$ & $a$ & $b$ \\
+$\neg\varphi$ & $c$ & $d$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+$a$ = objects satisfying both, $b$ = only $\varphi$, $c$ = only $\psi$, $d$ = neither,
+$n=a+b+c+d$. Every generalised quantifier is just a~condition on $a,b,c,d$.
 \end{defbox}
+
+\begin{defbox}[Type 1 --- confidence and support (association rules)]
+\textbf{Purpose:} \uv{if $\varphi$, then often enough also $\psi$, and this concerns
+a~large enough part of the data.} \textbf{Formula:}
+\[ \mathrm{conf}=\frac{a}{a+b}\ \ (\text{estimate of } P(\psi\mid\varphi)),\qquad
+   \mathrm{sup}=\frac{a}{n}, \]
+\[ (\varphi\sim\psi)=1 \iff \mathrm{conf}\ge c_0\ \wedge\ \mathrm{sup}\ge s_0 . \]
+\textbf{Meaning:} confidence is the \emph{reliability} of the rule (of the baskets with
+rolls, how many also contain butter), support is its \emph{significance} (how many
+baskets it concerns at all). The thresholds $c_0, s_0$ are chosen by the user. Weakness:
+a~confidence of 60~\% means nothing if 60~\% of \emph{all} customers buy butter --- the
+confidence must be compared with $\tfrac{a+c}{n}$, which leads to type~2.
+\end{defbox}
+
+\begin{defbox}[Type 2 --- hypothesis test]
+\textbf{Purpose:} instead of a~fixed threshold we ask whether the joint occurrence of
+$\varphi$ and $\psi$ could be \emph{chance}. \textbf{Formula:} $H_0$: $\varphi$ and
+$\psi$ are independent, $P(\psi\mid\varphi)=P(\psi)$; $H_1$: positive dependence,
+$P(\psi\mid\varphi)>P(\psi)$. The one-sided Fisher test
+(Section~\ref{ssec:kontingencni}) computes the $p$-value = the probability that, under
+independence and with the given marginal sums of the table, $a$ would come out at least
+as large as observed;
+\[ (\varphi\sim\psi)=1 \iff p\le\alpha \quad(\text{e.g.\ } \alpha=0.05). \]
+\textbf{Meaning:} the rule holds when $\varphi$ and $\psi$ occur together
+\emph{demonstrably} more often than chance would explain. The test automatically
+accounts for both the strength of the dependence and the number of objects: with
+a~small $n$ even a~high confidence is not enough.
+\end{defbox}
+
+\textbf{Example.} $n=1000$ baskets, rolls in 100 of them, butter in 400; together
+$a=60$, hence $b=40$, $c=340$, $d=560$. Confidence $60/100=60\,\%$, support
+$60/1000=6\,\%$; with thresholds $c_0=0.5$, $s_0=0.05$ the rule holds. Overall $40\,\%$
+of customers buy butter, among roll buyers $60\,\%$ --- under independence we would
+expect $a\approx40$, we observed 60, the Fisher test gives $p\ll0.05$ and the rule holds
+by type~2 as well.
 
 \subsection{The statistical view: regression and discriminant analysis}
 \label{ssec:stat-pohled}
@@ -2909,6 +2860,17 @@ recommendation for the user.
       The Boolean implication is true at $t(\varphi)=0$ or $t(\varphi)=t(\psi)=1$; the
       fuzzy implication $=$ the residuum of a~t-norm, $t(\varphi)\le
       t(\psi)\Rightarrow$ the implication is true to degree 1.
+\item \textbf{AOI --- attribute-oriented induction}: lifts the data to a~higher conceptual
+      level following \emph{concept hierarchies} and only then looks for regularities. Two
+      operations: attribute \emph{removal} (many values and no hierarchy --- name, birth
+      number) and attribute \emph{generalization} (values $\to$ concepts one level up),
+      with identical tuples merged after each step and a~\texttt{count} accumulated. When
+      to stop: a~threshold on the number of distinct values of an \emph{attribute} (2--8)
+      and a~threshold on the number of tuples of the \emph{relation} (10--30); thresholds
+      that are too low lead to \textbf{over-generalisation} (\uv{all clients are people}).
+      It corresponds to the \emph{roll-up} operation in OLAP but runs automatically over
+      a~relation. Run on the target class it yields a~\emph{characterisation}, run on the
+      target and the contrasting classes a~\emph{discrimination}.
 \item \textbf{Characteristic vs.\ discriminant rule} (Han--Kamber): characterisation
       describes the target class ($\Rightarrow$, a~necessary condition,
       \textbf{t-weight} $=\frac{\mathrm{count}(q_a)}{\sum_i\mathrm{count}(q_i)}$);
@@ -3530,46 +3492,34 @@ clustering of social networks.
 \subsection{Cohesion: measures at the network level}
 
 \begin{defbox}[Reciprocity, density, clustering coefficient]
-\textbf{Reciprocity} --- the degree of mutuality and reciprocal exchange in the network, which is
-related to social cohesion: the ratio of the number of relations that are reciprocated (there is an
-edge in both directions) over the total number of relations, where two vertices are said to be
-related if there is at least one edge between them. \textbf{It makes sense only in directed graphs.}
+\textbf{Reciprocity} --- the ratio of \emph{reciprocated} relations (an edge in both
+directions) over all relations in the network; \textbf{it makes sense only in directed
+graphs}.
 
-\textbf{Density} --- the ratio of the number of edges over the total number of \emph{possible} edges:
+\textbf{Density} --- the ratio of the number of edges over the number of \emph{possible} edges:
 \[ \text{density}=\frac{|E|}{|V|(|V|-1)/2}\quad\text{(undirected graph)},\qquad
    \frac{|E|}{|V|(|V|-1)}\quad\text{(directed)}. \]
-A common measure of how well a network is connected (how closely knit it is). A perfectly connected
-network is called a \emph{clique} and has a density of 1. Directed graphs have half the density of
-their undirected counterparts, as there are twice as many possible edges.
+A \emph{clique} (a perfectly connected network) has density 1; directed graphs have half the
+density, as there are twice as many possible edges.
 
-\textbf{Clustering coefficient} of node $i$ measures the density of its \emph{neighbourhood} --- the
-network consisting only of the nodes directly connected to $i$. For $G=(V,E)$ the neighbourhood is
-$N_i=\{v_j: e_{ij}\in E\ \vee\ e_{ji}\in E\}$, $k_i=|N_i|$, and
+\textbf{Clustering coefficient} of node $i$ --- the density of its \emph{neighbourhood}
+$N_i=\{v_j: e_{ij}\in E\ \vee\ e_{ji}\in E\}$, $k_i=|N_i|$:
 \[ C_i=\frac{2\,|\{e_{jk}: v_j,v_k\in N_i,\ e_{jk}\in E\}|}{k_i(k_i-1)}
    \ \text{(undirected)},\qquad
    C_i=\frac{|\{e_{jk}\}|}{k_i(k_i-1)}\ \text{(directed)}. \]
-The \emph{network clustering coefficient} $C$ is the average of the coefficients of all its nodes,
-$C=\frac{1}{|V|}\sum_{i=1}^{|V|}C_i$. It indicates the presence of (sub)communities; clustering
-algorithms try to maximise the number of edges that fall within the same cluster.
+The network coefficient $C=\frac{1}{|V|}\sum_i C_i$ indicates the presence of
+(sub)communities.
 \end{defbox}
 
 \begin{defbox}[Diameter, average distance, eccentricity, small worlds]
-The network's \textbf{diameter} --- the longest shortest path (distance) between any two nodes. A
-useful measure of the \emph{reach} of the network: it indicates how long it will take at most to
-reach any node. Sparser networks generally have greater diameters.
+The network's \textbf{diameter} $=$ the longest shortest path between two nodes; the
+\textbf{average distance} $=$ the average of all shortest paths; the \textbf{eccentricity}
+of a vertex $=$ its greatest geodesic distance from another vertex.
 
-The \textbf{average distance} --- the average of all shortest paths in the network; it indicates how
-far apart any two nodes will be on average.
-
-The \textbf{eccentricity} of a vertex --- the greatest geodesic distance between the given vertex and
-any other vertex in the graph.
-
-A \textbf{small world} --- a network that looks almost random but exhibits a \emph{significantly high
-clustering coefficient} and a \emph{relatively short average path length}: nodes cluster locally and
-can be reached in a few steps. It is very common in social networks, because of the
-\emph{transitivity} of strong social ties and the \emph{ability of weak ties to reach across
-clusters}. Small-world networks have many clusters but also many bridges between them that help
-shorten the average distance between nodes.
+A \textbf{small world} --- a network with a \emph{significantly high clustering coefficient}
+and a \emph{short average path length}: clusters arise from the transitivity of strong ties,
+short paths are provided by weak ties (bridges) between the clusters. Very common in social
+networks.
 \end{defbox}
 
 \subsection{A model of real-world complex networks and their properties}
@@ -3610,45 +3560,24 @@ networks. The properties:
 \end{defbox}
 
 \begin{defbox}[Scale-free networks and preferential attachment]
-\textbf{Scale-free networks} (Barabási, Albert, 1999) are networks whose degree distribution follows
-a \emph{power law} (the WWW, citation networks, biological networks, some social networks). Power-law
-distributions usually arise when \emph{the amount you get of something depends on the amount you
-already have}; in topological terms this reflects in a network with few highly connected nodes
-(\emph{hubs}) and a large number of nodes with low degree.
-
-The mechanism was referred to as the \emph{rich-get-richer and poor-get-poorer} strategy, or
-equivalently the \emph{Matthew effect}; Price called it \emph{cumulative advantage}, and Barabási and
-Albert used the expression \textbf{preferential attachment}. The explanation: new nodes entering the
-network tend to connect to well-connected nodes, which are often associated with central and
-prestigious positions (more status, popularity, knowledge, money).
-
-The two main mechanisms behind an SF network are therefore \textbf{growth} and \textbf{preferential
-attachment}. The resulting network has a \emph{long-tailed} degree distribution and a
-\emph{small-world structure}; transitivity and the strong/weak tie characteristics are common and can
-lead to small-world structures, but they are \emph{not necessary} to explain it.
-
-\textbf{Reasons for preferential attachment:} \emph{popularity} (\uv{the rich get richer}) --- we
-want to be associated with popular people, ideas and items, which further increases their popularity
-irrespective of any objective, measurable characteristics; \emph{quality} (\uv{the good get better})
---- we evaluate people and everything else based on objective quality criteria, so higher-quality
-nodes will naturally attract more attention faster; a \emph{mixed model} --- \uv{it is impossible to
-predict who will become a star, even if quality matters}: among nodes of similar attributes, those
-that reach critical mass first will become \uv{stars} (the \emph{halo effect}).
+\textbf{Scale-free networks} (Barabási, Albert, 1999) have a \emph{power-law} degree
+distribution (the WWW, citation and biological networks): a few highly connected \emph{hubs}
+and a large number of low-degree nodes. They arise from two mechanisms: \textbf{growth} $+$
+\textbf{preferential attachment} --- new nodes tend to connect to already well-connected ones
+(\emph{rich-get-richer}, the \emph{Matthew effect}, Price's \emph{cumulative advantage}). The
+reason may be \emph{popularity} (the rich get richer), \emph{quality} (the good get better),
+or a mixed model --- among similar nodes, those that reach critical mass first become stars
+(the \emph{halo effect}). The resulting network has a long-tailed degree distribution and a
+small-world structure.
 \end{defbox}
 
 \begin{defbox}[Core-periphery structures and centralisation]
-\textbf{Centralisation} measures the degree to which a network is centralised or decentralised; it is
-based on the \emph{differences in degrees} between nodes and is usually normalised to $[0,1]$. A
-network that greatly depends on 1--2 highly connected nodes (e.g.\ as a result of preferential
-attachment) exhibits greater differences in degree centrality. Centralised structures can perform
-better at some tasks that require coordination (e.g.\ team-based problem solving) but are
-\emph{more prone to failure} if key players disconnect.
-
-Many large groups and communities have a \emph{core} of densely interconnected users, which is
-critical for connecting a much larger \emph{periphery}. The cores can be identified visually, or by
-examining the location of high-degree nodes and their joint degree distributions;
-\emph{bow-tie analysis} (used to analyse the structure of the Web) can also be used to distinguish
-between the core and the more peripheral elements.
+\textbf{Centralisation} --- from the differences in node degrees (normalised to $[0,1]$) it
+measures how much the network depends on a few hubs: centralised networks are better at
+coordination but \emph{more prone to failure} if the key players disconnect. Many large
+communities have a densely interconnected \emph{core} critical for connecting a much larger
+\emph{periphery}; the cores are found visually, by the location of high-degree nodes, or by
+\emph{bow-tie analysis} (the structure of the Web).
 \end{defbox}
 
 \subsection{Influence modelling}
@@ -3793,125 +3722,68 @@ there is evidence for homophily.}
 homophily there should be $2pq=4/9$, i.e.\ 8 out of 18 $\Rightarrow$ \emph{evidence of homophily}.
 \end{defbox}
 
-\textbf{Notes on the homophily test.} \uv{Significantly less} --- a deviation below the mean is
-suitable. What if the network had significantly \emph{more} than $2pq$ heterogeneous edges? Then this
-is \emph{inverse homophily} (example: male--female dating relationships). The test can be used for any
-characteristic (race, age, native language, preferences); for characteristics with more than two
-values one performs the same type of calculation --- the number of heterogeneous edges is compared to
-what a randomly generated graph would look like using the real data as probabilities.
+\textbf{Notes on the test.} Significantly \emph{more} than $2pq$ heterogeneous edges $=$
+\emph{inverse homophily} (male--female dating relationships). The test works for any
+characteristic and also for more than two values --- the number of heterogeneous edges is
+compared to a randomly generated graph using the real proportions as probabilities.
 
 \begin{defbox}[Selection vs.\ social influence]
-\textbf{Triadic closure}: when two individuals share a common friend, a friendship between the two is
-also more likely to occur. Homophily suggests that two individuals are more alike \emph{because of} a
-common friend, so a link may occur even if neither is aware of the mutual friend. Usually it is
-difficult to attribute the formation of a link to any one factor.
+\textbf{Triadic closure}: when two individuals share a common friend, a friendship between
+them is more likely --- the link may form even if neither is aware of the mutual friend.
+The formation of a link can rarely be attributed to a single factor.
 
-\textbf{Selection} --- people tend to choose friends who are like themselves. It operates at
-different levels of intentionality: you actively choose friends like yourself among a small group;
-\emph{or} your school's population is relatively homogeneous compared to the overall population, so
-your environment \emph{compels} you to choose friends like yourself.
+\textbf{Selection} --- people choose friends who are like themselves; it operates actively
+(choosing similar friends in a small group) as well as through the environment (a homogeneous
+school population).
 
-\textbf{Mutable vs.\ immutable characteristics:} \emph{immutable} ones do not change (gender, race) or
-change consistently with the population (age, generation); \emph{mutable} ones can change over time
-(behaviours, beliefs, interests, opinions).
+\textbf{Mutable vs.\ immutable characteristics:} \emph{immutable} ones do not change (gender,
+race) or change consistently with the population (age); \emph{mutable} ones change over time
+(behaviours, interests, opinions).
 
-\textbf{Social influence} is the \emph{opposite} of selection: \emph{selection} --- individual
-characteristics drive the formation of links; \emph{social influence} --- existing links shape
-people's mutable characteristics.
+\textbf{Social influence} is the \emph{opposite} of selection: selection --- characteristics
+drive the formation of links; influence --- existing links shape mutable characteristics.
 \end{defbox}
 
-\textbf{Longitudinal studies} (over a long time span) are necessary because from a single snapshot of
-a network one cannot tell whether selection or social influence is at play: they track social
-connections and individual behaviours over time and answer the question \emph{does behaviour change
-after changes to the network, or does the network change after changes in behaviour?} Longitudinal
-studies have been used e.g.\ to determine whether selection or social influence had more effect on
-teenagers' scholastic achievement and drug use --- which matters for designing interventions: if drug
-use displays homophily in a network, a programme targeting \emph{social influence} (getting friends
-to influence other friends to stop) might work best; but if the homophily took place due to
-\emph{selection}, former drug users may choose new friends and the behaviour of others is not
-strongly affected.
-
-\emph{Christakis and Fowler} tracked the obesity status and social network of 12\,000 people over 32
-years and found homophily based on obesity status. Possible explanations: \emph{selection effects}
-(do people choose to befriend others of similar obesity status?), \emph{confounding effects} (are
-there other factors that correlate with obesity status?), \emph{social influence} (if friends changed
-their obesity status, did it influence a person's future status?). \textbf{Significant evidence was
-discovered for the third hypothesis:} obesity is a type of \uv{contagion} that can spread through
-social influence.
+\textbf{Longitudinal studies:} from a single snapshot of a network, selection and influence
+cannot be distinguished --- links and behaviour must be tracked over time (\emph{does
+behaviour change after changes to the network, or the network after changes in behaviour?}).
+The answer matters for designing interventions: an anti-drug programme \uv{friends persuade
+friends} only works if the homophily arose by \emph{influence}, not by selection.
+\emph{Christakis and Fowler} (obesity, 12\,000 people, 32 years) tested \emph{selection},
+\emph{confounding} and \emph{social influence} --- and \textbf{found significant evidence for
+influence}: obesity is a \uv{contagion} spreading through social influence.
 
 \subsection{Affiliation networks and closure processes}
 
 \begin{defbox}[Affiliation and social-affiliation network]
-An \textbf{affiliation network} puts context into the network by showing connections to activities,
-companies, organisations, neighbourhoods, etc. It is a \emph{bipartite graph}: every edge joins two
-nodes belonging to \emph{different} sets (persons vs.\ \emph{affiliations}, or \emph{foci}).
-
-A \textbf{social-affiliation network} has \emph{two types of edges}: \emph{person to person}
-(friendship or another social relationship) and \emph{person to focus} (participation in the focus).
+An \textbf{affiliation network} is a \emph{bipartite graph} of persons and \emph{affiliations}
+(\emph{foci}: activities, organisations, \dots). A \textbf{social-affiliation network} has
+\emph{two types of edges}: \emph{person--person} (a social relationship) and
+\emph{person--focus} (participation).
 \end{defbox}
 
 \begin{defbox}[Three closure processes]
 \begin{itemize}
 \item \textbf{Triadic closure} --- two people connect because they have a common friend.
-\item \textbf{Focal closure} --- two people connect because they share a focus; closure due to
+\item \textbf{Focal closure} --- a shared focus connects them; closure due to
       \emph{selection}.
-\item \textbf{Membership closure} --- a person becomes involved in a focus because their friend is
-      involved in it; closure due to \emph{social influence}.
+\item \textbf{Membership closure} --- a person joins a focus where their friend already is;
+      closure due to \emph{social influence}.
 \end{itemize}
 \end{defbox}
 
-\textbf{Questions about closure.} Would Sue be more likely to become friends with Alice if they shared
-more than one friend? More formally: \emph{what is the probability that two people form a link as a
-function of the number of mutual friends they share?} Analogously for focal closure (as a function of
-the number of shared foci) and membership closure (as a function of the number of friends already
-involved in the focus).
+\textbf{Measurement:} from two snapshots of the network ($t_1$, $t_2$), for each $k$ define
+$T(k)$ $=$ the fraction of pairs that had exactly $k$ common friends (resp.\ foci) and no edge
+at $t_1$ and formed an edge by $t_2$. The baseline model of independent opportunities:
+$T_{\text{base}}(k)=1-(1-p)^{k}$.
 
-\begin{defbox}[Methodology for measuring triadic closure]
-\begin{enumerate}
-\item Take two snapshots of the network at times $t_1$ and $t_2$.
-\item For each $k$, identify all \emph{pairs} of nodes who have exactly $k$ friends in common at
-      $t_1$ but who are \emph{not} directly connected by an edge.
-\item Define $T(k)$ to be the \emph{fraction} of these pairs that form an edge by $t_2$. This is the
-      probability that a link will form between two people with $k$ friends in common.
-\item Plot $T(k)$ as a function of $k$.
-\end{enumerate}
-
-\textbf{The baseline (null) model:} if the probability of forming a link given one common friend is
-$p$ and the individual common friends are treated as \emph{independent} opportunities, then
-\[ T_{\text{base}}(k)=1-(1-p)^{k}\qquad\text{(resp.\ }1-(1-p)^{k-1}\text{ by convention).} \]
-\end{defbox}
-
-\textbf{Empirical results.} \emph{The email network} (Kossinets, Watts, 2006): the email communication
-of 22\,000 students at a large US university over one year; a link between two people was assumed if
-an email was sent between them in the past 60 days; the snapshots were one day apart and $T(k)$ was
-averaged over multiple pairs of snapshots. The findings: with \emph{no} friends in common almost no
-emails are exchanged; there is a \emph{significant increase} going from 1 to 2 friends in common; the
-further increase is significant but on a much smaller subpopulation --- i.e.\ \emph{diminishing
-returns}.
-
-\emph{Focal closure} in the same study: from the class schedules of 22\,000 students, a
-social-affiliation network was created where classes are foci. The finding: \emph{sharing a class has
-nearly the same effect as sharing a friend}, again with diminishing returns.
-
-\emph{Membership closure:} Backstrom et al.\ (2006) created a social-affiliation network for
-LiveJournal (friendships designated by users in their profile, foci $=$ membership in user-defined
-communities) --- a significant increase from 1 to 2, then diminishing returns. Crandall et al.\
-(2008) did the same for Wikipedia (nodes $=$ editors maintaining a user talk page, a link $=$ two
-editors have communicated using the talk page, foci $=$ articles edited) --- the same pattern.
-
-\textbf{Selection and social influence in the Wikipedia data set.} The similarity of two editors was
-measured as
-\[ \frac{\text{number of articles edited by both editors}}
-   {\text{number of articles edited by at least one editor}} \]
-(analogous to the neighbourhood overlap for edges). The finding: \emph{pairs of Wikipedia editors who
-have communicated are significantly more similar in behaviour than editors who have never
-communicated.} The question remains whether the homophily arises because editors talk with editors
-who have edited the same article (\emph{selection}), or because editors are led to the articles by
-those they talk to (\emph{social influence}). The analysis averaged the interaction histories (0 $=$
-the time when the link occurred, only editors with at least 100 actions both before and after the
-first interaction, the baseline $=$ the similarity of a random pair of editors) --- the similarity
-grows \emph{already before} the link is formed (selection) and continues to grow \emph{after} it
-(influence).
+\textbf{Empirically} (the emails of 22\,000 students --- Kossinets and Watts 2006;
+LiveJournal --- Backstrom et al.; Wikipedia --- Crandall et al.) all three closures show the
+same pattern: a \emph{significant increase from 1 to 2} common friends/foci and
+\emph{diminishing returns} afterwards; sharing a class has nearly the same effect as sharing
+a friend. On Wikipedia, moreover, the similarity of editors (the overlap of edited articles)
+was measured around the first interaction: the similarity grows \emph{already before} the
+link is formed (\emph{selection}) and continues to grow \emph{after} it (\emph{influence}).
 
 \subsection{The Schelling model of segregation}
 
@@ -4101,18 +3973,6 @@ $a_k/c_1^k$ converges to $x_1z_1$ --- to the \emph{principal} eigenvector. (Conv
 the initial vector and the relaxation of the assumption $c_1>c_2$ are not shown here.)
 \end{defbox}
 
-\begin{defbox}[Relationship with co-citation and bibliographic coupling]
-The \textbf{co-citation} of pages $i$ and $j$ (e.g.\ the number of papers that co-cite the papers $i$
-and $j$):
-\[ C_{ij}=\sum_{k=1}^{n}L_{ki}L_{kj}=\big(L^{\!\top}L\big)_{ij}. \]
-The authority matrix $L^{\!\top}L$ of HITS is therefore the \emph{co-citation matrix}.
-
-The \textbf{bibliographic coupling} of pages $i$ and $j$ (the number of papers cited by \emph{both}
-$i$ and $j$):
-\[ B_{ij}=\sum_{k=1}^{n}L_{ik}L_{jk}=\big(LL^{\!\top}\big)_{ij}. \]
-The hub matrix $LL^{\!\top}$ is therefore the bibliographic coupling matrix.
-\end{defbox}
-
 \textbf{Strengths and weaknesses of HITS.} \emph{Strength:} its ability to rank pages according to the
 \emph{query topic}, which may provide more relevant authority and hub pages. \emph{Weaknesses:}
 \emph{(1)}~it can be easily spammed --- adding out-links in one's own page is very easy;
@@ -4245,7 +4105,7 @@ PageRank values of all pages are computed and saved \emph{off-line} rather than 
 that are authoritative in general and pages that are authoritative on the query topic.
 
 \textbf{Summary.} Within the framework of link analysis we have seen the principles of
-\emph{centrality} and \emph{prestige}, \emph{co-citation} and \emph{bibliographic coupling}, and the
+\emph{centrality} and \emph{prestige} and the
 algorithms \emph{HITS} and \emph{PageRank} (which powers Google). Yahoo! and MSN have their own
 unpublished link-based algorithms. \textbf{Important:} hyperlink-based ranking is not the only
 algorithm used in search engines --- it is combined with many content-based factors to produce the
@@ -4470,6 +4330,9 @@ locally optimally assigned and will therefore remain in it; \emph{getting stuck 
 A refinement of the Louvain method for agglomerative hierarchical modularity maximisation. It has
 three phases: \emph{(1)}~local moving of nodes (similar to Louvain); \emph{(2)}~\textbf{refinement of
 the partition}; \emph{(3)}~network aggregation (similar to Louvain).
+Refinement means that every community from phase~1 is split from the inside into connected,
+well-linked subcommunities (nodes merge only within their own community) and only these are
+aggregated, so the disconnected communities known from Louvain cannot arise.
 
 \textbf{Advantages:} more efficient than the Louvain method, but it may lead to extended processing
 times for massive graphs; parallel multicore implementations may boost the speed. \textbf{Drawback:} a
@@ -4483,250 +4346,137 @@ of size and density.
 
 \subsubsection{A taxonomy of community detection methods}
 
-The methods can be divided into four categories (the criteria may vary depending on the task):
-\emph{node-centric} (each node in a group satisfies certain properties), \emph{group-centric} (the
-connections within a group as a whole satisfy certain properties, without zooming into the node
-level), \emph{network-centric} (partition the whole network into several disjoint sets) and
-\emph{hierarchy-centric} (construct a hierarchical structure of communities).
+Four categories according to the level at which the criterion is placed: \emph{node-centric}
+(each node of the group satisfies a property), \emph{group-centric} (the group as a whole
+does), \emph{network-centric} (partition the whole network into disjoint sets) and
+\emph{hierarchy-centric} (a hierarchy of communities).
 
 \begin{defbox}[Node-centric community detection]
-Nodes may be required to satisfy different properties commonly used in traditional SNA:
-
-\textbf{Complete mutuality --- cliques.} A \emph{clique} is a maximal complete subgraph of three or
-more nodes, all of which are adjacent to each other. Finding the maximum clique is \textbf{NP-hard};
-a straightforward implementation is very expensive in time. \emph{The idea of recursive pruning:} in a
-clique of size $k$ each node has degree $\ge k-1$, so nodes with degree $<k-1$ will not be in the
-maximum clique --- repeatedly: sample a sub-network and find a clique in it (say greedily); if it has
-size $k$, remove all nodes with degree $\le k-1$ in order to find a larger clique; repeat until the
-network is small enough. In social media many nodes get pruned, as node degrees follow a power-law
-distribution. Cliques are normally used as a \emph{core} or \emph{seed} to explore larger communities.
-
-\textbf{The clique percolation method} (CPM) --- a clique is a stringent definition and unstable in
-practice; CPM is an example of a method for finding \emph{overlapping} communities. \emph{Input:} a
-parameter $k$ and a network. \emph{Procedure:} find all cliques of size $k$; construct a \emph{clique
-graph} --- two cliques are adjacent if they share $k-1$ nodes; each connected component of the clique
-graph forms a community.
-\emph{Example:} the cliques of size 3 are $\{1,2,3\}$, $\{1,3,4\}$, $\{4,5,6\}$, $\{5,6,7\}$,
-$\{5,6,8\}$, $\{5,7,8\}$, $\{6,7,8\}$ $\Rightarrow$ the communities $\{1,2,3,4\}$ and
-$\{4,5,6,7,8\}$ (node 4 is in both).
-
-\textbf{Reachability --- $k$-clique, $k$-club, $k$-clan.} The main idea: any node in a group should be
-reachable in $k$ hops. A \emph{$k$-clique} is a maximal subgraph in which the largest geodesic
-distance between any two nodes is $\le k$ (note that a $k$-clique can have a diameter $\ge k$
-\emph{within the subgraph} --- e.g.\ in another of the slides' example graphs the 2-clique
-$\{12,4,10,1,6\}$ has $d(1,6)=3$). A
-\emph{$k$-club} is a substructure of diameter $\le k$. A \emph{$k$-clan} is a $k$-clique with diameter
-$\le k$.
-\emph{Example:} cliques $\{1,2,3\}$; 2-cliques $\{1,2,3,4,5\}$, $\{2,3,4,5,6\}$; 2-clubs
-$\{1,2,3,4\}$, $\{1,2,3,5\}$, $\{2,3,4,5,6\}$.
-
-\textbf{Nodal degrees --- $k$-core, $k$-plex.} Each node should have a certain number of connections to
-nodes \emph{within} the group. A \emph{$k$-core} is a substructure where each node is connected to at
-least $k$ other members of the group. A \emph{$k$-plex}: for a group with $n_s$ nodes, each node should
-be adjacent to no fewer than $n_s-k$ nodes in the group. The definitions are complementary: a $k$-core
-is an $(n_s-k)$-plex; however, the set of all $k$-cores for a given $k$ is \emph{not} identical to the
-set of all $(n_s-k)$-plexes, as the group size $n_s$ can vary across $k$-cores.
-
-\textbf{Within-outside ties --- LS sets.} An \emph{LS set} (Luccio--Sami): any of the proper subsets of
-an LS set has more ties to other nodes \emph{in} the group than \emph{outside} of it. The objective was
-to find cohesive groups of nodes for circuit design on chips; for network analysis the definition is
-\emph{too strict}. A relaxed definition is a \emph{$k$-component} --- a maximal subgraph that remains
-connected even after removing fewer than $k$ vertices or edges; it requires the computation of edge
-connectivity between any pair of nodes via the minimum-cut / maximum-flow algorithm.
-
-\textbf{Limitations of node-centric definitions:} they are too strict (but can be used as the core of
-a community); they are not scalable and are commonly used for networks of small size; sometimes they
-are not consistent with the properties of large-scale networks (e.g.\ node degrees in scale-free
-networks).
+\begin{itemize}
+\item \textbf{Complete mutuality --- cliques.} A \emph{clique} $=$ a maximal complete
+      subgraph; finding the maximum clique is \textbf{NP-hard}. \emph{Recursive pruning:} in
+      a clique of size $k$ each node has degree $\ge k-1$, so lower-degree nodes can be
+      removed repeatedly (in scale-free networks most get pruned). Cliques serve rather as
+      \emph{cores} (seeds) of larger communities.
+\item \textbf{Clique percolation} (CPM) --- finds \emph{overlapping} communities: find all
+      cliques of size $k$, build the \emph{clique graph} (two cliques are adjacent iff they
+      share $k-1$ nodes); the communities $=$ the connected components of the clique graph.
+\item \textbf{Reachability.} A \emph{$k$-clique} --- a maximal subgraph with pairwise
+      geodesic distance $\le k$ (beware: the paths may run \emph{outside} the subgraph, the
+      inner diameter can exceed $k$); a \emph{$k$-club} --- diameter $\le k$; a
+      \emph{$k$-clan} --- a $k$-clique that is also a $k$-club.
+\item \textbf{Nodal degrees.} A \emph{$k$-core} --- each node connected to at least $k$
+      members; a \emph{$k$-plex} --- in a group of $n_s$ nodes each node connected to at
+      least $n_s-k$ members. The definitions are complementary, but the sets of all
+      $k$-cores and $(n_s-k)$-plexes differ ($n_s$ is not fixed).
+\item \textbf{Within vs.\ outside ties.} An \emph{LS set} --- every proper subset has more
+      ties inside the group than outside; too strict for practice. A relaxation is the
+      \emph{$k$-component} --- connected even after removing fewer than $k$ vertices or
+      edges (computed via minimum cut / maximum flow).
+\end{itemize}
+\textbf{Limitations:} the definitions are strict, do not scale, and may not match the
+properties of scale-free networks --- they are mainly useful as community cores.
 \end{defbox}
 
 \begin{defbox}[Group-centric detection: quasi-cliques]
-Group-centric criteria require the \emph{whole group} to satisfy a particular condition --- e.g.\ that
-the group density be big enough ($\ge$ a given threshold). A subgraph $G_S=(V_S,E_S)$ is a
-\emph{$\gamma$-dense quasi-clique} if
-\[ |E_S|\ \ge\ \gamma\cdot\frac{|V_S|\,(|V_S|-1)}{2}. \]
-A strategy similar to that of cliques can be used: \emph{local search} --- sample a subgraph and find a
-maximum $\gamma$-dense quasi-clique (of size $k$); \emph{heuristic pruning} --- remove nodes with a
-degree less than the average degree ($<\gamma(k-1)$).
+The condition is placed on the group as a whole, typically its density: a subgraph
+$G_S=(V_S,E_S)$ is a \emph{$\gamma$-dense quasi-clique} if
+$|E_S|\ge\gamma\cdot\frac{|V_S|(|V_S|-1)}{2}$. It is found by local search over a sample with
+heuristic pruning (remove nodes with degree $<\gamma(k-1)$, i.e.\ below the average degree).
 \end{defbox}
 
 \begin{defbox}[Network-centric community detection]
-The criteria consider the connections within the network \emph{globally}; the goal is to partition the
-nodes into \emph{disjoint} sets. The approaches: clustering based on vertex similarity; latent space
-models; block model approximation; spectral clustering; modularity maximisation.
-
-\textbf{Clustering based on vertex similarity.} Apply $k$-means or similarity-based clustering to the
-nodes; vertex similarity is defined in terms of the similarity of their \emph{neighbourhood}.
-\emph{Structural equivalence:} two nodes are structurally equivalent iff they are connected to the
-\emph{same} set of actors --- too restrictive for practical use. The practical measures (the
-connections are considered as features):
-\[ \mathrm{Jaccard}(v_i,v_j)=\frac{|N_i\cap N_j|}{|N_i\cup N_j|},\qquad
-   \cos(v_i,v_j)=\frac{|N_i\cap N_j|}{\sqrt{|N_i|\,|N_j|}}. \]
-For huge networks one computes the vertex similarity with the cosine or Jaccard measure and applies the
-classical $k$-means algorithm (each cluster is associated with a centroid and each node is assigned to
-the cluster with the closest centroid).
-
-\textbf{Latent space models.} Map the nodes into a \emph{low-dimensional} space such that the proximity
-between nodes based on network connectivity is preserved, then apply $k$-means.
-\emph{Multi-dimensional scaling} (MDS): given a network, construct a proximity matrix $P$ representing
-the pairwise distances between nodes (e.g.\ geodesic); let $S\in\mathbb R^{n\times l}$ denote the
-coordinates of the nodes in the low-dimensional space --- the solution is $S=V\Lambda^{1/2}$, where $V$
-is the top $l$ eigenvectors (and $\Lambda$ the diagonal matrix of the corresponding eigenvalues) of the
-double-centred proximity matrix.
-
-\textbf{Block models.} The adjacency matrix is approximated as $A\approx S\,\Sigma\,S^{\!\top}$, where
-$\Sigma$ is the \emph{mixing matrix} and $S$ the \emph{community indicator matrix}; relaxing $S$ to
-numerical values, the optimal solution corresponds to the top eigenvectors of $A$.
-
-\textbf{Spectral clustering.} Both the ratio cut and the normalised cut can be reformulated as
-minimising $\mathrm{tr}(S^{\!\top}LS)$, where $L=D-A$ is the \emph{graph Laplacian} (for the ratio
-cut), resp.\ $L=D^{-1/2}(D-A)D^{-1/2}$ the \emph{normalised} graph Laplacian (for the normalised cut),
-and $D$ the diagonal matrix of degrees. After \emph{spectral relaxation}, the optimal solution consists
-of the eigenvectors with the \emph{smallest} eigenvalues. (The first eigenvector says that all nodes
-belong to the same cluster --- it is of no use.)
-
-\textbf{Modularity maximisation.} Modularity measures the strength of a partition by taking the degree
-distribution into account; the \emph{strength of a community} is
-$\sum_{i,j\in C}\big(A_{ij}-\frac{d_id_j}{2m}\big)$ and the modularity
-$Q=\frac{1}{2m}\sum_{C}\sum_{i,j\in C}\big(A_{ij}-\frac{d_id_j}{2m}\big)$. Analogously to spectral
-clustering, modularity maximisation can be reformulated using the \emph{modularity matrix}
-$B=A-\frac{dd^{\!\top}}{2m}$; the optimal solution consists of the \emph{top} eigenvectors of the
-modularity matrix, and $k$-means is applied as a post-processing step.
-
-\textbf{A unified view: matrix factorisation.} Latent space models, block models, spectral clustering
-and modularity maximisation can all be written as a factorisation
-$X\approx S\,\Sigma\,S^{\!\top}$, where
-\[ X=\begin{cases}
-\text{(double-centred) proximity matrix} & \text{latent space models},\\
-\text{the sociomatrix }A & \text{block model approximation},\\
-\text{the graph Laplacian} & \text{cut minimisation},\\
-\text{the modularity matrix} & \text{modularity maximisation}.
-\end{cases} \]
-\textbf{Limitation:} all of them require the user to specify the \emph{number of communities}
-beforehand.
+The connections are considered \emph{globally}; the goal is to partition the whole network
+into \emph{disjoint} sets:
+\begin{itemize}
+\item \textbf{vertex similarity} --- $k$-means over the similarity of \emph{neighbourhoods}
+      ($\mathrm{Jaccard}=\frac{|N_i\cap N_j|}{|N_i\cup N_j|}$,
+      $\cos=\frac{|N_i\cap N_j|}{\sqrt{|N_i||N_j|}}$); structural equivalence is too
+      restrictive;
+\item \textbf{latent space models} --- MDS: map the nodes into a low-dimensional space
+      ($S=V\Lambda^{1/2}$ from the double-centred proximity matrix), then $k$-means;
+\item \textbf{block models} --- $A\approx S\,\Sigma\,S^{\!\top}$ ($S$ the community
+      indicator matrix, $\Sigma$ the mixing matrix); after relaxing $S$, the optimum is the
+      top eigenvectors of $A$;
+\item \textbf{spectral clustering} --- the ratio and normalised cut $=$ minimising
+      $\mathrm{tr}(S^{\!\top}LS)$ with the \emph{graph Laplacian} $L=D-A$, resp.\
+      $D^{-1/2}(D-A)D^{-1/2}$; after relaxation the optimum is the eigenvectors with the
+      \emph{smallest} eigenvalues (the first one is useless);
+\item \textbf{modularity maximisation} --- $Q=\frac{1}{2m}\sum_C\sum_{i,j\in C}
+      \big(A_{ij}-\frac{d_id_j}{2m}\big)$; the optimum is the \emph{top} eigenvectors of the
+      \emph{modularity matrix} $B=A-\frac{dd^{\!\top}}{2m}$, followed by $k$-means.
+\end{itemize}
+\textbf{A unified view:} all four matrix approaches are factorisations
+$X\approx S\,\Sigma\,S^{\!\top}$, with $X$ being, in turn, the proximity matrix, the
+sociomatrix $A$, the graph Laplacian and the modularity matrix. \textbf{Limitation:} the
+number of communities must be specified beforehand.
 \end{defbox}
 
 \begin{defbox}[Hierarchy-centric community detection]
-\textbf{The goal:} build a hierarchical structure of communities based on the network topology; it
-allows the analysis of a network at different \emph{resolutions}. Two representative approaches:
-
-\textbf{Divisive hierarchical clustering} --- e.g.\ Girvan--Newman ($O(m^2n)$, resp.\
-$O(n^3)$ for sparse networks): partition the nodes into
-several sets; divide each set further into smaller ones; network-centric methods can be applied to the
-partition. One particular example: recursively remove the \uv{weakest} tie --- find the edge with the
-least strength, remove it and update the strength of each edge; recursively repeat until the network is
-decomposed into the desired number of connected components. Each component then forms a community. The
-strength of a tie can be measured by \emph{edge betweenness} --- an edge with higher betweenness tends
-to be the bridge between two communities.
-
-\textbf{Agglomerative hierarchical clustering} --- e.g.\ Louvain, $O(n\log n)$: initialise each node as
-a community; merge communities successively into larger ones following a particular criterion (e.g.\
-based on the \emph{modularity increase}). Another example is \emph{Walktrap} --- it runs short random
-walks and uses their results to merge separate communities in a bottom-up manner.
+Builds a hierarchy of communities (analysis at different \emph{resolutions}).
+\textbf{Divisive} --- e.g.\ Girvan--Newman ($O(m^2n)$, for sparse networks $O(n^3)$):
+repeatedly remove the \uv{weakest} edge (the highest \emph{edge betweenness} $=$ a bridge)
+until the network decomposes into the desired number of components.
+\textbf{Agglomerative} --- e.g.\ Louvain ($O(n\log n)$): start with the nodes as communities
+and merge them by the \emph{modularity increase}; \emph{Walktrap} merges according to the
+results of short random walks.
 \end{defbox}
 
 \subsection{Link prediction}
 
 \begin{defbox}[The link prediction task]
-\textbf{The objective:} predict \emph{future} links between pairs of nodes in the network. In
-commercial social networks (Facebook, LinkedIn) users are recommended as potential friends. Both
-content similarity and structure may be used:
-\begin{itemize}
-\item \textbf{Content-based measures} use the principle of \emph{homophily} --- nodes with similar
-      content are more likely to become linked. They enhance link prediction but are sensitive to the
-      network at hand (e.g.\ short and noisy tweets with non-standard acronyms on Twitter).
-      \emph{Content-based homophily does not necessarily imply structural connectivity!}
-\item \textbf{Structural measures} use the principle of \emph{triadic closure} --- two nodes that share
-      their neighbourhood are more likely to get connected. Triadic closure is very common across
-      domains, the measures are effective in different types of networks and are more directly
-      applicable; they include the \emph{neighbourhood-based} measures, the \emph{Katz} measure and
-      \emph{random walk}-based measures. \emph{Structural connectivity usually implies content-based
-      homophily too.}
-\end{itemize}
+\textbf{The objective:} predict \emph{future} links between pairs of nodes (friend
+recommendation on Facebook or LinkedIn). \textbf{Content-based measures} build on
+\emph{homophily} (similar content $\to$ a link); they are, however, sensitive to the network
+at hand (noisy tweets), and content-based homophily does \emph{not} guarantee structural
+connectivity. \textbf{Structural measures} build on \emph{triadic closure} (a shared
+neighbourhood $\to$ a link); they work across domains and are \emph{far more powerful} ---
+structural connectivity usually implies content-based homophily. They include the
+\emph{neighbourhood-based} measures, the \emph{Katz} measure and \emph{random walk}-based
+measures.
 \end{defbox}
 
 \begin{defbox}[Neighbourhood-based link prediction measures]
-They use the number of \emph{common neighbours} between a pair of nodes $i$ and $j$ to quantify the
-likelihood of a future link. Let $S_i$ be the neighbour set of node $i$.
-
-\textbf{The common neighbour measure:} $\mathrm{CN}(i,j)=|S_i\cap S_j|$.
-\emph{Weakness:} it does not account for the \emph{relative} number of common neighbours as compared to
-the number of other connections --- if Alice and Bob were very popular public figures connected to a
-large number of other actors, they might easily have many neighbours in common \emph{just by chance}.
-
-\textbf{The Jaccard measure:} $\mathrm{Jaccard}(i,j)=\dfrac{|S_i\cap S_j|}{|S_i\cup S_j|}$ --- it
-measures the similarity of the neighbourhood, \emph{normalised} for node degrees, which vary strongly
-due to the power-law distribution. Larger degrees of Alice or Bob therefore lower their Jaccard
-coefficient. \emph{Weakness:} it does not adjust well to \emph{intermediate} neighbours --- if the
-common neighbours of Alice and Bob are very popular (have a high degree), then they occur as common
-neighbours of many other pairs of nodes too, and are therefore \emph{less important} for the
-prediction.
-
-\textbf{The Adamic--Adar measure} --- a weighted version of the common neighbour measure, designed to
-account for the varying importance of different common neighbours: the weight of a common neighbour is
-a \emph{decreasing} function of its node degree, e.g.\ $1/\log|S_k|$:
-\[ \mathrm{AA}(i,j)=\sum_{k\in S_i\cap S_j}\frac{1}{\log|S_k|}. \]
-\emph{Example:} for four common neighbours with degrees 4, 2, 2, 4 we get
-$\frac{1}{\log 4}+\frac{1}{\log 2}+\frac{1}{\log 2}+\frac{1}{\log 4}=\frac{3}{\log 2}$.
+$S_i$ $=$ the neighbour set of node $i$; each measure fixes a weakness of the previous one:
+\begin{itemize}
+\item \textbf{common neighbours} $\mathrm{CN}(i,j)=|S_i\cap S_j|$ --- ignores the degrees:
+      two popular figures have many common neighbours \emph{just by chance};
+\item \textbf{Jaccard} $\frac{|S_i\cap S_j|}{|S_i\cup S_j|}$ --- normalises for the degrees
+      of the end nodes, but not of the \emph{intermediate} neighbours: a very popular common
+      neighbour is common to many pairs and hence less important for the prediction;
+\item \textbf{Adamic--Adar} $\mathrm{AA}(i,j)=\sum_{k\in S_i\cap S_j}\frac{1}{\log|S_k|}$
+      --- the weight of a common neighbour decreases with its degree.
+\end{itemize}
 \end{defbox}
 
 \begin{defbox}[The Katz measure]
-Neighbourhood-based measures are \emph{not effective} when the number of neighbours shared between a
-pair of nodes is small. If Alice and Bob share one neighbour in common and Alice and Jim also share
-one, neighbourhood-based measures cannot distinguish between the cases --- but there is
-\emph{indirect} connectivity through longer paths. In such cases \emph{walk}-based measures such as
-the Katz measure are more appropriate.
-
-Let $W_{ij}^{(t)}$ be the number of walks of length $t$ between nodes $i$ and $j$. For a pre-set
-parameter $\beta<1$:
-\[ \mathrm{Katz}(i,j)=\sum_{t=1}^{\infty}\beta^{t}\,W_{ij}^{(t)}, \]
-where $\beta$ is a \emph{discount factor} that de-emphasises the walks of longer length; for small
-$\beta$ the infinite summation converges. If $A$ is the symmetric adjacency matrix of an undirected
-network, the $n\times n$ pairwise Katz coefficient matrix $K$ can be computed as
-\[ K=\sum_{t=1}^{\infty}\beta^{t}A^{t}=(I-\beta A)^{-1}-I \]
-(the eigenvalues of $A^t$ are the $t$-th powers of the eigenvalues of $A$). Highly central nodes have
-the propensity to form links with many nodes $\Rightarrow$ the sum of the Katz coefficients of node $i$
-with respect to the other nodes is referred to as its \textbf{Katz centrality}.
+With few common neighbours the neighbourhood-based measures cannot distinguish; the Katz
+measure captures \emph{indirect} connectivity through walks of all lengths ($W_{ij}^{(t)}$
+$=$ the number of walks of length $t$, $\beta<1$ a \emph{discount factor} de-emphasising
+long walks):
+\[ \mathrm{Katz}(i,j)=\sum_{t=1}^{\infty}\beta^{t}\,W_{ij}^{(t)},\qquad
+   K=\sum_{t=1}^{\infty}\beta^{t}A^{t}=(I-\beta A)^{-1}-I. \]
+The sum of the Katz coefficients of a node with respect to the other nodes is its
+\textbf{Katz centrality}.
 \end{defbox}
 
 \begin{defbox}[Link prediction as a classification problem]
-The presence or absence of a link between a pair of nodes is treated as a \emph{binary} class
-indicator; a multi-dimensional data record is constructed for each pair of nodes:
-\begin{itemize}
-\item the \emph{features} include all the different similarities between nodes --- neighbourhood-based,
-      Katz-based, walk-based --- plus a number of preferential-attachment features, such as the node
-      degrees of each node in the pair;
-\item the result is a \emph{positive-unlabelled} classification problem, where node pairs with edges
-      are the positive examples and the remaining pairs are unlabelled;
-\item unlabelled examples can be approximately treated as negative during training;
-\item as there are too many negative example pairs in large and sparse networks, only a \emph{sample}
-      of the negative examples is used.
-\end{itemize}
-
-\textbf{The algorithm.} \emph{Training phase:} generate the data with one record for each pair of nodes
-with an edge between them, plus a sample of records from pairs without edges; the features correspond
-to the extracted similarity and structural features; the class label is the presence or absence of an
-edge; construct a classifier model and train it. \emph{Testing phase:} convert each test node pair to
-a multi-dimensional record and use the pre-trained classifier to make label predictions.
-\emph{Logistic regression} is a common choice for the base classifier; \emph{cost-sensitive} versions
-of various classifiers are often used because of the imbalanced data.
-
-\textbf{Advantages of the supervised approach:} content features can be extracted and used easily; the
-classifier automatically learns the \emph{relevance} of the features; for directed networks the
-features can be extracted \emph{asymmetrically} too (e.g.\ in-degrees and out-degrees instead of plain
-node degrees, or various random-walk-based measures such as personalised PageRank); a higher
-flexibility due to the ability to learn relationships between links and features of various types.
+The presence of an edge $=$ a binary class; the features of a pair $=$ the similarity
+measures (neighbourhood-based, Katz, walk-based) $+$ preferential-attachment features (node
+degrees). It is a \emph{positive-unlabelled} problem: pairs with an edge are positive, and
+approximate \uv{negative} examples are sampled from the unlabelled ones (a sparse network has
+far too many). The base classifier is typically \emph{logistic regression}, in a
+cost-sensitive version due to the imbalance. \textbf{Advantages:} content features are easy
+to add; the classifier learns the relevance of the features \emph{by itself}; for directed
+networks the features can be extracted \emph{asymmetrically} (in- and out-degrees,
+personalised PageRank).
 \end{defbox}
 
-\textbf{Summary of link prediction.} Different measures vary in their effectiveness over different data
-sets: \emph{neighbourhood-based} measures can be computed efficiently for extensive data and perform
-almost as well as the other unsupervised measures; \emph{random walk}-based and \emph{Katz}-based
-measures are helpful for \emph{very sparse} networks in which the number of common neighbours cannot be
-robustly measured; \emph{supervision} provides better accuracy and adaptability across various domains
-of social networks but is computationally expensive; in recent years content has also been used to
-enhance link prediction, yet structural measures are \emph{far more powerful} (due to the triadic
-properties of real networks); content-based measures are based on \uv{reverse homophily}, where similar
-or link-correlated content is leveraged for predicting links.
+\textbf{Summary:} \emph{neighbourhood-based} measures are cheap even for extensive data and
+perform almost as well as the other unsupervised ones; the \emph{Katz} and \emph{walk}-based
+measures help in \emph{very sparse} networks with few common neighbours; \emph{supervision}
+is more accurate and adaptable but expensive; content enhances the prediction, yet structural
+measures dominate.
 
 \subsection{Summary for the examination}
 
@@ -4798,9 +4548,8 @@ or link-correlated content is leveraged for predicting links.
       alliances 1872--1907, Bangladesh 1972.
 \item \textbf{HITS}: query-\emph{dependent}; the root set $S$ ($t=200$) $\to$ the base set $B$;
       $a=L^{\!\top}h$, $h=La$, power iteration with \textbf{indispensable normalisation};
-      $a_k=(L^{\!\top}L)^{k-1}a_0$ converges to the principal eigenvector of $L^{\!\top}L$ $=$ the
-      \emph{co-citation} matrix ($LL^{\!\top}$ $=$ bibliographic coupling). Weaknesses: easily spammed,
-      topic drift, inefficiency at query time.
+      $a_k=(L^{\!\top}L)^{k-1}a_0$ converges to the principal eigenvector of $L^{\!\top}L$.
+      Weaknesses: easily spammed, topic drift, inefficiency at query time.
 \item \textbf{PageRank}: query-\emph{independent}, $P(i)=\sum_{(j,i)\in E}P(j)/O_j$, \emph{needs no
       normalisation} (the total PageRank is constant --- the \uv{fluid}). The \uv{slow leak} problem
       $\Rightarrow$ the \emph{scaled} rule with the damping factor $d$ (0.8--0.9; $0.85$ in the paper),

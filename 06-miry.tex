@@ -1,0 +1,424 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[czech]{babel}
+\usepackage[margin=1.9cm,top=2.0cm,bottom=2.0cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{parskip}
+\usepackage{enumitem}
+\setlist{nosep,leftmargin=1.4em}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{xcolor}
+\definecolor{linkblue}{RGB}{20,60,150}
+\definecolor{upcol}{RGB}{0,110,60}
+\definecolor{downcol}{RGB}{160,50,0}
+\definecolor{markcol}{RGB}{176,84,0}
+\definecolor{markbg}{RGB}{253,246,236}
+\usepackage[most]{tcolorbox}
+\newtcolorbox{poznbox}[1][]{breakable,colback=markbg,colframe=markcol,boxrule=0.6pt,
+  arc=1.5mm,left=2mm,right=2mm,top=1mm,bottom=1mm,title={#1},fonttitle=\bfseries}
+\usepackage[colorlinks=true,linkcolor=linkblue,urlcolor=linkblue]{hyperref}
+
+\setlength{\parskip}{0.35em}
+
+% směr: co je lepší
+\newcommand{\up}{\textcolor{upcol}{$\boldsymbol{\uparrow}$}}
+\newcommand{\down}{\textcolor{downcol}{$\boldsymbol{\downarrow}$}}
+\newcommand{\neut}{$\circ$}
+
+% tabulka měr
+\newenvironment{mirytab}{%
+  \par\medskip\noindent\small
+  \begin{tabular}{@{}>{\raggedright\arraybackslash}p{3.15cm}
+                    >{\centering\arraybackslash}p{0.85cm}
+                    >{\raggedright\arraybackslash}p{5.3cm}
+                    >{\raggedright\arraybackslash}p{6.1cm}@{}}
+  \toprule
+  \textbf{Míra} & & \textbf{Co měří} & \textbf{Na co pozor} \\
+  \midrule}%
+  {\bottomrule\end{tabular}\par\medskip}
+
+\setcounter{tocdepth}{1}
+
+\title{\textbf{Míry a~metriky ke~SZZ}\\[2mm]
+\large Co která měří a~kterým směrem je lépe}
+\author{SZZ Umělá inteligence, MFF UK}
+\date{srpen 2026}
+
+\begin{document}
+\maketitle
+
+\begin{center}
+\begin{minipage}{0.93\textwidth}
+\small
+Přehled všech měr, kvalit a~kritérií, které se v~okruzích objevují --- \textbf{bez vzorců}.
+U~každé jen to, \emph{co popisuje}, \emph{kterým směrem je lépe} a~\emph{kde je past}.
+Vzorce jsou ve \texttt{04-vzorce}, výklad ve \texttt{01}--\texttt{03}.
+\end{minipage}
+\end{center}
+
+\begin{center}
+\begin{minipage}{0.93\textwidth}
+\begin{poznbox}[Legenda směru]
+\small
+\up~= \textbf{větší je lepší} \quad\textbullet\quad
+\down~= \textbf{menší je lepší} \quad\textbullet\quad
+\neut~= \textbf{deskriptivní} --- popisuje vlastnost, ne kvalitu; \uv{lepší} u~ní nedává
+smysl (vzdálenost, hustota sítě, reciprocita).
+
+\textbf{Pozor na past se směrem:} u~několika měr závisí žádoucí směr na tom, \emph{co
+porovnáváš}. Korelace mezi dvěma \emph{vstupy} vysoká = redundance (špatně), mezi vstupem
+a~\emph{cílem} vysoká = relevance (dobře). Táž míra, opačné čtení.
+\end{poznbox}
+\end{minipage}
+\end{center}
+
+\tableofcontents
+
+% =====================================================================
+\section{Vyhodnocování klasifikace}
+% =====================================================================
+
+\begin{mirytab}
+Accuracy \newline (správnost) & \up &
+Podíl správně klasifikovaných ze všech testovaných. &
+\textbf{Zavádějící na nevyvážených datech}: při 1~\% podvodů má klasifikátor
+\uv{nikdy podvod} accuracy 99~\%. \\[2pt]
+
+Chybovost \newline (\emph{error rate}) & \down &
+Doplněk accuracy do 1. &
+Předpokládá, že každá chyba stojí stejně --- což skoro nikdy neplatí. \\[2pt]
+
+Precision & \up &
+Z~vzorů, které model \textbf{označil} za pozitivní, kolik jich pozitivních opravdu je. &
+Hodnotí \emph{jen pozitivní třídu}. Jde snadno vyhnat k~1 tím, že model označí jen
+pár jistých případů --- proto nikdy sama. \\[2pt]
+
+Recall \newline (TPR, senzitivita) & \up &
+Ze \textbf{skutečně} pozitivních vzorů kolik jich model našel. &
+Taky jen pozitivní třída. Jde vyhnat k~1 tím, že model označí všechno --- proto vždy
+spolu s~precision. \\[2pt]
+
+Specificita (TNR) & \up &
+Ze skutečně negativních kolik jich model správně nechal být. &
+Doplněk FPR do 1. Druhá osa ROC křivky. \\[2pt]
+
+FPR \newline (falešně pozitivní) & \down &
+Podíl skutečně negativních, které model označil za pozitivní. &
+\uv{Falešný poplach}. U~spamu nebo lékařské diagnózy bývá dražší než FN. \\[2pt]
+
+$F_1$-míra & \up &
+Kombinuje precision a~recall do jednoho čísla (harmonický průměr). &
+Harmonický průměr je blíž tomu \textbf{menšímu} z~obou --- $F_1$ je velká, jen když jsou
+velké \emph{obě}. Proto neošidíš. \\[2pt]
+
+AUC \newline (plocha pod ROC) & \up &
+Pravděpodobnost, že náhodný pozitivní vzor dostane vyšší skóre než náhodný negativní. &
+$0{,}5$ = náhoda, $1{,}0$ = dokonalé. \textbf{Nezávisí na prahu ani na poměru tříd} ---
+proto se hodí tam, kde accuracy klame. \\[2pt]
+
+Lift (lift analýza) & \up &
+Kolikrát je model lepší než náhodné oslovení --- kolik pozitivních je v~nejlépe
+oskórované přihrádce oproti průměru. &
+Marketingová míra: rozdíl mezi lift křivkou a~diagonálou je přínos modelu.
+Rozhodnutí \uv{kolik zásilek} pak plyne z~ekonomiky, ne z~míry. \\[2pt]
+
+Střední hodnota ceny & \down &
+Průměrná cena chyb, když má každý typ záměny jinou cenu. &
+Zobecnění chybovosti (ta je speciální případ s~cenou 0/1). Realističtější:
+nedoručený ham vadí víc než nerozpoznaný spam. \\
+\end{mirytab}
+
+\begin{poznbox}[Jak si zapamatovat precision vs.\ recall]
+\small
+\textbf{Precision} se ptá na to, co model \emph{řekl}: \uv{kolik z~mých obvinění bylo
+oprávněných?} \quad
+\textbf{Recall} se ptá na to, co ve světě \emph{je}: \uv{kolik viníků jsem dopadl?}
+
+Jmenovatel to prozradí: u~precision je v~něm \emph{predikce} modelu, u~recallu
+\emph{skutečnost}. Obě přitom hodnotí \textbf{pouze pozitivní třídu} --- o~tom, jak dobře
+model rozpoznává negativní, neříkají nic (na to je specificita).
+\end{poznbox}
+
+% =====================================================================
+\section{Pravidla a~asociace}
+% =====================================================================
+
+\begin{mirytab}
+Support (podpora) & \up &
+Jak \emph{často} je pravidlo použitelné --- podíl transakcí obsahujících celou kombinaci. &
+Hlídá statistickou váhu. Bez něj projde pravidlo s~dokonalou konfidencí postavené
+na třech transakcích. \\[2pt]
+
+Confidence \newline (spolehlivost) & \up &
+Jak \emph{spolehlivě} pravidlo platí --- z~transakcí s~předpokladem, kolik jich má
+i~závěr. &
+Je to \emph{precision} pravidla. Sama nestačí: vysoká confidence může jen kopírovat to,
+že závěr je obecně častý. \\[2pt]
+
+Lift (zdvih) & \up &
+Kolikrát častěji platí závěr při splněném předpokladu, než by odpovídalo náhodě. &
+\textbf{Referenční hodnota je 1}, ne 0. $>1$ souvislost, $=1$ nezávislost,
+$<1$ horší než náhoda --- tam dá lepší pravidlo \emph{negace} závěru. \\[2pt]
+
+t-weight \newline (typičnost) & \up &
+Jakou část cílové třídy daný zobecněný záznam pokrývá. &
+Je to \emph{recall} pravidla vůči cílové třídě. Součet přes všechny záznamy je 100~\%. \\[2pt]
+
+d-weight \newline (rozlišovací váha) & \up &
+Z~objektů pokrytých záznamem kolik jich patří do cílové třídy. &
+Je to \emph{precision} pravidla. Vždy srovnat s~\textbf{apriorním} podílem třídy ---
+d-weight 0,6 při třídě zabírající 60~\% dat nerozlišuje nic. \\[2pt]
+
+MIS \newline (minimum item support) & \neut &
+Individuální práh supportu pro jednotlivou položku v~MS-Apriori. &
+Zadává uživatel podle vzácnosti položky. Práh množiny = \emph{minimum} MIS jejích položek
+--- proto přestane platit uzavřenost dolů. \\
+\end{mirytab}
+
+% =====================================================================
+\section{Relevance atributů a~dělení uzlů}
+% =====================================================================
+
+\begin{mirytab}
+$\chi^2$ & \up &
+Jak moc se pozorované četnosti liší od těch očekávaných \emph{při nezávislosti}. &
+Použitelné jen při dost velkých četnostech (očekávaná $\ge 5$); jinak Fisherův exaktní
+test. Jako test má i~kritickou hodnotu, nejen pořadí. \\[2pt]
+
+Entropie $H(A)$ & \down &
+Kolik \textbf{nejistoty o~třídě zůstane} po rozdělení podle atributu (vážený průměr
+přes větve). &
+Vážení je podstatné --- brání tomu, aby vyhrávaly atributy s~mnoha titěrnými čistými
+větvemi. \\[2pt]
+
+Informační zisk & \up &
+Kolik bitů nejistoty o~třídě dělení \textbf{ubralo}. &
+Totéž rozhodnutí jako minimalizace $H(A)$ (entropie rodiče je konstanta).
+\textbf{Nadržuje atributům s~mnoha hodnotami} --- v~limitě vyhraje rodné číslo. \\[2pt]
+
+Poměrný informační zisk & \up &
+Informační zisk normalizovaný tím, jak moc atribut větví. &
+Oprava předchozí vady (C4.5). Jmenovatel penalizuje nadměrné větvení. \\[2pt]
+
+Gini index & \down &
+Nečistota uzlu --- pravděpodobnost, že dva náhodně tažené prvky jsou z~různých tříd. &
+Stejný princip jako entropie, jiná stupnice (max $0{,}5$ pro 2 třídy vs.\ 1 u~entropie),
+takže \textbf{hodnoty spolu neporovnávej}. Levnější (bez logaritmů). \\[2pt]
+
+Kritérium $\Phi$ (CART) & \up &
+Jak dobře binární dělení oddělí třídy mezi levý a~pravý podstrom. &
+Maxima nabývá, když jsou všechny vzory dané třídy v~témže podstromu. \\[2pt]
+
+Vzájemná informace & \up &
+Kolik informace o~třídě atribut nese. &
+Systematicky zvýhodňuje atributy s~mnoha hodnotami --- proto se normalizuje. \\[2pt]
+
+Informační míra závislosti & \up &
+Vzájemná informace normalizovaná entropií cílového atributu. &
+Díky normalizaci \textbf{srovnatelná napříč úlohami}, na rozdíl od samotné MI. \\[2pt]
+
+Pearsonovo $r$ & \up/\down &
+Sílu a~směr \textbf{lineárního} vztahu dvou numerických veličin. &
+\textbf{Směr závisí na tom, co porovnáváš}: vysoké $|r|$ mezi vstupem a~cílem = relevance
+(dobře), mezi dvěma vstupy = redundance (jeden zahodit). $r=0$ \emph{neznamená}
+nezávislost. \\[2pt]
+
+Spearmanovo $\rho$ & \up/\down &
+Totéž, ale pro \textbf{libovolný monotónní} vztah (počítá se z~pořadí). &
+Robustní vůči odlehlým hodnotám, invariantní vůči monotónní transformaci, funguje
+i~na ordinálních atributech. \\
+\end{mirytab}
+
+% =====================================================================
+\section{Vzdálenosti a~shlukování}
+% =====================================================================
+
+\begin{mirytab}
+Euklidovská, Manhattan, Čebyševova & \neut &
+Vzdálenost dvou vzorů (speciální případy Minkowského metriky). &
+\textbf{Není to míra kvality} --- menší znamená podobnější, ne \uv{lepší}. Předpokládají
+stejný rozptyl všech veličin $\Rightarrow$ nutná normalizace. \\[2pt]
+
+Mahalanobisova vzdálenost & \neut &
+Vzdálenost \uv{po narovnání} prostoru podle rozptylů \emph{a~korelací} dat. &
+Zahrne to, co euklidovská nevidí. Vyžaduje invertovatelnou kovarianční matici;
+na malých datech je její odhad zašuměný. \\[2pt]
+
+Účelová funkce \newline $k$-means / $k$-medoids & \down &
+Součet vzdáleností bodů k~jejich nejbližším reprezentantům. &
+Klesá s~rostoucím $k$ vždy --- \textbf{nelze jí volit $k$}. Na to slouží loket, siluety
+či dendrogram. \\[2pt]
+
+Vzdálenost klastrů (\emph{linkage}) & \neut &
+Jak se měří vzdálenost mezi dvěma skupinami při hierarchickém shlukování ---
+single, complete, average, centroidní. &
+\textbf{Volba určuje tvar} nalezených klastrů: single řetězí a~zvládne protáhlé tvary,
+complete dělá kompaktní kulovité. \\
+\end{mirytab}
+
+% =====================================================================
+\section{Analýza sociálních sítí}
+% =====================================================================
+
+\begin{mirytab}
+Stupňová centralita & \up &
+Kolik lidí uzel dosáhne \textbf{přímo}; popularita a~přímý vliv. &
+Nejlevnější, ale nejkrátkozrakejší --- nevidí, kde uzel v~síti leží. \\[2pt]
+
+Mezilehlá centralita & \up &
+Jak často uzel leží na nejkratších cestách mezi jinými. &
+Označuje \uv{mosty}: místa, jejichž odstraněním se síť \textbf{rozpadne}. \\[2pt]
+
+Blízkostní centralita & \up &
+Jak rychle se od uzlu dostane informace ke všem ostatním. &
+Převrácená průměrná vzdálenost. Užitečná, jde-li o~rychlost šíření. \\[2pt]
+
+Vlastní centralita & \up &
+Jak dobře je uzel spojen s~\emph{jinými dobře propojenými} uzly (rekurzivně). &
+Blízká příbuzná PageRanku. Nutná normalizace, jinak nekonverguje. \\[2pt]
+
+Překryv sousedství & \up &
+Sílu vazby --- jak velký podíl přátel mají oba konce společný. &
+Malý překryv = \emph{most}: slabá vazba, ale zprostředkuje nové informace
+(síla slabých vazeb). \\[2pt]
+
+Hustota sítě & \neut &
+Podíl existujících hran na počtu možných. &
+Deskriptivní. Klika má 1. Orientované grafy mají poloviční hustotu, protože možných
+hran je dvakrát víc. \\[2pt]
+
+Klastrovací koeficient & \up &
+Jak moc jsou sousedé uzlu propojení mezi sebou (tranzitivita). &
+Vysoká hodnota indikuje \textbf{komunitní strukturu}; jedna ze šesti charakteristik
+reálných komplexních sítí. \\[2pt]
+
+Reciprocita & \neut &
+Podíl obousměrných vztahů. &
+\textbf{Má smysl jen v~orientovaných grafech.} \\[2pt]
+
+Modularita $Q$ & \up &
+Jak moc je hran \emph{uvnitř} komunit víc, než by odpovídalo náhodě. &
+Kritérium, které maximalizuje Louvain. Má \emph{rozlišovací limit} --- malé komunity
+ve velkých sítích nenajde. \\[2pt]
+
+RatioCut / NCut & \down &
+Cenu rozdělení sítě, normalizovanou velikostí komunit. &
+Normalizace je tam proto, že prostý minimální řez vrací nevyvážená rozdělení
+(často singleton). \\[2pt]
+
+CN, Jaccard, Adamic--Adar & \up &
+Jak pravděpodobně mezi dvěma uzly vznikne vazba (sousedské míry). &
+Každá opravuje vadu předchozí: CN nevidí stupně, Jaccard nevidí stupeň
+\emph{prostředního} souseda, AA ho váží. \\[2pt]
+
+Katzova míra & \up &
+Nepřímou propojenost přes procházky všech délek, tlumené délkou. &
+Pomáhá ve \textbf{velmi řídkých} sítích, kde společných sousedů je málo a~sousedské
+míry nerozliší. \\
+\end{mirytab}
+
+% =====================================================================
+\section{Evoluční a~rojové algoritmy}
+% =====================================================================
+
+\begin{mirytab}
+Fitness & \up &
+Kvalitu jedince vůči úloze; řídí selekci. &
+U~minimalizace se otáčí. V~koevoluci není absolutní, ale \emph{kontextová} --- závisí na
+ostatních jedincích. \\[2pt]
+
+Selekční tlak & \neut &
+Jak moc jsou lepší jedinci zvýhodněni. &
+\textbf{Není lepší velký ani malý}: velký urychlí konvergenci, ale zabije diverzitu;
+malý naopak. To je celé dilema explorace vs.\ exploatace. \\[2pt]
+
+Doba převzetí $\tau^*$ & \neut &
+Za kolik generací zaplní kopie nejlepšího jedince celou populaci. &
+Kvantifikuje selekční tlak --- \emph{kratší doba} znamená \emph{vyšší tlak}.
+Nezaměňovat: menší $\tau^*$ není \uv{lepší}. \\[2pt]
+
+Řád a~definující délka schématu & \down &
+Jak je schéma \uv{křehké} vůči mutaci ($o(S)$) a~křížení ($d(S)$). &
+Věta o~schématech: množí se schémata \emph{krátká}, \emph{nízkého řádu}
+a~\emph{nadprůměrná} --- proto u~obou menší lépe přežívá. \\[2pt]
+
+Crowding distance & \up &
+Jak řídce je okolí jedince obsazené na Pareto frontě. &
+Velká hodnota = \textbf{chceme si ho nechat} (drží frontu rozprostřenou).
+Krajní body dostanou $\infty$. \\[2pt]
+
+Hypervolume & \up &
+Objem prostoru kritérií, který fronta \uv{ukrojila} vůči referenčnímu bodu. &
+Měří konvergenci \emph{i} rozprostření jedním číslem a~\textbf{nepotřebuje znát
+skutečnou frontu}. Cena: volba referenčního bodu, exponenciální složitost. \\[2pt]
+
+GD (generational distance) & \down &
+Průměrnou vzdálenost nalezených bodů od skutečné Pareto fronty. &
+Měří jen konvergenci, ne pokrytí. \textbf{Vyžaduje znát skutečnou frontu} --- na reálné
+úloze tedy nepoužitelná. \\[2pt]
+
+IGD & \down &
+Vzdálenost od skutečné fronty k~nalezené (opačný směr než GD). &
+Měří konvergenci \emph{i} pokrytí. Taky potřebuje skutečnou frontu. \\[2pt]
+
+Spread & \down &
+Jak nerovnoměrně jsou řešení po frontě rozložená. &
+Doplněk k~hypervolume: hlídá rovnoměrnost, ne objem. \\[2pt]
+
+Míra podobnosti $\delta$ (NEAT) & \neut &
+Jak jsou si dva genomy strukturně a~parametricky vzdálené. &
+Je to \emph{vzdálenost}, ne kvalita. Pod prahem $\Rightarrow$ tentýž druh, uvnitř
+druhu se sdílí fitness (ochrana nových topologií). \\
+\end{mirytab}
+
+% =====================================================================
+\section{Multiagentní systémy}
+% =====================================================================
+
+\begin{mirytab}
+Utilita & \up &
+Jak je pro agenta daný stav či běh žádoucí; cíl se zadává \emph{nepřímo} přes ni. &
+Utilita běhu je lepší než utilita stavu (méně krátkozraká). Definice optimálního agenta
+je elegantní, ale \textbf{nekonstruktivní}. \\[2pt]
+
+$f = g + h$ (A*) & \down &
+Odhad ceny nejlepší cesty vedoucí přes daný vrchol; expanduje se nejmenší. &
+Heuristika musí být \emph{přípustná} (nenadhodnocuje), aby byl A* optimální;
+konzistence je silnější a~přípustnost z~ní plyne. \\[2pt]
+
+$Q(s,a)$ & \up &
+Očekávaný diskontovaný součet budoucích odměn za akci $a$ ve stavu $s$. &
+Politika se z~$Q$ získá jako argmax --- \textbf{bez znalosti modelu}, na rozdíl
+od~$V$. \\[2pt]
+
+Risk (Zeuthen) & \down &
+Ochotu agenta riskovat konflikt při vyjednávání. &
+\textbf{Ustupuje ten s~nižším Riskem} --- tady je menší hodnota \uv{horší pozice},
+ne lepší výsledek. \\[2pt]
+
+Sociální blahobyt & \up &
+Součet utilit všech agentů --- kvalita výsledku pro skupinu. &
+Nezaměňovat s~\emph{Paretovou optimalitou}: ta neříká nic o~součtu, jen že nelze nikomu
+přilepšit bez uškození jinému. \\
+\end{mirytab}
+
+\begin{poznbox}[Nejčastější past: směr není vlastnost míry, ale otázky]
+\small
+Několik měr nemá pevný \uv{lepší} směr a~zkoušející se na to rád chytá:
+
+\begin{itemize}
+\item \textbf{Korelace} --- vysoká mezi vstupem a~cílem je \emph{relevance} (chceme),
+      vysoká mezi dvěma vstupy je \emph{redundance} (nechceme).
+\item \textbf{Selekční tlak a~doba převzetí} --- ani velký, ani malý není lepší; je to
+      nastavitelný kompromis mezi explorací a~exploatací.
+\item \textbf{Vzdálenosti} --- menší znamená podobnější, ne kvalitnější.
+\item \textbf{Risk u~Zeuthena} --- nižší hodnota znamená, že agent ustoupí, tedy horší
+      vyjednávací pozici.
+\item \textbf{Lift} --- referenční hodnota je \textbf{1}, ne 0; pod jednou se vyplatí
+      závěr pravidla znegovat.
+\end{itemize}
+\end{poznbox}
+
+\end{document}

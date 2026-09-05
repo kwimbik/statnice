@@ -1317,7 +1317,7 @@ Praktické důsledky:
 \begin{itemize}
 \item \textbf{Na kódování záleží.} Geny, které spolu interagují, mají ležet
   blízko sebe (\emph{linkage}), jinak je křížení rozbíjí. Odtud snahy o~inverzi,
-  \emph{messy GA}, \emph{linkage learning} a~algoritmy odhadu rozdělení (EDA).
+  \emph{messy GA} a~\emph{linkage learning}.
 \item \textbf{Na velikosti populace záleží.} Populace musí obsahovat dostatek
   vzorků od každého stavebního bloku (teorie \emph{population sizing}).
 \item \textbf{Předčasná konvergence škodí} --- ztráta diverzity znemožní
@@ -1588,28 +1588,6 @@ výpočet; jeho hodnota je teoretická.
   trajektorii $\mathcal{G}$.
 \end{itemize}
 
-\subsubsection{Algoritmy odhadu rozdělení (EDA)}
-\label{ssec:eda}
-
-\noindent\mimoq{ve slidech EVA není; je to ale přímé pokračování Voseho pohledu}
-
-\begin{defbox}[EDA --- obecné schéma]
-Voseho model ukazuje, že SGA je ve skutečnosti stroj na transformaci pravděpodobnostního
-rozdělení nad prostorem řetězců. \emph{Algoritmy odhadu rozdělení} berou toto pozorování
-doslova: zahodí křížení i~mutaci a~udržují \textbf{explicitní model} $p_\theta(x)$.
-Iterace: navzorkuj z~$p_\theta$ populaci, vyber lepší část, \emph{přeuč} na ní model,
-opakuj. Model $\theta$ je jediná informace přenášená mezi generacemi.
-
-Podle bohatosti zachycených závislostí: \textbf{bez závislostí} (UMDA, PBIL),
-\textbf{párové} (MIMIC), \textbf{obecné} (BOA --- Bayesovská síť), \textbf{spojité}
-(CMA-ES). PBIL posouvá vektor pravděpodobností k~nejlepšímu jedinci:
-$p_i \gets (1-\alpha)\,p_i + \alpha\, x_i^{\mathrm{best}}$.
-\end{defbox}
-
-Univariátní model selže, jakmile mezi geny existuje \emph{epistáze} --- proto BOA, který se
-strukturu závislostí učí. Tím EDA řeší problém, kvůli němuž Holland navrhoval inverzi:
-kde mají spolupracující geny ležet, se algoritmus naučí sám.
-
 \subsection{Shrnutí ke~zkoušce}
 
 \begin{itemize}
@@ -1648,11 +1626,6 @@ kde mají spolupracující geny ležet, se algoritmus naučí sám.
 \item Nekonečné populace = deterministický model (exaktní, nepraktický),
   konečné = stochastický (realistický, nezvládnutelný). Limitní přechod je
   spojuje.
-\item \textbf{EDA} berou pohled \uv{GA = transformace rozdělení} doslova:
-  místo operátorů se učí model $p_\theta$ (UMDA/PBIL --- nezávislé marginály,
-  MIMIC/BMDA --- párové závislosti, BOA --- Bayesovská síť, CMA-ES --- gaussovka).
-  Cyklus: vzorkuj $\to$ vyber lepší $\to$ přeuč model. PBIL:
-  $p_i \gets (1-\alpha)p_i + \alpha x_i^{\mathrm{best}}$.
 \end{itemize}
 
 %=====================================================================
@@ -2545,16 +2518,27 @@ grafu; mravenci jsou agenti konstruující řešení po hranách.
 
 \begin{defbox}[Ant System (AS) --- pravidlo přechodu]
 Mravenec $k$ v~městě $i$ zvolí následující město $j$ z~množiny dosud
-nenavštívených $\mathcal{N}_i^k$ s~pravděpodobností
+nenavštívených $\mathcal{N}_i^k$ \textbf{ruletou}: každému kandidátovi přiřadí
+\emph{skóre} a~to znormalizuje na pravděpodobnost.
 \[
-p_{ij}^{k} \;=\;
-\frac{\big[\tau_{ij}\big]^{\alpha}\,\big[\eta_{ij}\big]^{\beta}}
-     {\sum_{l \in \mathcal{N}_i^k}\big[\tau_{il}\big]^{\alpha}\,\big[\eta_{il}\big]^{\beta}},
+w_{ij} \;=\; \big[\tau_{ij}\big]^{\alpha}\,\big[\eta_{ij}\big]^{\beta},
+\qquad
+p_{ij}^{k} \;=\; \frac{w_{ij}}{\displaystyle\sum_{l \in \mathcal{N}_i^k} w_{il}},
 \qquad \eta_{ij} = \frac{1}{d_{ij}},
 \]
 kde $\tau_{ij}$ je množství feromonu na hraně, $\eta_{ij}$ heuristická
 \uv{viditelnost} (převrácená vzdálenost) a~$\alpha, \beta$ váhy obou vlivů
 (typicky $\alpha = 1$, $\beta \in [2,5]$).
+
+\textbf{Zapamatovatelný tvar.} Indexy $i$ a~$k$ jsou během jednoho rozhodnutí
+\emph{konstanty} ($i$ = kde stojím, $k$ = čí je seznam nenavštívených měst)
+a~jmenovatel je jen normalizace. Dosadíme-li navíc $\eta = 1/d$, zbude
+\[
+p_j \;\propto\; \frac{\tau_j^{\,\alpha}}{d_j^{\,\beta}}
+\qquad\text{---\ \uv{feromon nahoře, vzdálenost dole}.}
+\]
+Z~toho se plný zápis kdykoli zrekonstruuje: dopočítat skóre všem kandidátům
+a~vydělit jejich součtem.
 \end{defbox}
 
 \begin{defbox}[Ant System --- aktualizace feromonu]
@@ -3634,7 +3618,7 @@ SMS-EMOA & příspěvek k~hypervolume & implicitní & teoreticky nejlépe podlo�
   genetické algoritmy (binární, celočíselné, permutační, reálné), evoluční
   strategie, diferenciální evoluce, evoluční programování, genetické
   programování (stromové, lineární, kartézské, gramatická evoluce),
-  learning classifier systems, algoritmy odhadu rozdělení (EDA).
+  learning classifier systems.
 \item \textbf{Přírodou inspirované metody bez evoluce}: rojové algoritmy
   (PSO, ACO, ABC, firefly).
 \item \textbf{Nebiologicky inspirované metaheuristiky}: tabu search,
@@ -3713,8 +3697,6 @@ NEAT & seznam hran & mutace struktury, křížení dle ID & sdílená fitness
 \item Popište Voseho model SGA: co jsou vektory $p$ a~$s$, co dělá operátor
   $\mathcal{F}$, co $\mathcal{M}$, jaké mají pevné body? Jak vypadá model
   konečné populace jako Markovův řetězec?
-\item Co jsou algoritmy odhadu rozdělení (EDA)? Jaký je jejich vztah
-  k~Voseho pohledu na GA a~jak se liší UMDA/PBIL od BOA?
 \item Jaký je rozdíl mezi $(\mu,\lambda)$ a~$(\mu+\lambda)$-ES?
   Vysvětlete pravidlo 1/5 a~samoadaptaci $\sigma$. Jak funguje CMA-ES?
 \item Popište jeden krok diferenciální evoluce včetně vzorců

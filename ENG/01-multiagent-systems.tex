@@ -158,29 +158,23 @@ to study mechanisms of negotiation, coordination, and dynamic resource allocatio
 between: it should autonomously choose the \emph{way} in which a given problem is to be solved
 (that is, the choice of subgoals), but not the main goal --- that is delegated to it.
 
-\paragraph{Delimitation against related fields.} The breadth of the topic is explained by the
-fact that MAS can be read from five different sides:
+\paragraph{Delimitation against related fields.} MAS can be read from five different sides:
 \begin{itemize}
 \item \textbf{Software engineering.} An agent is the next level of abstraction in the sequence
-  machine code $\to$ structured programs $\to$ objects $\to$ distributed objects (CORBA)
-  $\to$ agents. The classic quip: \uv{objects do it for free, agents do it because they want to}.
-\item \textbf{Distributed and parallel systems.} Decades of research have solved mutual exclusion,
-  deadlock, and consensus. The difference is that agents are \emph{autonomous}, coordination
-  mechanisms are not given in advance, and everything has to be resolved at run time.
-\item \textbf{Artificial intelligence.} Traditionally: MAS is a subfield of AI. According to
-  Russell and Norvig the goal of AI is conversely the design of intelligent agents (hence
-  AI $\subseteq$ MAS); Etzioni's pointed version is \uv{MAS is 1~\% AI and 99~\% computer
-  science}. MAS uses AI techniques (knowledge representation, planning) but emphasises the
-  \emph{social} aspects that classical AI overlooked.
+  machine code $\to$ objects $\to$ distributed objects $\to$ agents; the classic quip:
+  \uv{objects do it for free, agents do it because they want to}.
+\item \textbf{Distributed and parallel systems.} Mutual exclusion, deadlock, and consensus are
+  solved; agents, however, are \emph{autonomous} and coordination mechanisms have to be resolved
+  at run time.
+\item \textbf{Artificial intelligence.} Traditionally MAS $\subseteq$ AI; according to Russell
+  and Norvig the goal of AI is conversely the design of intelligent agents. MAS uses AI
+  techniques but emphasises the \emph{social} aspects that classical AI overlooked.
 \item \textbf{Game theory and economics.} A formal apparatus for rational decision making by
-  multiple parties. Mathematical game theory deals mainly with questions of \emph{existence},
-  whereas MAS deals with the \emph{computational} aspects (complexity, practical usability).
-\item \textbf{Sociology.} A key notion of MAS is \emph{agent societies}, and sociology studies
-  human societies --- so the inspiration suggests itself. The same caveat applies here as to the
-  relation between AI and human intelligence: inspiration yes, necessity no (aeroplanes do not
-  flap their wings). In the opposite direction the link is stronger: sociology, economics, and
-  ecology all use agents as a building block of their simulation models --- \emph{agent-based
-  modelling} (ABM), see the platforms in chapter~\ref{sec:metodologie}.
+  multiple parties; mathematical game theory deals mainly with \emph{existence}, MAS with the
+  \emph{computational} aspects.
+\item \textbf{Sociology.} Agent societies: inspiration yes, necessity no. In the opposite
+  direction the link is stronger --- sociology, economics, and ecology build their simulation
+  models on agents (\emph{agent-based modelling}, ABM).
 \end{itemize}
 \subsection{Properties of an intelligent agent}
 
@@ -215,17 +209,13 @@ physical laws, but I know the purpose for which the system was designed --- I ca
 clock without understanding its electronics), and the \emph{intentional} one (I describe the
 system in terms of beliefs, desires, and rationality).
 
-Shoham gives a provocative example: \uv{The light switch in the room is a very cooperative agent
-that is willing of its own free will to conduct electric current, but does so only when it
-believes that we really want it to.} The description is consistent and elegant, yet most people
-find it absurd --- \emph{because for a light switch we have a simpler and equally accurate
-description}. The intentional stance pays off where a physical or design description does not
-exist or is impractical (even with the schematic of a computer at hand it is hard to derive why
-clicking an icon opens a window).
+Shoham's example: \uv{The light switch is a very cooperative agent that conducts current
+whenever it believes we want it to.} The description is consistent, yet absurd ---
+\emph{for a light switch we have a simpler and equally accurate description}. The intentional
+stance pays off where a physical or design description does not exist or is impractical.
 \textbf{From the point of view of computer science, the intentional stance is above all an
 abstraction for managing complexity} --- and for many programmers that is precisely the main
-contribution of MAS. Dennett himself adds a philosophical question: in his view intentionality
-does not exist in itself, it arises only \emph{in the process of interpretation} by an observer.
+contribution of MAS.
 
 \subsection{The environment and its properties}
 
@@ -262,15 +252,11 @@ are continuous, non-deterministic, dynamic, and only partially observable. Preci
 reason it is not enough to program an agent as a fixed table of rules.
 
 \medskip
-\noindent\emph{Example --- a thermostat.} A not particularly intelligent agent, situated in an
-environment (a room). Two percepts (\uv{it is cold}, \uv{the temperature is fine}), two actions
-(switch on, switch off), and a decision unit: cold $\Rightarrow$ switch on, OK $\Rightarrow$ switch
-off. The environment is nevertheless non-deterministic (someone opens the door).
-
-\noindent\emph{Example --- a software daemon.} For instance the Unix \texttt{xbiff}: the
-environment is the operating system, it perceives by calling system services, and its actions are
-software operations (start a mail client, change an icon). Its decision algorithm is at the level
-of the thermostat.
+\noindent\emph{Examples.} \textbf{A thermostat}: two percepts (\uv{it is cold}, \uv{the
+temperature is fine}), two actions (switch on, switch off); the environment is nevertheless
+non-deterministic (someone opens the door). \textbf{A software daemon} (the Unix
+\texttt{xbiff}): the environment is the operating system, the percepts are system calls,
+the actions software operations.
 
 \subsection{An abstract agent architecture}
 
@@ -581,19 +567,9 @@ that generates concrete actions. This approach runs into two classical problems:
 \begin{itemize}
 \item \textbf{The transduction problem}: how to translate the real world into a symbolic
   representation (computer vision, natural language processing, learning).
-  In Goethe's words: \uv{All theory, dear friend, is grey, but the golden tree of life springs ever
-  green.}
 \item \textbf{The representation and reasoning problem}: how to represent knowledge and how to
   reason over it efficiently (theorem provers, planners).
 \end{itemize}
-
-\medskip
-\noindent\textbf{A digression: deduction vs.\ induction.}
-\emph{Deduction} is the derivation of conclusions that are true whenever the premises are true ---
-a move from the general to the particular (the syllogism: \uv{All men are mortal, Socrates is a man,
-therefore Socrates is mortal}). \emph{Induction} means that, given true premises, the conclusion is
-more likely true than false --- from the particular to the general. Sherlock Holmes in fact uses
-induction, even though he calls it deduction; mathematical induction, on the contrary, is deduction.
 
 \begin{defbox}[Deductive agent (the agent as a theorem prover)]
 Let $L$ be a set of first-order predicate logic formulae and $D = 2^L$ the set of databases of
@@ -694,12 +670,10 @@ incompatible with an intention I have adopted) and \emph{influence future belief
 intention succeeding).
 \end{defbox}
 
-\noindent\textbf{The difference between a desire and an intention} is illustrated by Bratman (1990):
-\uv{My desire to play basketball this afternoon is merely a potential influencer of my conduct this
-afternoon. It must vie with my other relevant desires\dots{} In contrast, once I
-\emph{intend} to play basketball this afternoon, the matter is settled: I normally need not continue
-to weigh the pros and cons; when the afternoon arrives, I will normally just proceed to execute my
-intention.}
+\noindent\textbf{The difference between a desire and an intention} (Bratman, 1990): a desire to
+play basketball this afternoon is merely a potential influence on my conduct and must vie with
+my other desires; once I \emph{intend} to play basketball, the matter is settled --- I no longer
+weigh the pros and cons and simply execute the intention.
 
 \begin{defbox}[The deliberation functions]
 Let $B \subseteq \mathit{Bel}$ denote the agent's current beliefs, $D \subseteq \mathit{Des}$ its
@@ -790,30 +764,16 @@ Initial state $B_0 = \{\mathit{Clear}(A), \mathit{On}(A,B), \mathit{OnTable}(B),
 goal $G = \{\mathit{OnTable}(A), \mathit{OnTable}(B), \mathit{OnTable}(C)\}$.
 
 \noindent A correct plan: $\pi = (\mathit{UnStack}(A,B),\ \mathit{PutDown}(A))$. Verification:
-\begin{itemize}
-\item $B_0 \models \{\mathit{On}(A,B),\mathit{Clear}(A),\mathit{ArmEmpty}\}$, so the first action
-  is admissible; after it
-  \[
-  B_1 = \big(B_0 \setminus \{\mathit{On}(A,B),\mathit{ArmEmpty}\}\big) \cup
-  \{\mathit{Holding}(A),\mathit{Clear}(B)\}.
-  \]
-\item $B_1 \models \{\mathit{Holding}(A)\}$, so the second action is admissible too; after it
-  \[
-  B_2 = \big(B_1 \setminus \{\mathit{Holding}(A)\}\big) \cup
-  \{\mathit{ArmEmpty},\mathit{OnTable}(A)\}.
-  \]
-\item $B_2 \models G$, so the plan is correct.
-\end{itemize}
+$B_0$ satisfies the preconditions of the first action; after it
+$B_1 = (B_0 \setminus \{\mathit{On}(A,B),\mathit{ArmEmpty}\}) \cup
+\{\mathit{Holding}(A),\mathit{Clear}(B)\}$. This satisfies $\mathit{Holding}(A)$; after the
+second action $B_2 \models G$, so the plan is admissible and correct.
 
 \begin{defbox}[Auxiliary functions over plans]
-$\mathit{Plan}$ --- the set of all plans over $\mathit{Ac}$;
-$\mathit{pre}(\pi)$ --- the precondition of a plan; $\mathit{body}(\pi)$ --- the body of a plan
-(the sequence of actions); $\mathit{empty}(\pi)$ --- is the plan empty?;
-$\mathit{execute}(\pi)$ --- executes all actions of the plan;
-$\mathit{hd}(\pi)$ --- the first action; $\mathit{tail}(\pi)$ --- the rest;
-$\mathit{sound}(\pi,I,B)$ --- plan $\pi$ is correct with respect to intentions $I$ and beliefs $B$.
-
-The agent's planning function:
+$\mathit{pre}(\pi)$ (precondition), $\mathit{body}(\pi)$ (body), $\mathit{empty}(\pi)$,
+$\mathit{execute}(\pi)$, $\mathit{hd}(\pi)$ (first action), $\mathit{tail}(\pi)$ (the rest),
+$\mathit{sound}(\pi,I,B)$ (correctness with respect to intentions $I$ and beliefs $B$);
+the planning function
 $\mathit{plan} : 2^{\mathit{Bel}} \times 2^{\mathit{Int}} \times 2^{\mathit{Ac}} \to \mathit{Plan}$.
 \end{defbox}
 
@@ -916,8 +876,7 @@ Georgeff et al., 1980s, Stanford. \textbf{The first implementation of the BDI ar
 of the most successful agent architectures in practice --- it has been reimplemented many times:
 \textbf{AgentSpeak/Jason}, \textbf{JAM}, \textbf{JACK}, \textbf{Jadex}.
 
-Practical deployments: OASIS (the air traffic control system in Sydney), SPOC (business process
-organisation), SWARMM (an air combat simulator of the Australian air force).
+Practical deployments: OASIS (air traffic control in Sydney), SPOC, SWARMM.
 \end{defbox}
 
 \slajd{mas-prs.png}{0.46}{The architecture of a PRS agent. Sensor data enter the database of
@@ -1140,17 +1099,14 @@ $\theta$ determines \textbf{deliberateness vs.\ speed} (a high threshold $\to$ t
 longer but decides better). If in a given step no executable module exceeds the threshold, $\theta$
 is lowered by 10~\% and the attempt is repeated --- the network therefore cannot \uv{freeze}.
 
-\textbf{How the activation in one step is computed.} The update proceeds in four phases:
-(1)~\emph{input from the environment} --- each true fact distributes a quantum $\phi$ evenly among
-the modules that have it among their preconditions; (2)~\emph{input from goals} --- each goal
-distributes $\gamma$ among the modules that add it, and each protected goal \emph{removes} $\delta$
-from the modules that would destroy it; (3)~\emph{spreading between modules} --- an executable module
-sends part of its activation forward to its successors (again divided evenly among the recipients), a
-non-executable module sends activation backward to modules that can satisfy its missing precondition,
-and conflictor links subtract the corresponding share of activation; (4)~\emph{normalisation} --- the
-activations of all modules are rescaled so that their average is $\pi$ (the total energy of the
-network remains constant). Then the executable module with activation above the threshold $\theta$ is
-selected; the module that has been executed resets its activation to zero.
+\textbf{How the activation in one step is computed:} (1)~each true fact distributes a quantum
+$\phi$ among the modules that have it among their preconditions; (2)~each goal distributes
+$\gamma$ among the modules that add it, and protected goals \emph{remove} $\delta$ from the
+modules that would destroy them; (3)~executable modules send activation forward to their
+successors, non-executable ones backward to modules that can satisfy their missing
+precondition, and conflictor links subtract; (4)~the activations are rescaled so that their
+average is $\pi$. Then the executable module with activation above the threshold $\theta$ is
+selected; the executed module resets its activation to zero.
 
 \emph{A note on the lecture course:} the slides present the activation threshold as a property of an
 individual module (and speak of it as a priority); in Maes's original model the threshold $\theta$ is
@@ -1243,15 +1199,10 @@ upwards) and \emph{top-down execution} (a higher layer uses a lower one to carry
 \end{defbox}
 
 \medskip
-\noindent\textbf{A real-world example: Stanley} (a Volkswagen Touareg R5, Stanford). The autonomous
-vehicle that won the DARPA Grand Challenge 2005 (212~km across the Mojave Desert); a direct
-predecessor of today's autonomous vehicles. A layered architecture:
-\begin{itemize}
-\item the sensor layer $\to$ the abstract perception layer $\to$ the planning and control layer
-  (the route plan and vehicle control) $\to$ the vehicle interface layer;
-\item plus a user interface layer (the panel, starting) and a global services layer (file system,
-  communication, clock).
-\end{itemize}
+\noindent\textbf{A real-world example: Stanley} (Stanford) --- the autonomous vehicle that won
+the DARPA Grand Challenge 2005. A layered architecture: sensors $\to$ abstract perception $\to$
+planning and control $\to$ vehicle interface; plus a user interface layer and a global services
+layer.
 
 \subsection{Complex architectures: IDA and the global workspace}
 \label{ssec:ida}
@@ -1286,9 +1237,8 @@ whole is very difficult.
 
 \slajd{mas-ida.png}{0.96}{The IDA architecture. The blue blocks are perception and memory modules,
 the green ones deliberation and negotiation, the red ones learning and output; everything meets in
-\uv{Consciousness} (the global workspace) and in the \emph{Behavior Net}, which selects the action.
-It is easy to see why the architecture is considered the most complicated one --- and why tuning it
-is so hard.}
+\uv{Consciousness} (the global workspace) and in the \emph{Behavior Net}, which selects the
+action.}
 
 For comparing action selection mechanisms, IDA is useful as a \emph{fourth} type of arbitration:
 subsumption decides by \textbf{fixed priority}, the Maes network by \textbf{activation level},
@@ -1399,6 +1349,17 @@ The graph is usually given \emph{implicitly} by a successor function (a 4-/8-con
 navigation mesh, a visibility graph, a grid of the robot's configuration space).
 \end{defbox}
 
+\mimo{} \textbf{A note on metaheuristics.} Pathfinding is also tackled by \emph{ant colony
+optimization} (ACO) and \emph{particle swarm optimization} (PSO) from the \emph{Nature-inspired
+computing} topic: ACO was directly inspired by ants finding the shortest path to food and is used
+for network routing (AntNet) and for robot path planning on a grid; PSO is used in robotics by
+encoding a path as a vector of waypoints and continuously optimising its length, smoothness and
+clearance from obstacles. \textbf{For the problem as stated above they do not pay off}, however:
+on a static graph with known costs A* is \emph{optimal} and faster, whereas a metaheuristic gives
+no optimality guarantee at all. They start to make sense only where the problem is harder than
+a shortest path --- a continuous space with obstacles, several criteria at once, strongly dynamic
+or stochastic costs, or routing without global knowledge of the topology.
+
 \subsection{A*}
 
 \emph{Best-first} search maintains for every vertex $n$ the values
@@ -1448,14 +1409,6 @@ algorithm}. Typical heuristics on a grid are Manhattan $|\Delta x| + |\Delta y|$
 octile (8~directions) and Euclidean. \textbf{Weighted A*} uses
 $f = g + \varepsilon h$, $\varepsilon > 1$ --- it is faster, but the path found is at most
 $\varepsilon$ times more expensive; \textbf{IDA*} saves memory ($O(d)$ instead of exponential).
-\medskip
-\noindent\textbf{A small example.} A $3\times3$ grid, movement in 4~directions, edge cost $1$,
-start $(0,0)$, goal $(2,2)$, an obstacle at $(1,1)$; the Manhattan heuristic
-$h(x,y) = |2-x| + |2-y|$ is both admissible and consistent. The start has $f=0+4=4$; its successors
-$(1,0)$ and $(0,1)$ have $g=1$, $h=3$, $f=4$; then $(2,0)$ and $(0,2)$ with $g=2,h=2,f=4$, then
-$(2,1)$ and $(1,2)$ with $g=3,h=1,f=4$, and finally the goal $(2,2)$ with $g=4,h=0,f=4$. All vertices
-on the optimal path have $f=4$ --- a typical manifestation of a consistent heuristic that estimates
-the remainder of the path exactly.
 
 \subsection{A dynamic environment: D*~Lite}
 
@@ -1570,8 +1523,7 @@ one another, and for that they need to resolve:
 \subsection{What an ontology is}
 
 \begin{defbox}[Ontology]
-\emph{Philosophically} (from the Greek \emph{to on} = that which is, \emph{logos} = word): the study
-of being, according to Aristotle \uv{first philosophy}, a part of metaphysics.
+\emph{Philosophically}: the study of being, according to Aristotle \uv{first philosophy}.
 
 \emph{In computer science}: an \textbf{explicit and formalised description of a part of reality}.
 Usually a formal declarative description containing a \emph{glossary} (definitions of concepts) and a
@@ -1584,11 +1536,9 @@ The frequently cited shortened version: \emph{an ontology is an explicit specifi
 conceptualisation}.
 \end{defbox}
 
-\textbf{A motivating example} (a dialogue between two people --- or two agents). \uv{Have you heard
-7777? --- No, what is it? --- It's the new CD by the band SRPR, alt.rock with electronics and great
-lyrics. --- I see.} For them to understand each other, they have to share the following:
-7777 is an album; it falls into the genres alt.rock and electronica; it has tracks, a performer
-(SRPR), and authors of the music and the lyrics; SRPR is a band, it has members, and they play
+\textbf{A motivating example:} for two agents to understand the sentence \uv{7777 is the new CD
+by the band SRPR}, they have to share a conceptualisation: 7777 is an album, it falls into
+genres, it has tracks and a performer; SRPR is a band, it has members, and they play
 instruments\dots
 
 \begin{defbox}[The formalism of an ontology]
@@ -1618,8 +1568,6 @@ value restrictions (\uv{every person has exactly one mother}) $\to$ arbitrary lo
 \item \textbf{Upper ontologies} --- these are supposed to describe \uv{everything}
   (Thing, Living thing, \dots) and serve as a foundation for domain ontologies:
   BFO, GFO, UFO; WordNet and IDEAS are not suitable for formal inference.
-  There are methodological objections against the very effort to build a universal ontology
-  (Wittgenstein, \emph{Tractatus logico-philosophicus}).
 \end{itemize}
 
 \subsection{Ontology languages}
@@ -1642,16 +1590,10 @@ Trigger, accessor, mutator & method \\
 \end{tabular}
 \end{center}
 
-\textbf{XML} was not created for ontologies, but it is used for them: its main advantage is the
-possibility of defining one's own tags, which naturally represent a vocabulary:
-\begin{quote}\small\ttfamily
-<product type=\textquotedbl CD\textquotedbl>\\
-\hspace*{1em}<title>7777</title>\\
-\hspace*{1em}<artist>SRPR</artist>\\
-</product>
-\end{quote}
-What it lacks, however, is a defined semantics --- it describes only the structure of a document, not
-its meaning.
+\textbf{XML} was not created for ontologies, but it is used for them: one's own tags
+(\texttt{<product>}, \texttt{<title>}, \texttt{<artist>}) naturally represent a vocabulary.
+What it lacks, however, is a defined semantics --- it describes only the structure of a
+document, not its meaning.
 
 \begin{defbox}[RDF --- \emph{Resource Description Framework}]
 The standard tool for knowledge representation for (but not only for) the web. It is
@@ -1707,9 +1649,7 @@ the DARPA \emph{Knowledge Sharing Effort} project as the \textbf{inner language}
 content), whereas KQML was the \emph{outer} language (the envelope). Examples:
 \begin{quote}\small\ttfamily
 (salary 015-46-3946 widgets 72000)\\
-(> (* (width chip1) (length chip1)) (* (width chip2) (length chip2)))\\
-(forall (?F ?T) (=> (and (instance ?F Farmer) (instance ?T Tractor)) (likes ?F ?T)))\\
-(exists (?F ?T) (and (instance ?F Farmer) (instance ?T Tractor) (likes ?F ?T)))
+(forall (?F ?T) (=> (and (instance ?F Farmer) (instance ?T Tractor)) (likes ?F ?T)))
 \end{quote}
 \end{defbox}
 
@@ -2186,20 +2126,13 @@ appears on the blackboard.
 \end{itemize}
 
 \medskip
-\noindent\textbf{Example: BBWar.} The blackboard is a hash table mapping required capabilities to
-tasks; \uv{open missions} are published on the blackboard. The experts form a hierarchy: a
-\emph{commander} agent looks for tasks of the type \uv{conquer a city} (\texttt{ATTACK-CITY}) and
-converts them into several tasks \uv{attack a position} (\texttt{ATTACK-LOCATION}); soldiers of
-various types then pick from the blackboard the missions they have the capabilities for.
-
-\medskip
-\noindent\textbf{Example: FELINE} (Wooldridge, Jennings, 1990) --- a distributed expert system from
-the time before KQML and ACL. Knowledge sharing and the distribution of subtasks; each agent is a
-rule-based system that maintains:
-\emph{Skills} --- \uv{I can prove/refute the following\dots} and \emph{Interests} ---
-\uv{I am interested in whether the following holds\dots}. Communication is a triple
-(sender, recipient, content), where the content is a hypothesis + a speech act (request, response,
-inform).
+\noindent\textbf{Examples.} \emph{BBWar}: the blackboard maps required capabilities to tasks; a
+\emph{commander} agent converts \uv{conquer a city} (\texttt{ATTACK-CITY}) into several
+\uv{attack a position} (\texttt{ATTACK-LOCATION}) tasks and soldiers pick from the blackboard
+the missions they have the capabilities for. \emph{FELINE} (Wooldridge, Jennings, 1990): a
+distributed expert system from before ACL; each agent publishes \emph{Skills} (what it can
+prove) and \emph{Interests} (what it wants to know) and communicates by triples
+(sender, recipient, hypothesis + speech act).
 
 \subsection{Distributed constraints (DisCSP and DCOP)}
 
@@ -2222,17 +2155,12 @@ Applications: meeting scheduling, assigning tasks to sensors, frequency allocati
 \end{defbox}
 \subsection{Agent interaction in the environment}
 
-Agents can help and hinder one another even \emph{without communication}, simply by affecting the
-environment:
-\begin{itemize}
-\item Robots can carry a brick only if they push from two sides simultaneously (a positive
-  interaction, requiring synchronisation).
-\item Robots crowd at a door and cannot open it (a negative interaction, requiring coordination).
-\end{itemize}
-Agents can form communities, hierarchies, and hostilities. \textbf{It is necessary to know the types
-of interaction} in a specific MAS --- otherwise effective control mechanisms cannot be designed.
-The simplest model case, which the following chapter deals with, is the interaction of two
-rational (selfish) agents in an environment resembling a game.
+Agents can help and hinder one another even \emph{without communication}, simply by affecting
+the environment: robots can carry a brick only if they push from two sides (a positive
+interaction, requiring synchronisation); robots crowd at a door and cannot open it (a negative
+interaction, requiring coordination). \textbf{Without knowing the types of interaction} in a
+specific MAS, effective control mechanisms cannot be designed. The simplest model case is the
+interaction of two rational (selfish) agents in an environment resembling a game.
 \subsection{The selfish agent}
 
 Why should an agent be honest about its capabilities? Why should it complete an assigned task?
@@ -2250,9 +2178,6 @@ $u_i : O \to \mathbb{R}$, which orders the outcomes.
 \textbf{Strategic thinking:} maximise your utility under the assumption that everybody else acts
 rationally as well. This does \emph{not} maximise the common utility, but it is a \emph{robust}
 strategy.
-
-\emph{A note:} money is not a good utility for a human being --- the utility function of money is
-non-linear and differs for the rich and the poor.
 \end{defbox}
 
 \subsection{Normal-form games}
@@ -2315,12 +2240,9 @@ Every game with a finite number of players and a finite number of strategies has
 equilibrium \emph{in mixed strategies}.
 \end{theorem}
 
-\textbf{Computational complexity.} Finding a NE is a \emph{total} search problem (a solution always
-exists, the only question is how to find it). Since 2006 we have known that it is
-\textbf{PPAD-complete} --- very roughly speaking \uv{somewhat less hopeless than NP-completeness}
-(NP-completeness does not even make sense for a problem that always has a solution). For three and more
-players this was proved by Daskalakis, Goldberg, and Papadimitriou; shortly afterwards Chen and Deng
-supplied the remaining and hardest case of \emph{two} players.
+\textbf{Computational complexity.} Finding a NE is a \emph{total} search problem (a solution
+always exists) and is \textbf{PPAD-complete} (Daskalakis, Goldberg, Papadimitriou for $\ge 3$
+players; Chen and Deng for two) --- roughly, \uv{somewhat less hopeless than NP-completeness}.
 
 \begin{defbox}[Pareto efficiency and social welfare]
 A strategy profile is \textbf{Pareto optimal} (Pareto efficient) if there is no other profile that
@@ -2611,13 +2533,11 @@ Vickrey & $A$ & $60$ (the second highest bid) \\
 In all cases the item is obtained by the agent with the highest valuation (the auctions are
 \emph{efficient}), but they differ in the price and in the information the auction reveals.
 
-\emph{Why does FPSB come out at 80 when one is supposed to bid below one's valuation?} Because the
-scenario assumes \emph{zero} information about the others: agent $A$ does not know how high $B$ will
-go, and any retreat from 80 risks losing. The degree of shading is a function of one's beliefs about
-the others --- which is why FPSB (and the Dutch auction) \textbf{has no dominant strategy}. If $A$
-knows the valuations of the others, it bids $60+\varepsilon$ and the seller's revenue drops to the
-level of the Vickrey auction (cf.\ the revenue equivalence theorem below). In the English and Vickrey
-auctions, by contrast, a dominant strategy does exist and does not depend on what the others do.
+\emph{Why does FPSB come out at 80 when one is supposed to bid below one's valuation?} The
+scenario assumes \emph{zero} information about the others; the degree of shading is a function
+of one's beliefs about the others --- which is why FPSB (and the Dutch auction) \textbf{has no
+dominant strategy}. If $A$ knows the valuations of the others, it bids $60+\varepsilon$ and the
+revenue drops to the level of the Vickrey auction.
 
 \begin{defbox}[The revenue equivalence theorem]
 Vickrey (1961), Myerson, Riley--Samuelson. Under the assumptions: risk-neutral buyers,
@@ -2630,7 +2550,7 @@ case FPSB/Dutch are better), common values and the winner's curse (in which case
 better because it reveals information), the possibility of collusion among buyers (the English auction
 is more vulnerable), and the cost of communication (sealed bid is cheaper).
 \end{defbox}
-\subsection{Combinatorial auctions and VCG}
+\subsection{Combinatorial auctions}
 
 \begin{defbox}[Combinatorial auction]
 \emph{Several items are auctioned simultaneously} and buyers submit bids on \emph{subsets}
@@ -2650,12 +2570,10 @@ compact languages are used (OR, XOR, OR-of-XOR).
 \subsection{Further types of auction and resource allocation}
 
 \begin{itemize}
-\item An \emph{all-pay auction} --- everybody pays and the highest bid wins; a model of lobbying,
-  bribes, sporting contests, and patent races.
-\item A \emph{silent} auction --- a written variant of the English one. The \emph{Amsterdam} auction ---
-  it starts as an English one, and once two bidders remain it switches to a Dutch one with a doubled
-  price. \emph{Tsukiji} (the Tokyo fish market) --- everybody bids at once, and ties are resolved by
-  rock--paper--scissors.
+\item An \emph{all-pay auction} --- everybody pays and the highest bid wins; a model of lobbying
+  and patent races.
+\item A \emph{silent} auction --- a written variant of the English one; the \emph{Amsterdam}
+  auction --- an English auction that switches to a Dutch one once two bidders remain.
 \item A \emph{double auction} --- bids are submitted by buyers and sellers alike and are matched; a
   model of a stock exchange.
 \end{itemize}
@@ -2684,14 +2602,8 @@ the theory revolves around Vickrey and VCG. Without payments it runs into the
 Gibbard--Satterthwaite theorem.
 \end{defbox}
 
-\begin{defbox}[Combinatorial auctions and VCG]
-In a \textbf{combinatorial auction} several items are auctioned at once and bids are placed on
-\emph{subsets}, because the values are not additive: \emph{complementarity}
-($v(\{x,y\}) > v(x)+v(y)$, two adjacent frequency blocks) and \emph{substitution}
-($v(\{x,y\}) < v(x)+v(y)$). \textbf{The winner determination problem} (WDP) --- to select
-disjoint bids maximising the sum of prices --- is \textbf{NP-hard}.
-
-\textbf{VCG} (Vickrey--Clarke--Groves) generalises the Vickrey auction: the allocation $x^*$
+\begin{defbox}[VCG --- Vickrey--Clarke--Groves]
+\textbf{VCG} generalises the Vickrey auction to the combinatorial case: the allocation $x^*$
 maximising $\sum_i \hat v_i(x)$ is chosen and agent $i$ pays \textbf{the externality it imposes
 on the others}:
 \[
@@ -2796,27 +2708,21 @@ the basis of experience; there is a whole range of methods:
 
 \begin{defbox}[Methods for agent learning]
 \begin{itemize}
-\item \textbf{By the learning signal} (the three classical paradigms of machine learning):
-  \emph{supervised learning} (the agent receives the correct answers --- e.g.\ learning a model of the
-  opponent from observed moves, classifying percepts), \emph{unsupervised learning}
-  (finding structure in observations --- clustering situations, discovering roles),
-  and \textbf{reinforcement learning} (only a scalar reward from the environment is available;
-  the most natural for autonomous agents, see the rest of this chapter).
-\item \textbf{Imitation learning} (\emph{learning from demonstration}): the agent learns a
-  policy from trajectories demonstrated by an expert --- either by direct copying
-  (\emph{behavioural cloning}), or by \emph{inverse RL}, in which the reward function is
-  reconstructed from the expert's behaviour.
-\item \textbf{Evolutionary methods}: a population of controllers (parameters of reactive behaviours,
-  neural network weights, rules) is bred by a genetic algorithm according to the utility
-  achieved --- the typical way in which the reactive architectures of
-  chapter~\ref{sec:rizeni} are \uv{tuned experimentally}; this also includes \emph{learning
-  classifier systems} and neuroevolution.
-\item \textbf{By what the agent learns}: a model of the environment (the transition function),
-  a model of the opponent (\emph{opponent modelling}), a value function, the policy directly,
-  or, in PRS, the ratings of plans.
-\item \textbf{Individual vs.\ social learning}: the agent learns only from its own
-  experience, or also by imitating and sharing experience with the others (learning
-  in a swarm, shared experience in MARL).
+\item \textbf{By the learning signal}: \emph{supervised learning} (correct answers --- a model
+  of the opponent from observed moves, classifying percepts), \emph{unsupervised learning}
+  (finding structure --- clustering situations), and \textbf{reinforcement learning} (only a
+  scalar reward from the environment; the most natural for autonomous agents).
+\item \textbf{Imitation learning} (\emph{learning from demonstration}): a policy from
+  trajectories demonstrated by an expert --- \emph{behavioural cloning}, or \emph{inverse RL}
+  (reconstructing the reward function from the expert's behaviour).
+\item \textbf{Evolutionary methods}: a population of controllers bred according to the utility
+  achieved --- the typical way of tuning the reactive architectures of
+  chapter~\ref{sec:rizeni}; \emph{learning classifier systems}, neuroevolution.
+\item \textbf{By what the agent learns}: a model of the environment, a model of the opponent
+  (\emph{opponent modelling}), a value function, the policy directly, or, in PRS, the ratings
+  of plans.
+\item \textbf{Individual vs.\ social learning}: only from one's own experience, or also by
+  imitating and sharing experience with the others.
 \end{itemize}
 \end{defbox}
 
@@ -3014,10 +2920,9 @@ between homogeneous agents and \emph{opponent modelling}.
 \end{defbox}
 
 \textbf{Self-play.} An agent learns by playing against itself (or against earlier versions of
-itself). In zero-sum games with perfect information self-play reliably leads to strong
-strategies: TD-Gammon, AlphaGo Zero, AlphaZero. The risk is \emph{cyclic} preferences among
-strategies (rock--paper--scissors), where naive self-play oscillates --- hence leagues of
-opponents and population-based methods.
+itself); in zero-sum games it reliably leads to strong strategies (TD-Gammon, AlphaZero).
+The risk is \emph{cyclic} preferences among strategies, where naive self-play oscillates ---
+hence leagues of opponents and population-based methods.
 
 \subsection{Exam summary}
 
@@ -3078,25 +2983,14 @@ communicates with whom --- a check for bottlenecks and excessive coupling).
 organisation; the extensions \emph{ROADMAP} and \emph{Gaia v.2} relax these limitations.
 \end{defbox}
 
-\noindent\mimoq{the slides name only Gaia and roles; the other methodologies are for
-orientation}
-\textbf{Prometheus} (Padgham, Winikoff, 2002) is a practical methodology aimed at \textbf{BDI
-agents}, with three phases: \emph{system specification} (goals, \emph{functionalities}, the
-interface with the outside world --- \emph{percepts} and \emph{actions}),
-\emph{architectural design} (agent types, protocols, messages) and \emph{detailed design}
-(capabilities, plans, events --- the building blocks of BDI). \textbf{Tropos} builds on the
-modelling of \emph{actors and goals} (the $i^*$ framework) and is the only one to cover the
-early-requirements phase as well; it works with the notions \emph{actor}, \emph{goal} and
-\emph{softgoal} (a non-functional requirement without a sharp satisfaction criterion),
-\emph{plan}, \emph{resource} and \emph{dependency}. There are also \textbf{MaSE},
-\textbf{INGENIAS}, \textbf{ADELFE} and \textbf{PASSI}.
-
 \subsection{The FIPA standard and the architecture of a platform}
 \begin{defbox}[The FIPA reference architecture of an agent platform]
 \begin{itemize}
 \item \textbf{AMS} (\emph{Agent Management System}) --- a mandatory component; the \uv{registry} of the
   platform: it keeps records of agents, assigns them unique \emph{AIDs} (agent identifiers),
-  manages the life cycle (create, suspend, resume, terminate), and provides the
+  manages the life cycle according to the FIPA state diagram (\emph{initiated} $\to$
+  \emph{active} $\leftrightarrow$ \emph{waiting}/\emph{suspended}, plus \emph{transit} for
+  mobile agents; the operations create, suspend, resume, terminate), and provides the
   \emph{white pages}.
 \item \textbf{DF} (\emph{Directory Facilitator}) --- the \emph{yellow pages}:
   agents register with it the \emph{services} they offer and look up service providers.
@@ -3160,10 +3054,61 @@ AgentSpeak/Jason.
 \end{tabular}
 \end{center}
 
+\begin{defbox}[Jason in more detail (the NAIL106 practicals material)]
+\textbf{The language.} Besides the triggers \texttt{+b}, \texttt{-b}, \texttt{+!g} and
+\texttt{-!g} there is the \emph{test goal} \texttt{?g} --- a query into the belief base that
+fills in variables by unification; the plan body may also modify beliefs directly (\texttt{+b}
+addition, \texttt{-b} removal, \texttt{-+b} update). The language distinguishes \textbf{two
+negations}: \texttt{not b} is negation as failure (\uv{the agent has no reason to believe
+\texttt{b}}), whereas \texttt{\textasciitilde b} is strong negation (\uv{the agent believes
+that \texttt{b} does not hold}). Beliefs carry \emph{annotations}, above all the source:
+\texttt{likes(a,b)[source(martin)]} --- the source is a percept (\texttt{percept}), the agent
+itself (\texttt{self}), or another agent.
+
+\textbf{Communication.} The built-in internal action \texttt{.send}(\emph{receiver},
+\emph{performative}, \emph{content}) with the performatives \texttt{tell}, \texttt{untell},
+\texttt{achieve}, \texttt{askOne}, \dots{} --- the performatives are speech acts in the sense
+of KQML/FIPA-ACL (chapter~\ref{sec:komunikace}): \texttt{tell} adds a belief with the
+annotation \texttt{source(sender)} to the receiver, \texttt{achieve} adds a goal to it. In the
+slides this is demonstrated by the beer robot of section~\ref{sec:rizeni}:
+\texttt{.send(supermarket, achieve, order(beer,5))}.
+
+\textbf{The environment and the project.} The environment is a Java class inheriting from
+\texttt{Environment}: one overrides \texttt{executeAction}(\emph{agent}, \emph{action}), and
+percepts are handed to the agents via \texttt{addPercept}; for grid worlds there is the
+ready-made \texttt{GridWorldModel}. The whole system is described by the project file
+\texttt{.mas2j} --- the list of agents (and instance counts), the environment class, and the
+infrastructure.
+
+\textbf{Customising the interpreter.} The three choices in the interpreter cycle --- select an
+event, select an applicable plan, select an intention --- are exactly the three
+\emph{selection functions} (\texttt{selectEvent}, \texttt{selectOption},
+\texttt{selectIntention}), which are overridden by inheriting from the \texttt{Agent} class
+(e.g.\ prioritising a certain kind of event). Further one can inherit the whole agent
+architecture \texttt{AgArch} (the methods \texttt{perceive} and \texttt{checkMail} --- one's
+own world model updated from percepts and messages), a custom \texttt{BeliefBase} (e.g.\ the
+automatic replacement of duplicate beliefs), and computationally heavy subroutines (typically
+pathfinding) can be written as custom internal actions by inheriting from
+\texttt{DefaultInternalAction}.
+\end{defbox}
+
+Besides JADE and AgentSpeak/Jason, the seminar slides of the course also name
+\textbf{BattleCode} --- an MIT programming competition combining battle strategy, software
+engineering, and AI: a team writes a program that controls each robot of its army
+autonomously and separately (decentralised control, limited computation per turn, limited
+communication) --- that is, a MAS in the small as a training ground.
+
 \textbf{Further environments:} \emph{Jadex}, \emph{JACK} and \emph{JAM} (further implementations
 of BDI/PRS; Jadex builds a BDI layer on top of JADE); \emph{MASON}, \emph{Repast} and
-\emph{GAMA} (simulation platforms for agent-based models); \emph{PettingZoo}, \emph{Gymnasium}
-and \emph{OpenSpiel} (standard environments for multiagent reinforcement learning).
+\emph{GAMA} (simulation platforms for agent-based models). For multiagent reinforcement
+learning (chapter~\ref{sec:uceni}): \textbf{Gymnasium} (the successor of OpenAI Gym) defines
+the standard API of single-agent RL --- \texttt{reset()} and \texttt{step(action)} returning
+an observation, a reward, and a termination flag; \textbf{PettingZoo} is its multiagent
+counterpart with two APIs --- \emph{AEC} (agents take turns) and \emph{Parallel} (all at
+once) --- and a set of ready-made environments (MPE, multiplayer Atari, board games);
+\textbf{OpenSpiel} (DeepMind) is a collection of games in extensive and normal form (zero-sum
+and general-sum, imperfect information) and of reference algorithms (CFR, fictitious play,
+MCTS) for learning in games.
 
 \subsection{Exam summary}
 
@@ -3174,15 +3119,19 @@ and \emph{OpenSpiel} (standard environments for multiagent reinforcement learnin
   responsibilities with liveness and safety, activities, protocols) + the interaction model;
   design = the agent, services, and acquaintance models. It assumes cooperative agents and a
   static organisation.
-\item \textbf{Prometheus} (aimed at BDI: functionalities $\to$ agent types $\to$ capabilities
-  and plans) and \textbf{Tropos} (actors, goals and softgoals, dependencies; it also covers
-  early requirements).
-\item \textbf{The FIPA platform}: AMS (white pages, life cycle, AID), DF (yellow pages,
-  services), MTS/ACC (delivery of ACL messages).
+\item \textbf{The FIPA platform}: AMS (white pages, AID, the life cycle: initiated, active,
+  waiting, suspended, transit), DF (yellow pages, services), MTS/ACC (delivery of ACL
+  messages).
 \item \textbf{JADE} = Java, FIPA, \texttt{Agent} + \texttt{Behaviour} + \texttt{ACLMessage},
   ready-made protocols and debugging tools. \textbf{Jason/AgentSpeak} = a BDI language, a plan
   of the form \texttt{trigger : context <- body}, a descendant of PRS. \textbf{NetLogo} = ABM
   simulation (turtles/patches/links). \textbf{SPADE} = Python + XMPP.
+\item \textbf{Jason in practice}: the test goal \texttt{?g}, the update \texttt{-+b};
+  \texttt{not} (negation as failure) vs.\ \texttt{\textasciitilde} (strong negation); the
+  annotations \texttt{[source(...)]}; \texttt{.send} with the performatives tell/achieve =
+  speech acts; the environment in Java (\texttt{executeAction}, \texttt{addPercept}), the
+  \texttt{.mas2j} project; customisation via the selection functions of the cycle,
+  \texttt{AgArch}, and custom internal actions.
 \end{itemize}
 
 \section*{In closing: how to approach the examination}

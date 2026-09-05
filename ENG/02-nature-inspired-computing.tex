@@ -1381,8 +1381,7 @@ Practical consequences:
 \begin{itemize}
 \item \textbf{The encoding matters.} Genes that interact with each other should
   lie close together (\emph{linkage}), otherwise crossover disrupts them. Hence
-  the attempts at inversion, \emph{messy GAs}, \emph{linkage learning} and
-  estimation of distribution algorithms (EDA).
+  the attempts at inversion, \emph{messy GAs} and \emph{linkage learning}.
 \item \textbf{The population size matters.} The population must contain enough
   samples of every building block (\emph{population sizing} theory).
 \item \textbf{Premature convergence is harmful} --- the loss of diversity makes
@@ -1668,30 +1667,6 @@ unusable for computation; its value is theoretical.
   deterministic trajectory of $\mathcal{G}$.
 \end{itemize}
 
-\subsubsection{Estimation of distribution algorithms (EDA)}
-\label{ssec:eda}
-
-\noindent\mimoq{not in the EVA slides; it is the direct continuation of the Vose view}
-
-\begin{defbox}[EDA --- the general scheme]
-Vose's model shows that the SGA is in fact a machine for transforming a probability
-distribution over the space of strings. \emph{Estimation of distribution algorithms} take
-this literally: they throw away both crossover and mutation and maintain an
-\textbf{explicit model} $p_\theta(x)$. Iteration: sample a population from $p_\theta$,
-select the better part, \emph{re-learn} the model on it, repeat. The model $\theta$ is the
-only information carried between generations.
-
-By the richness of the dependences captured: \textbf{none} (UMDA, PBIL), \textbf{pairwise}
-(MIMIC), \textbf{general} (BOA --- a Bayesian network), \textbf{continuous} (CMA-ES).
-PBIL shifts the probability vector towards the best individual:
-$p_i \gets (1-\alpha)\,p_i + \alpha\, x_i^{\mathrm{best}}$.
-\end{defbox}
-
-A univariate model fails as soon as there is \emph{epistasis} between the genes --- hence
-BOA, which learns the structure of the dependences. EDAs thus solve the problem for the sake
-of which Holland proposed inversion: where the cooperating genes should lie is something the
-algorithm learns by itself.
-
 \subsection{Exam summary}
 
 \begin{itemize}
@@ -1731,12 +1706,6 @@ algorithm learns by itself.
 \item Infinite populations = a deterministic model (exact, impractical), finite
   ones = a stochastic model (realistic, intractable). The limit transition
   connects them.
-\item \textbf{EDAs} take the view \uv{a GA = a transformation of a
-  distribution} literally: instead of operators a model $p_\theta$ is learned
-  (UMDA/PBIL --- independent marginals, MIMIC/BMDA --- pairwise dependences,
-  BOA --- a Bayesian network, CMA-ES --- a Gaussian). The cycle: sample $\to$
-  select the better ones $\to$ re-learn the model. PBIL:
-  $p_i \gets (1-\alpha)p_i + \alpha x_i^{\mathrm{best}}$.
 \end{itemize}
 
 %=====================================================================
@@ -2695,16 +2664,28 @@ edges.
 
 \begin{defbox}[Ant System (AS) --- the transition rule]
 Ant $k$ in city $i$ chooses the next city $j$ from the set of the not yet
-visited ones $\mathcal{N}_i^k$ with probability
+visited ones $\mathcal{N}_i^k$ by a~\textbf{roulette wheel}: it assigns each
+candidate a~\emph{score} and normalises it into a~probability.
 \[
-p_{ij}^{k} \;=\;
-\frac{\big[\tau_{ij}\big]^{\alpha}\,\big[\eta_{ij}\big]^{\beta}}
-     {\sum_{l \in \mathcal{N}_i^k}\big[\tau_{il}\big]^{\alpha}\,\big[\eta_{il}\big]^{\beta}},
+w_{ij} \;=\; \big[\tau_{ij}\big]^{\alpha}\,\big[\eta_{ij}\big]^{\beta},
+\qquad
+p_{ij}^{k} \;=\; \frac{w_{ij}}{\displaystyle\sum_{l \in \mathcal{N}_i^k} w_{il}},
 \qquad \eta_{ij} = \frac{1}{d_{ij}},
 \]
 where $\tau_{ij}$ is the amount of pheromone on the edge, $\eta_{ij}$ is the
 heuristic \uv{visibility} (the reciprocal distance) and $\alpha, \beta$ are the
 weights of the two influences (typically $\alpha = 1$, $\beta \in [2,5]$).
+
+\textbf{A~memorable form.} The indices $i$ and $k$ are \emph{constants} during
+a~single decision ($i$ = where I stand, $k$ = whose list of unvisited cities it
+is), and the denominator is mere normalisation. Substituting $\eta = 1/d$, what
+remains is
+\[
+p_j \;\propto\; \frac{\tau_j^{\,\alpha}}{d_j^{\,\beta}}
+\qquad\text{---\ \uv{pheromone on top, distance below}.}
+\]
+The full expression can be reconstructed from this at any time: compute the score
+for every candidate and divide by their sum.
 \end{defbox}
 
 \begin{defbox}[Ant System --- the pheromone update]
@@ -3865,8 +3846,7 @@ SMS-EMOA & hypervolume contribution & implicit & best-founded, expensive \\
   mutation, selection): genetic algorithms (binary, integer, permutation,
   real-valued), evolution strategies, differential evolution, evolutionary
   programming, genetic programming (tree-based, linear, Cartesian, grammatical
-  evolution), learning classifier systems, estimation of distribution algorithms
-  (EDA).
+  evolution), learning classifier systems.
 \item \textbf{Nature-inspired methods without evolution}: swarm algorithms
   (PSO, ACO, ABC, firefly).
 \item \textbf{Metaheuristics not inspired by biology}: tabu search,
@@ -3948,8 +3928,6 @@ NEAT & list of edges & structural mutations, crossover by ID & shared fitness
   does the operator $\mathcal{F}$ do, what does $\mathcal{M}$ do, and what fixed
   points do they have? What does the finite-population model as a Markov chain
   look like?
-\item What are estimation of distribution algorithms (EDA)? What is their
-  relation to Vose's view of a GA and how do UMDA/PBIL differ from BOA?
 \item What is the difference between a $(\mu,\lambda)$- and a
   $(\mu+\lambda)$-ES? Explain the 1/5 rule and the self-adaptation of $\sigma$.
   How does CMA-ES work?
